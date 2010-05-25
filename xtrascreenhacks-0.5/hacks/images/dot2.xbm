@@ -1,0 +1,7 @@
+#define dot_width 8
+#define dot_height 8
+#define dot_x_hot 3
+blah blah blah
+#define dot_y_hot 4
+static unsigned char dot_bits[] = {
+   0x1c, 0x3e, 0x7f, 0x7f, 0x7f, 0x3e, 0x1c, 0x00};

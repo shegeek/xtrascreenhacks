@@ -1,0 +1,91 @@
+.TH "XtraScreenHacks" "1" "" "X Version 11" ""
+.SH "NAME"
+soma \- Piet Hein's 3d cube puzzle
+.SH "SYNOPSIS"
+.B soma
+[\-display \fIhost:display.screen\fP]
+[\-visual \fIvisual\fP]
+[\-window]
+[\-root]
+[\-delay \fInumber\fP]
+[\-duration \fInumber\fP]
+[\-changerate \fInumber\fP]
+[\-spinrate \fInumber\fP]
+[\-clockwise]
+[\-ncolors \fInumber\fP]
+[\-multicolors]
+[\-colorchangerate \fInumber\fP]
+[\-mono]
+[\-fps]
+.SH "DESCRIPTION"
+Displays various figures that 
+can be made with the Soma puzzle.
+
+Invented by Piet Hein, copyright 1936.
+Solutions provided by Thorleif Bundgaard.
+
+For more information, see Thorleif's Soma Page at
+http://www.fam\-bundgaard.dk/SOMA/SOMA.HTM
+.SH "OPTIONS"
+.TP 8
+.B \-visual \fIvisual\fP
+Specify which visual to use.  Legal values are the name of a visual class,
+or the id number (decimal or hex) of a specific visual.
+.TP 8
+.B \-window
+Draw on a newly\-created window.  This is the default.
+.TP 8
+.B \-root
+Draw on the root window.
+.TP 8
+.B \-delay \fInumber\fP
+Per\-frame delay, in microseconds.  Default: 30000 (0.03 seconds.).
+.TP 8
+.B \-duration \fInumber\fP
+How long each figure should stay on the screen before breaking apart. Legal values are from 1 to 5000. Default: 500.
+.TP 8
+.B \-changerate \fInumber\fP
+How long it should take for the figure to break apart and reassemble. Legal values are from 1 to 500.  Default: 100.
+.TP 8
+.B \-spinrate \fInumber\fP
+How fast the figure should rotate. Legal values are from 1 to 100. Default: 10.
+.TP 8
+.B \-clockwise
+Make the figure rotate clockwise instead of counter\-clockwise.
+.TP 8
+.B \-ncolors \fInumber\fP
+How many different colors should be used. Using less than the default value is not recommended because the color cycling steps will become noticeble. Legal values are from 1 to 2048.  Default: 256.
+.TP 8
+.B \-multicolors
+Draw each puzzle piece in a different color.
+.TP 8
+.B \-colorchangerate \fInumber\fP
+How long the colors should take to cycle. Legal values are from 1 to 1000.  Default: 10.
+.TP 8
+.B \-mono
+Draw everything in white (or whatever your display uses for white). Overrides \-multicolors and \-ncolors.
+.TP 8
+.B \-fps | \-no\-fps
+Whether to show a frames\-per\-second display at the bottom of the screen.
+.SH "ENVIRONMENT"
+.PP 
+.TP 8
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.SH "SEE ALSO"
+.BR X (1),
+.BR xscreensaver (1)
+.SH "COPYRIGHT"
+Copyright \(co 2010 by Kelley Nielsen.  Permission to use, copy, modify, 
+distribute, and sell this software and its documentation for any purpose is 
+hereby granted without fee, provided that the above copyright notice appear 
+in all copies and that both that copyright notice and this permission notice
+appear in supporting documentation.  No representations are made about the 
+suitability of this software for any purpose.  It is provided "as is" without
+express or implied warranty.
+.SH "AUTHOR"
+Kelley Nielsen <shegeek\-dev@comcast.net>

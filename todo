@@ -1,0 +1,162 @@
+Up next:  test make install  (leave make tar for next release)
+            -> add install directory for images
+	    -> add provision for soma database file
+
+
+Get rid of /usr/lib/xscreensaver/config (is mistake file)
+Put refs to the really slicks screensavers back in some .xscreensaver
+
+
+Make sure all the targets in the top level makefile.in work correctly
+  -> vms files, dtd still in make tar;
+Clean unneeded tests out of configure.ac
+figure out a better way to get the entries in .xscreensaver
+make .desktop files for gnome-screensaver and figure out how they work
+see if there are any more daemons to be accomodated
+look into portability issues (gnu portability library)
+create a proper history/changelog
+iron out heading at top of man files (some say xtrascreenhacks at both sides
+  with a blank middle, some say the hack name on both sides with 
+  xtrascreenhacks manual in the middle--is probably in the man files)
+fix default configdir in configure.ac--uses /xscreensaver,
+  doesn't substitute variables down into $datadir or wherever
+Stop trying to install from utils directory--nothing is installed from there
+
+Continue to develop web page (including personal section)
+Determine what package dependencies should be listed
+Make more xbms for flyer
+Implement multiple xbm option in flyer
+Add motion trails to flyer
+Improve soma database parser
+make skeleton files for future hacks, configurators and man pages
+decide whether to incorporate 2d berlinuhr
+
+There is makefile weirdness: for instance, why are all the x libraries,
+gl, etc pulled into the gl hacks with XPM_LIBS? that's misleading.
+
+
+for freshmeat:
+Determine and list dependencies
+Create and post an avatar
+Update and post the changelog,
+hopefuly one that is proper and compliant and all that
+? put a link on homepage to freshmeat page
+
+from actodo:
+Needed files: configure.in Makefile.in hacks/Makefile.in utils/Makefile.in
+              configure.guess aclocal.m4(regenerate?), all .com/.vms files
+              (incuding ones in utils--ones in driver?), install-sh(?)
+
+General:
+
+-figure out how to tick version numbers & tie in w/ tarfile creation
+ (uses utils/version.h and Makefile.in somehow)
+-figure out how xscreensaver.spec is used and update/customize it
+-make a better ChangeLog
+-figure out if INSTALL is handwritten or generated, and make a new one
+-figure out how to pass install dir arg to configure, and put in INSTALL
+-is driver/screensaver-properties.desktop.in good for anything?
+  ->no--is only for xscreensaver-demo
+-there are some examples of updating an existing file (to reflect version)
+ in driver/Makefile.in--perhaps use for script to update .xscreensaver
+
+
+Makefile.in:
+
+-remove reference to unused dirs in SUBDIRS
+-remove references to intltools in TARFILES and distclean target
+-figure out how www section is used and if it could be useful here
+-figure out how to roll rpms with make rpm target
+-make sure make tar target is all ok for this package
+ (includes making archive directory)
+-is the hack count useful here? help blurb customization?
+  ->is probably for .ad file     ->may no longer work
+-figure out what tags and  update-spec-version targets are for
+
+
+hacks/Makefile.in:
+
+-remove references to original hacks & man/xml files, replace w/ new ones
+-a line referencing the package is put into installed manpages--
+ update to reflect this package
+-propogate other changes make to generated Makefile in version 0.1
+-transfer comment about Xlibs from driver/Makefile.in
+
+
+utils/Makefile.in:
+
+-remove long comment about libs
+
+
+configure.in:
+
+-remove references to unused dirs in inventory check
+-figure out how to call AC_INIT (is presently called with driver/subprocs.c,
+ a file not used here)
+
+
+config.h.in:
+
+
+
+
+from 4autotools:
+
+*find out what the existing screensaver installation is, if any,
+ and put hacks & config in the right place
+ to consider: xscreensaver, gnome screensaver, kde's screensaver
+              -> involves .ad file
+hacks/.gdbinit: what does it do? (taken out)
+might hacks/xml2man be useful?
+
+do I need xscreensaver-sgigl (makes the hacks run on weird sgi displays),
+and the xss.dtd/xsd (checkers for the xml configurators)?
+How much do I want to be able to run on all the platforms xscreensaver does,
+and will I ever be willing to make this pkg depend on xscreensaver?
+(maybe suggest xscreensaver for the sgi console, etc?)
+
+Will need to change .spec and version.h to reflect this package
+will need to understand rpm spec file format (and how to build rpms)
+in order to do the .spec right  .spec is used by make distdepend,
+there is a make update-spec-version to maintain it
+
+All the OSX stuff! I would like to make this work on OSX, but
+that requires dealing with the xcodeproj directory and its one file,
+and I don't have a clue about it. Is there any way to still make it work?
+
+
+(OSX has not been removed yet, btw)
+
+
+Same thing with VMS
+
+write READMEs
+
+xscreensaver-gl-helper, include it?
+
+make sure the man installers in all makefile.ins refer to this package
+
+
+What happens when a hack that uses a screen grab is run with another daemon,
+or no daemon? (the daemon passes the screen grab to the hack, and the 
+hack needs grabscreen, etc in utils because it needs to know if the
+screen grab is coming.)
+
+
+doesn't look like xscreensaver-sgigl is referenced from anywhere in the code. It is another standalone executable.
+
+
+
+
+from xmldir-problem:
+
+option not given, returns mistake (${datadir}/xscreensaver/config)
+empty option (--with-datadir  ) gives same
+option w/ bogus dir as arg, bogus dir passes
+option with good dir as arg passes
+empty option with = (--with-configdir=   ) wants to install under /
+option with yes arg ( --with-configdir=yes
+) returns mistake
+option with 'no' arg ( --with-configdir=no) returns the error mesage and quits
+
+problem is probably around line 1100 of configure.ac

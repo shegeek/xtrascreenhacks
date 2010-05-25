@@ -1,0 +1,68 @@
+.de EX		\"Begin example
+.ne 5
+.if n .sp 1
+.if t .sp .5
+.nf
+.in +.5i
+..
+.de EE
+.fi
+.in -.5i
+.if n .sp 1
+.if t .sp .5
+..
+.TH XtraScreenHacks 1 "31-March-2006" "X Version 11"
+.SH NAME
+berlinuhr - the Berlin quantity didactics clock
+.SH SYNOPSIS
+.B berlinuhr
+[\-display \fIhost:display.screen\fP] [\-window] [\-root]
+[\-visual \fIvisual\fP] \" [\-delay \fImicroseconds\fP]
+.SH DESCRIPTION
+The \fIberlinuhr\fP program displays a simulation of Dieter Binninger's Berlin-Uhr quantity didactics clock which now stands at the Europa Center in Berlin.
+
+To read the clock, add the values of the lighted lamps: the rectangular lamps in the top row (red) specify five hours each; in the second row (red), one hour each; in the third row (yellow and red), five minutes each; and in the bottom row (yellow), one minute each. 
+.SH OPTIONS
+.I berlinuhr
+accepts the following options:
+.TP 8
+.B \-window
+Draw on a newly-created window.  This is the default.
+.TP 8
+.B \-root
+Draw on the root window.
+.TP 8
+.B \-visual \fIvisual\fP\fP
+Specify which visual to use.  Legal values are the name of a visual class,
+or the id number (decimal or hex) of a specific visual.
+.TP 8
+.B \-db\fP | \fB\-no\-db\fP
+Use double\-buffering, or not. \fB\-db\fP is the default.
+.SH ENVIRONMENT
+.PP
+.TP 8
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.SH SEE ALSO
+.BR X (1),
+.BR xscreensaver (1),
+ http://www.surveyor.in-berlin.de/berlin/uhr/indexe.html
+ http://www.kojak-online.de/berlin-uhr/
+.SH COPYRIGHT
+Copyright \(co 2006 by Kelley Nielsen.
+Permission to use, copy, modify, distribute, and sell this software and
+its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation.  No representations are made about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+Berlin-Uhr\(rg is a registered trademark of the Kindermann company in Rudow, Germany.
+
+.SH AUTHOR
+Kelley Nielsen <shegeek@cruzers.com>

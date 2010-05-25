@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="daisy" _label="Daisy">
+
+  <command arg="-root"/>
+
+  <number id="speed" type="slider" arg="-delay %"
+          _label="Speed" _low-label="Slow" _high-label="Fast"
+          low="0" high="100000" default="50000"
+          convert="invert"/>
+
+  <!-- high stops at one too many in the spinbox -->
+  <number id="count" type="spinbutton" arg="-count %"
+          _label="Count" low="5" high="39" default="25"/>
+
+  <number id="ncolors" type="slider" arg="-ncolors %"
+            _label="Number of Colors" _low-label="One" _high-label="Many"
+            low="1" high="255" default="20"/>
+
+  <select id="mode">
+    <option id="pop"  _label="Pop"/>
+    <option id="drop" _label="Drop"   arg-set="-drop"/>
+    <option id="roam" _label="Roam" arg-set="-roam"/>
+  </select>
+ 
+  <!-- #### -speed [15] -->
+
+
+  <boolean id="db" _label="Double Buffer" arg-unset="-no-db"/>
+
+  <_description>
+This draws spinning daisies that pop
+up one by one, drop down from above,
+or roam about the screen. Very retro.
+Written by Kelley Nielsen.
+  </_description>
+</screensaver>

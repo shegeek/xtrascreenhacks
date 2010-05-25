@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="soma" _label="Soma">
+
+  <command arg="-root"/>
+
+  <number id="delay" type="slider" arg="-delay %"
+          _label="Speed" _low-label="Slow" _high-label="Fast"
+           low="0" high="50000" default="30000"
+          convert="invert"/>
+
+  <number id="duration" type="slider" arg="-duration %"
+          _label="Viewing time" _low-label="Short" _high-label="Long"
+          low="1" high="5000" default="500"/>
+
+  <number id="changerate" type="slider" arg="-changerate %"
+          _label="Transition speed" _low-label="Slow" _high-label="Fast"
+          low="1" high="500" default="100" convert="invert"/>
+
+  <number id="spinrate" type="slider" arg="-spinrate %"
+          _label="Rotation speed" _low-label="Slow" _high-label="Fast"
+          low="1" high="100" default="10" />
+
+  <number id="colorchangerate" type="slider" arg="-colorchangerate %"
+          _label="Color cycling rate" _low-label="Slow" _high-label="Fast"
+          low="1" high="1000" default="10" convert="invert"/>
+
+  <number id="ncolors" type="slider" arg="-ncolors %"
+          _label="Number of colors" _low-label="Few" _high-label="Many"
+          low="1" high="2048" default="256"/>
+
+  <boolean id="multicolors" _label="Separately Colored Pieces"  arg-set="-multicolors"/>
+  <boolean id="clockwise" _label="Rotate Clockwise"  arg-set="-clockwise"/>
+  <boolean id="showfps" _label="Show Frames-per-Second" arg-set="-fps"/>
+  <boolean id="mono" _label="Mono (all white)" arg-set="-mono"/>
+
+  <_description>
+Displays various figures that can be 
+made with the Soma puzzle.
+
+Written by Kelley Nielsen 2010.
+
+Soma puzzle by Piet Hein copyright 1936. 
+Solutions provided by Thorleif Bundgaard
+http://www.fam-bundgaard.dk/SOMA/SOMA.HTM
+  </_description>
+</screensaver>

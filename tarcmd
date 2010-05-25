@@ -1,0 +1,2 @@
+ tar --exclude="archive" -zcvhf  xtrascreenhacks-0.2.tar.gz xtrascreenhacks-0.2
+ tar --exclude="archive" -jcvhf  xtrascreenhacks-0.2.tar.bz2 xtrascreenhacks-0.2

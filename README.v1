@@ -1,0 +1,70 @@
+XtraScreenHacks, by Kelley Nielsen
+
+This is a small collection of display modes that are based on and intended 
+to be run with the XScreensaver distribution. An XScreensaver distribution
+is not needed just to compile and view the display modes.
+
+INSTALLATION
+
+The configure script is not up and running yet, so the Makefiles and 
+config.h are hacked versions of the ones xscreensaver's configure script 
+generated on the author's machine. If your system differs from the 
+author's (i686 Debian GNU/Linux) then the build will probably not work 
+for you, unless you hack the Makefiles and possibly config.h to modify 
+the variables and defines.
+
+If the Makefiles and config.h are ok, then simply run
+
+$ make
+
+to generate the binaries. They will be in the hacks directory.
+If you have a copy of XScreensaver installed from the tarball, run
+
+$ make install
+
+If not, you will need to copy the files to their target directories
+by hand. Search for deluxe, deluxe.xml, and deluxe.1 (or deluxe.man, 
+deluxe.6x.gz, etc) using locate, find, or whereis to figure out where they
+should go. The binaries and xml files must be in the correct directories
+to work properly with xscreensaver-demo.
+
+You will need to add entries to your .xscreensaver file by hand.
+Open $HOME/.xscreensaver in your favorite text editor and paste
+the following two lines into the "programs" section:
+
+--snip----------------
+-                               daisy -root                                 \n\
+-                               twinkle -root                               \n\
+--snip----------------
+
+Then run xscreensaver-demo to activate and configure the hacks.
+
+If you don't have XScreensaver at all, just enjoy the hacks in an X window.
+
+If make install worked for you, type
+
+$ make uninstall
+
+when you no longer want the new screen hacks.
+
+
+
+COPYRIGHT
+
+The original copyright notice from xscreensaver reads:
+
+/* xscreensaver, Copyright (c) 1999, 2001, 2002 Jamie Zawinski <jwz@jwz.org>
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation.  No representations are made about the suitability of this
+ * software for any purpose.  It is provided "as is" without express or
+ * implied warranty.
+ */
+
+The modifications in this distribution are 
+copyright (c) 2006 Kelley Nielsen <shegeek@cruzers.com> .
+The same permission notice applies.
+

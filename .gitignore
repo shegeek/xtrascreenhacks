@@ -1,0 +1,5 @@
+*.o
+*~
+xtrascreenhacks-0.5/archive
+Makefile
+configure

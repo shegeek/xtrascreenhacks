@@ -1,0 +1,68 @@
+.TH "XtraScreenHacks" "1" "28-Feb-06" "X Version 11" ""
+.SH "NAME"
+daisy \- draws spinning daisies
+.SH "SYNOPSIS"
+.B daisy
+[\-display \fIhost:display.screen\fP] [\-window] [\-root] [\-mono] [\-install] [\-visual \fIvisual\fP] [\-delay \fIusecs\fP] [\-count \fIinteger\fP] [\-ncolors \fIinteger\fP] [\-pop | \-drop | \-roam] [\-db | \-no\-db]
+
+.SH "DESCRIPTION"
+The \fIdaisy\fP program draws spinning daisy\-like flowers that pop up one by one, drop down from above, or roam about the screen.
+
+.SH "OPTIONS"
+.I daisy
+accepts the following options:
+.TP 8
+.B \-window
+Draw on a newly\-created window.  This is the default.
+.TP 8
+.B \-root
+Draw on the root window.
+.TP 8
+.B \-mono 
+If on a color display, pretend we're on a monochrome display.
+.TP 8
+.B \-install
+Install a private colormap for the window.
+.TP 8
+.B \-visual \fIvisual\fP
+Specify which visual to use.  Legal values are the name of a visual class,
+or the id number (decimal or hex) of a specific visual.
+.TP 8
+.B \-delay \fIusecs\fP
+Per\-frame delay, in microseconds:  default is 50000.
+.TP 8
+.B \-count \fIinteger\fP
+Number of daisies to draw. Default is 25.
+.TP 8
+.B \-ncolors \fIinteger\fP
+How many colors should be used (if possible).  Default is 64.
+The colors are chosen randomly. Passing an argument of 1 is the same as specifying \fB\-mono\fP.
+.TP 8
+.B \-pop\fP | \fB\-drop\fP | \fB\-roam\fP
+If \fB\-drop\fP is specified, the daisies will drop in from the top of the screen, giving a "raining flowers" effect. Overrides \fB\-roam\fP. If \fB\-roam\fP is specified, then the daisies will wander around the screen in various directions. If \fB\-pop\fP is specified, then the daisies will pop up one by one in random places until \fB\-count\fP is reached. Overrides \fB\-drop\fP and \fB\-roam\fP. Default is \fB\-pop\fP.
+.TP 8
+.B \-db\fP | \fB\-no\-db\fP
+Use double\-buffering, or not. If not, the beautiful flowers will flicker and turn ugly; hence, \fB\-db\fP is the default.
+.SH "ENVIRONMENT"
+.PP 
+.TP 8
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.SH "SEE ALSO"
+.BR X (1),
+.BR xscreensaver (1),
+.BR xlock (1)
+.SH "COPYRIGHT"
+Copyright \(co 2006 by Kelley Nielsen.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation. 
+.SH "AUTHOR"
+Kelley Nielsen <shegeek\-dev@comcast.net>, 28\-Feb\-06.

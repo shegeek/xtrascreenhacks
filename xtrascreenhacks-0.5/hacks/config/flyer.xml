@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="flyer" _label="Flyer">
+
+  <command arg="-root"/>
+
+  <file id="bitmap" _label="Bitmap for Flyer" arg="-bitmap %"/> 
+
+  <number id="delay" type="slider" arg="-delay %"
+          _label="Speed" _low-label="Slow" _high-label="Fast"
+           low="0" high="50000" default="30000"
+          convert="invert"/>
+
+  <number id="count" type="slider" arg="-count %"
+          _label="Number of flyers" _low-label="Few" _high-label="Many"
+          low="1" high="1000" default="20"/>
+
+  <number id="ncolors" type="slider" arg="-ncolors %"
+          _label="Number of colors" _low-label="Few" _high-label="Many"
+          low="1" high="256" default="16"/>
+
+  <number id="size" type="slider" arg="-size %"
+          _label="Size of flyers" _low-label="Small" _high-label="Large"
+          low="1" high="200" default="100"/>
+
+  <number id="step" type="slider" arg="-step %"
+          _label="Movement per frame" _low-label="Short" _high-label="Long"
+          low="1" high="1000" default="200"/>
+
+  <boolean id="dots"     _label="Dots"  arg-set="-dots"/>
+  <boolean id="fog"    _label="Fog"   arg-set="-fog"/>
+  <boolean id="showfps" _label="Show Frames-per-Second" arg-set="-fps"/>
+  <boolean id="mono" _label="Mono (all white)" arg-set="-mono"/>
+
+  <_description>
+Flyer is like the classic screen saver 
+from Redmond that featured its logo, 
+except now you can fly anything.
+
+Written by Kelley Nielsen 2009.
+  </_description>
+</screensaver>

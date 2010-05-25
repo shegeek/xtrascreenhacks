@@ -1,0 +1,532 @@
+# hacks/Makefile.in --- xscreensaver, Copyright (c) 1997-2005 Jamie Zawinski.
+#  -> shegeek's version
+# the `../configure' script generates `hacks/Makefile' from this file.
+
+@SET_MAKE@
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+top_srcdir	= @top_srcdir@
+top_builddir	= ..
+
+install_prefix	=
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+datarootdir     = @datarootdir@
+ddatadir		= @datadir@
+mandir		= @mandir@
+libexecdir	= @libexecdir@
+mansuffix	= 6
+manNdir		= $(mandir)/man$(mansuffix)
+
+HACKDIR		= @HACKDIR@
+HACK_CONF_DIR	= @HACK_CONF_DIR@
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+DEFS		= -DSTANDALONE @DEFS@
+LIBS		= @LIBS@
+# is perl needed?
+PERL		= @PERL@
+
+DEPEND		= @DEPEND@
+DEPEND_FLAGS	= @DEPEND_FLAGS@
+DEPEND_DEFINES	= @DEPEND_DEFINES@
+
+SHELL		= /bin/sh
+INSTALL		= @INSTALL@
+#SUID_FLAGS      = -o root -m 4755
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+#INSTALL_SCRIPT  = @INSTALL_SCRIPT@
+#INSTALL_SETUID  = @INSTALL_SETUID@
+INSTALL_DATA	= @INSTALL_DATA@
+INSTALL_DIRS	= @INSTALL_DIRS@
+
+X_CFLAGS	= @X_CFLAGS@
+X_LIBS		= @X_LIBS@
+X_PRE_LIBS	= @X_PRE_LIBS@
+X_EXTRA_LIBS	= @X_EXTRA_LIBS@
+XMU_LIBS	= @XMU_LIBS@
+
+# Note: see comment in ../driver/Makefile.in for explanation of X_LIBS, etc.
+#
+HACK_PRE	= $(LIBS) $(X_LIBS)
+HACK_POST     = $(X_PRE_LIBS) -lXt -lX11 $(XMU_LIBS) -lXext $(X_EXTRA_LIBS) -lm
+HACK_LIBS	= $(HACK_PRE)            @HACK_LIBS@ $(HACK_POST)
+XPM_LIBS	= $(HACK_PRE) @XPM_LIBS@ @HACK_LIBS@ $(HACK_POST)
+JPEG_LIBS	= @JPEG_LIBS@
+XLOCK_LIBS	= $(HACK_LIBS)
+PTY_LIBS	= @PTY_LIBS@
+MINIXPM		= $(UTILS_BIN)/minixpm.o
+
+UTILS_SRC	= $(srcdir)/../utils
+UTILS_BIN	= ../utils
+
+INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I.. @INCLUDES@
+
+# ^^^ find out which of these I need, or--
+# better to just include them all, avoid changing the utils
+# directory and its makefile, considering I might end up using them anyway?
+UTIL_SRCS	= $(UTILS_SRC)/alpha.c $(UTILS_SRC)/colors.c \
+		  $(UTILS_SRC)/grabscreen.c $(UTILS_SRC)/grabclient.c \
+		  $(UTILS_SRC)/hsv.c $(UTILS_SRC)/resources.c \
+		  $(UTILS_SRC)/spline.c $(UTILS_SRC)/usleep.c \
+		  $(UTILS_SRC)/visual.c \
+		  $(UTILS_SRC)/minixpm.c \
+		  $(UTILS_SRC)/yarandom.c $(UTILS_SRC)/erase.c \
+		  $(UTILS_SRC)/xshm.c $(UTILS_SRC)/xdbe.c
+UTIL_OBJS	= $(UTILS_BIN)/alpha.o $(UTILS_BIN)/colors.o \
+		  $(UTILS_BIN)/grabscreen.o $(UTILS_BIN)/grabclient.o \
+		  $(UTILS_BIN)/hsv.o $(UTILS_BIN)/resources.o \
+		  $(UTILS_BIN)/spline.o $(UTILS_BIN)/usleep.o \
+		  $(UTILS_BIN)/visual.o \
+		  $(UTILS_SRC)/minixpm.c \
+		  $(UTILS_BIN)/yarandom.o $(UTILS_BIN)/erase.o \
+		  $(UTILS_BIN)/xshm.o $(UTILS_BIN)/xdbe.o #\
+#		  $(UTILS_BIN)/colorbars.o
+
+# does shegeek want sgigl, etc? If so, modify install to check for jwz's
+SRCS		= screenhack.c \ #xscreensaver-sgigl.c \
+		  xpm-pixmap.c xlockmore.c \
+		  daisy.c \
+		  twinkle.c
+
+#SCRIPTS		= vidwhacker webcollage ljlatest
+
+# shegeek: EXTERNALS removed
+
+OBJS		= screenhack.o  xlockmore.o \
+#		  xscreensaver-sgigl.o \
+                  xpm-pixmap.o \
+	daisy.o \
+	twinkle.o
+
+NEXES		= daisy \
+                  twinkle
+		  #@JPEG_EXES@
+
+# setuid hacks--shegeek will not have any
+#SEXES		= sonar
+#JPEG_EXES	= webcollage-helper
+EXES		= $(NEXES) # $(SEXES)
+
+HACK_OBJS_1	= $(UTILS_BIN)/resources.o $(UTILS_BIN)/visual.o \
+		  $(UTILS_BIN)/usleep.o $(UTILS_BIN)/yarandom.o @XMU_OBJS@
+HACK_OBJS	= screenhack.o $(HACK_OBJS_1)
+XLOCK_OBJS	= screenhack.o xlockmore.o $(COLOR_OBJS) $(HACK_OBJS_1)
+COLOR_OBJS	= $(UTILS_BIN)/hsv.o $(UTILS_BIN)/colors.o
+GRAB_OBJS	= $(UTILS_BIN)/grabclient.o
+XSHM_OBJS	= $(UTILS_BIN)/xshm.o
+XDBE_OBJS	= $(UTILS_BIN)/xdbe.o
+
+HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h \
+		   xpm-pixmap.h
+
+MEN		= daisy.man \
+                  twinkle.man
+
+STAR		= *
+EXTRAS		= README Makefile.in # xml2man.pl \
+		  config/README \
+		  config/$(STAR).xml \
+#		  config/$(STAR).dtd \
+#		  config/$(STAR).xsd \
+		  images/$(STAR).xbm \
+                  images/flyer/$(STAR).xbm #\
+#		  images/$(STAR).xpm \
+#		  images/bubbles/$(STAR).pov \ -> shegeek will have images
+#                  .gdbinit \ this is mentioned nowhere else, probably useless
+
+VMSFILES	= compile_axp.com compile_decc.com link_axp.com link_decc.com \
+		  vms_axp.opt vms_axp_12.opt vms_decc.opt vms_decc_12.opt
+
+TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(VMSFILES) # $(SCRIPTS)
+
+
+default: all
+all: $(EXES)
+
+install:   install-program   install-xml install-man   # install-scripts
+uninstall: uninstall-program uninstall-xml uninstall-man
+
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' \
+		install
+
+# the hacks, in $HACKDIR
+install-program:: $(EXES)
+	@if [ ! -d $(install_prefix)$(HACKDIR) ]; then			\
+	  $(INSTALL_DIRS) $(install_prefix)$(HACKDIR) ;			\
+	 fi ;								\
+	for program in $(NEXES); do					\
+	  echo $(INSTALL_PROGRAM) $$program				\
+	    $(install_prefix)$(HACKDIR)/$$program ;			\
+	  $(INSTALL_PROGRAM) $$program					\
+	    $(install_prefix)$(HACKDIR)/$$program ;			\
+	done ;								\
+	if [ @SETUID_HACKS@ = yes ]; then				\
+	  sinst="$(INSTALL_SETUID)" ;					\
+	else								\
+	  sinst="$(INSTALL_PROGRAM)" ;					\
+	fi # ;								\
+#	for program in $(SEXES); do					\
+#	  instargs="$$program $(install_prefix)$(HACKDIR)/$$program" ;	\
+#	  echo $$sinst $$instargs ;					\
+#	  if   $$sinst $$instargs ; then				\
+#	      true ;							\
+#	  elif [ @SETUID_HACKS@ = yes ]; then				\
+#	    echo $(INSTALL_PROGRAM) $$instargs ;			\
+#	    if   $(INSTALL_PROGRAM) $$instargs ; then			\
+#	      echo "" ;							\
+#	      echo "WARNING: unable to install $$program setuid:"	\
+#	           "installed non-setuid instead." ;			\
+#	      echo "" ;							\
+#	    else							\
+#	      exit 1 ;							\
+#	    fi ;							\
+#	  else								\
+#	    exit 1 ;							\
+#	  fi ;								\
+#	done
+
+#install-scripts: $(SCRIPTS) munge-scripts
+#	@for program in $(SCRIPTS); do					\
+#	  if [ -r $$program ] ; then					\
+#	    p=$$program ;						\
+#	  else								\
+#	    p=$(srcdir)/$$program ;					\
+#	  fi ;								\
+#	  echo $(INSTALL_SCRIPT) $$p					\
+#	    $(install_prefix)$(HACKDIR)/$$program ;			\
+#	  $(INSTALL_SCRIPT) $$p						\
+#	    $(install_prefix)$(HACKDIR)/$$program ;			\
+#	done
+
+#munge-scripts: $(SCRIPTS)
+#	@tmp=/tmp/mf.$$$$ ;						\
+#	perl="${PERL}" ;						\
+#	rm -f $$tmp ;							\
+#	for program in $(SCRIPTS); do					\
+#	  sed "s@^\(#!\)\(/[^ ]*/perl[^ ]*\)\(.*\)\$$@\1$$perl\3@"	\
+#	      < $(srcdir)/$$program > $$tmp ;				\
+#	  if ! cmp -s $(srcdir)/$$program $$tmp ; then			\
+#	    echo "$$program: setting interpreter to $$perl" >&2 ;	\
+#	    cat $$tmp > ./$$program ;					\
+#	  fi ;								\
+#	done ;								\
+#	rm -f $$tmp
+
+# When installing man pages, we install "foo.man" as "foo.N" and update
+# the .TH line in the installed file with one like
+#
+#     .TH XScreenSaver N "V.VV (DD-MMM-YYYY)" "X Version 11"
+#
+# where N is the manual section suffix.
+#
+install-man: $(MEN)
+	@men="$(MEN)" ;							\
+	U=$(UTILS_SRC)/version.h ;					\
+	V=`sed -n 's/.*xtrascreenhacks \([0-9]\.[^)]*)\).*/\1/p' < $$U` ;	\
+	T=/tmp/xs$$$$.$(mansuffix) ;					\
+	TH=".TH XtraScreenHacks $(mansuffix) \"$$V\" \"X Version 11\"" ;	\
+	echo "installing man pages: $$TH" ;				\
+									\
+	if [ ! -d $(install_prefix)$(manNdir) ]; then			\
+	  $(INSTALL_DIRS) $(install_prefix)$(manNdir) ;			\
+	 fi ;								\
+									\
+	for man in $$men; do						\
+	  instname=`echo $$man | sed 's/\.man$$/\.$(mansuffix)/'` ;	\
+	  manbase=`echo $$man | sed 's/\.man$$//'` ;    \
+	  TH=".TH $$manbase $(mansuffix) \"$$V\" \"X Version 11\" \"XtraScreenhacks manual\"" ;    \
+	  sed -e "s/^\.TH.*/$$TH/"					\
+	      -e 's@(MANSUFFIX)@($(mansuffix))@g'			\
+	    < $(srcdir)/$$man > $$T ;					\
+	  echo $(INSTALL_DATA) $(srcdir)/$$man				\
+	   $(install_prefix)$(manNdir)/$$instname ;			\
+	  $(INSTALL_DATA) $$T						\
+	    $(install_prefix)$(manNdir)/$$instname ;			\
+	done ;								\
+	rm -f $$T
+
+install-xml:
+	@dest=$(install_prefix)$(HACK_CONF_DIR) ;			\
+	 if [ ! -d $$dest ]; then					\
+	   $(INSTALL_DIRS) $$dest ;					\
+	 fi ;								\
+	 src=$(srcdir)/config ;						\
+#	 for file in $(EXES) $(SCRIPTS) $(EXTERNALS) ; do		\
+	 for file in $(EXES) ; do		\
+	   if [ -f $$src/$$file.xml ]; then				\
+	     echo $(INSTALL_DATA) $$src/$$file.xml $$dest/$$file.xml ;	\
+	          $(INSTALL_DATA) $$src/$$file.xml $$dest/$$file.xml ;	\
+	   fi ;								\
+	done
+
+uninstall-program:
+	@for program in $(EXES) ; do				\
+	  echo rm -f $(install_prefix)$(HACKDIR)/$$program ;		\
+	  rm -f $(install_prefix)$(HACKDIR)/$$program ;			\
+	done
+
+uninstall-man:
+	@men="$(MEN)" ;							\
+	for man in $$men; do						\
+	  instname=`echo $$man | sed 's/\.man$$/\.$(mansuffix)/'` ;	\
+	  echo rm -f $(install_prefix)$(manNdir)/$$instname* ;		\
+	  rm -f $(install_prefix)$(manNdir)/$$instname* ;		\
+	done
+
+uninstall-xml:
+	@dest=$(install_prefix)$(HACK_CONF_DIR) ;			\
+#	 for file in $(EXES) $(SCRIPTS) $(EXTERNALS) ; do		\
+	 for file in $(EXES) ; do		\
+	     echo rm -f $$dest/$$file.xml ;				\
+	          rm -f $$dest/$$file.xml ;				\
+	done
+
+clean:
+	-rm -f *.o a.out core $(EXES)
+
+distclean: clean
+	-rm -f Makefile TAGS *~ "#"*
+
+# Adds all current dependencies to Makefile
+depend:
+	$(DEPEND) -s '# DO NOT DELETE: updated by make depend'		    \
+	$(DEPEND_FLAGS) --						    \
+	$(INCLUDES) $(DEFS) $(DEPEND_DEFINES) $(CFLAGS) $(X_CFLAGS) --	    \
+	$(SRCS)
+
+# Adds some dependencies to Makefile.in -- not totally accurate, but pretty
+# close.  This excludes dependencies on files in /usr/include, etc.  It tries
+# to include only dependencies on files which are themselves a part of this
+# package.
+distdepend::
+	@echo updating dependencies in `pwd`/Makefile.in... ;		    \
+	$(DEPEND) -w 0 -f - 						    \
+	-s '# DO NOT DELETE: updated by make distdepend' $(DEPEND_FLAGS) -- \
+	$(INCLUDES) $(DEFS) $(DEPEND_DEFINES) $(CFLAGS) $(X_CFLAGS) --	    \
+	$(SRCS) 2>/dev/null |						    \
+	sort -d |							    \
+	(								    \
+	  awk '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
+	  sed -e '/^#.*/d'						    \
+	      -e 's@ \./@ @g;s@ /[^ ]*@@g;/^.*:$$/d'			    \
+	      -e 's@\.\./utils@$$(UTILS_SRC)@g'				    \
+	      -e 's@ \([^$$]\)@ $$(srcdir)/\1@g'			    \
+	      -e 's@ $$(srcdir)/\(.*config.h\)@ \1@g' ;			    \
+	  echo ''							    \
+	) > /tmp/distdepend.$$$$ &&					    \
+	mv Makefile.in Makefile.in.bak &&				    \
+	mv /tmp/distdepend.$$$$ Makefile.in
+
+TAGS: tags
+tags:
+	find $(srcdir) -name '*.[chly]' -print | xargs etags -a
+
+echo_tarfiles:
+	@echo $(TARFILES)
+
+check_men:
+	@badmen="" ;							\
+#	 for exe in $(EXES) $(SCRIPTS); do				\
+	 for exe in $(EXES) ;  do				\
+	   if ! [ -f $(srcdir)/$$exe.man				\
+		  -o "$$exe" = webcollage-helper ]; then		\
+	     badmen="$$badmen $$exe" ;					\
+	   fi ;								\
+	 done ;								\
+	 if [ -n "$$badmen" ]; then					\
+	   echo "" ;							\
+	   echo "Warning: The following programs have no manuals:" ;	\
+	   echo "" ;							\
+	   for m in $$badmen ; do					\
+	     echo "    $$m" ;						\
+	   done ;							\
+	 fi
+
+check_xml:
+	@badxml="" ;							\
+	 for exe in $(EXES) $(SCRIPTS); do				\
+	   if ! [ -f $(srcdir)/config/$$exe.xml				\
+		  -o "$$exe" = webcollage-helper			\
+		  -o "$$exe" = xsublim					\
+		  -o "$$exe" = ljlatest ]; then				\
+	     badxml="$$badxml $$exe" ;					\
+	   fi ;								\
+	 done ;								\
+	 if [ -n "$$badxml" ]; then					\
+	   echo "" ;							\
+	   echo "Warning: The following programs have no configurators:" ; \
+	   echo "" ;							\
+	   for m in $$badxml ; do					\
+	     echo "    $$m" ;						\
+	   done ;							\
+	   echo "" ;							\
+	 fi
+
+
+
+
+# Rules for generating the VMS makefiles on Unix, so that it doesn't have to
+# be done by hand...
+#
+VMS_AXP_COMPILE_1=$$ CC/DECC/PREFIX=ALL/DEFINE=(VMS,HAVE_CONFIG_H,STANDALONE
+VMS_AXP_COMPILE_2=)/INCL=([],[-],[-.UTILS])
+
+compile_axp.com: Makefile.in
+	@echo generating $@ from $<...  ;				    \
+	( for c in $(SRCS) ; do						    \
+	   c=`echo $$c | tr a-z A-Z` ;					    \
+	   echo "$(VMS_AXP_COMPILE_1)$(VMS_AXP_COMPILE_2) $$c" ;	    \
+         done ;								    \
+	) | sort -d > $@
+
+compile_decc.com: compile_axp.com
+	@echo generating $@ from $<...  ;				    \
+	sed 's/axp/decc/g' < $< > $@
+
+#### TODO: generating link_axp.com is kinda tricky...
+
+link_decc.com: link_axp.com
+	@echo generating $@ from $<...  ;				    \
+	sed 's/axp/decc/g' < $< > $@
+
+$(srcdir)/../setup.com: Makefile.in
+	@echo generating $@ from $<...  ;				    \
+	( echo '$$! Xscreensaver - definition of various DCL symbols' ;     \
+	  echo '$$ set NOON' ;						    \
+	  echo '$$ set def [.HACKS]' ;					    \
+	  echo '$$ mydisk = f$$trnlmn("SYS$$DISK")' ;			    \
+	  echo '$$ mydir  = mydisk+f$$directory()' ;			    \
+	  ( for c in $(EXES) ; do					    \
+	     c2="$${c}		" ;					    \
+	     c2=`echo "$${c2}" | sed 's/^\(........*\)	$$/\1/'` ;	    \
+	     echo '$$' "$${c2}:== $$'mydir'$${c}" ;			    \
+             done ;							    \
+	  ) | sort -d ;							    \
+          echo '$$ set def [-.DRIVER]' ;				    \
+          echo '$$ mydir  = mydisk+f$$directory()' ;			    \
+          echo "$$ xscreensaver :== $$'mydir'xscreensaver" ;		    \
+	  echo "$$ xscreen*command :== $$'mydir'xscreensaver-command" ;     \
+	  echo '$$ set def [-]' ;					    \
+	  echo '$$ exit' ; 						    \
+          ) > $@
+
+distdepend:: compile_axp.com compile_decc.com
+distdepend:: link_axp.com link_decc.com
+distdepend:: $(srcdir)/../setup.com
+distdepend:: check_men check_xml
+
+
+# Rules for noticing when the objects from the utils directory are out of
+# date with respect to their sources, and going and building them according
+# to the rules in their own Makefile...
+#
+$(UTILS_BIN)/alpha.o:		$(UTILS_SRC)/alpha.c
+$(UTILS_BIN)/colors.o:		$(UTILS_SRC)/colors.c
+$(UTILS_BIN)/grabclient.o:	$(UTILS_SRC)/grabclient.c
+$(UTILS_BIN)/hsv.o:		$(UTILS_SRC)/hsv.c
+$(UTILS_BIN)/resources.o:	$(UTILS_SRC)/resources.c
+$(UTILS_BIN)/spline.o:		$(UTILS_SRC)/spline.c
+$(UTILS_BIN)/usleep.o:		$(UTILS_SRC)/usleep.c
+$(UTILS_BIN)/visual.o:		$(UTILS_SRC)/visual.c
+$(UTILS_BIN)/xmu.o:		$(UTILS_SRC)/xmu.c
+#$(UTILS_BIN)/logo.o:		$(UTILS_SRC)/logo.c
+$(UTILS_BIN)/minixpm.o:		$(UTILS_SRC)/minixpm.c
+$(UTILS_BIN)/yarandom.o:	$(UTILS_SRC)/yarandom.c
+$(UTILS_BIN)/erase.o:		$(UTILS_SRC)/erase.c
+$(UTILS_BIN)/xshm.o:		$(UTILS_SRC)/xshm.c
+$(UTILS_BIN)/xdbe.o:		$(UTILS_SRC)/xdbe.c
+
+$(UTIL_OBJS):
+	cd $(UTILS_BIN) ; \
+	$(MAKE) $(@F) CC="$(CC)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
+
+# How we build object files in this directory.
+.c.o:
+	$(CC) -c $(INCLUDES) $(DEFS) $(CFLAGS) $(X_CFLAGS) $<
+
+
+# Make sure these are regenerated when the version number ticks.
+screenhack.o: $(UTILS_SRC)/version.h
+
+# Some abbreviations to keep the lines short...
+XPM		= xpm-pixmap.o
+ALP		= $(UTILS_BIN)/alpha.o
+HSV		= $(UTILS_BIN)/hsv.o
+SPL		= $(UTILS_BIN)/spline.o
+#LOGO		= $(UTILS_BIN)/logo.o $(UTILS_BIN)/minixpm.o
+GRAB		= $(GRAB_OBJS)
+ERASE		= $(UTILS_BIN)/erase.o
+COL		= $(COLOR_OBJS)
+SHM		= $(XSHM_OBJS)
+DBE		= $(XDBE_OBJS)
+#BARS		= $(UTILS_BIN)/colorbars.o $(LOGO)
+#ATV             = analogtv.o $(SHM)
+#APPLE2          = apple2.o $(ATV)
+
+CC_HACK		= $(CC) $(LDFLAGS)
+
+xscreensaver-sgigl: xscreensaver-sgigl.c
+	$(CC) $(LDFLAGS) -o $@ $< -I$(UTILS_SRC) $(HACK_PRE) \
+		$(XMU_LIBS) -lX11 -lXext $(X_EXTRA_LIBS) -lm
+
+
+# The rules for those hacks which follow the `screenhack.c' API.
+# If make wasn't such an utter abomination, these could all be combined
+# into one rule, but we don't live in such a perfect world.  The $< rule
+# is pretty much useless in the face of more than one dependency, as far
+# as I can tell.
+#
+
+daisy:          daisy.o         $(HACK_OBJS) $(COL) $(DBE) $(ERASE)
+	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(ERASE) \
+                                $(HACK_LIBS)
+
+twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
+	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(HACK_LIBS)
+
+
+
+
+
+# The rules for those hacks which follow the `xlockmore' API.
+#
+# shegeek has none of these yet, but may eventually,
+# thus some rules are left for future reference.
+
+#braid:		braid.o		$(XLOCK_OBJS) $(ERASE)
+#	$(CC_HACK) -o $@ $@.o	$(XLOCK_OBJS) $(ERASE) $(HACK_LIBS)
+
+#flag:		flag.o		$(XLOCK_OBJS) $(XPM)
+#	$(CC_HACK) -o $@ $@.o	$(XLOCK_OBJS) $(XPM) $(XPM_LIBS)
+
+#slip:		slip.o		$(XLOCK_OBJS) $(GRAB)
+#	$(CC_HACK) -o $@ $@.o	$(XLOCK_OBJS) $(GRAB) $(HACK_LIBS)
+
+
+# shegeek: rules for xsublim and webcollage-helper removed
+
+##############################################################################
+#
+# DO NOT DELETE: updated by make distdepend
+
+screenhack.o: ../config.h
+screenhack.o: $(srcdir)/screenhackI.h
+screenhack.o: $(UTILS_SRC)/colors.h
+screenhack.o: $(UTILS_SRC)/grabscreen.h
+screenhack.o: $(UTILS_SRC)/hsv.h
+screenhack.o: $(UTILS_SRC)/resources.h
+screenhack.o: $(UTILS_SRC)/usleep.h
+screenhack.o: $(UTILS_SRC)/version.h
+screenhack.o: $(UTILS_SRC)/visual.h
+screenhack.o: $(UTILS_SRC)/vroot.h
+screenhack.o: $(UTILS_SRC)/xmu.h
+screenhack.o: $(UTILS_SRC)/yarandom.h
+

@@ -1,0 +1,185 @@
+autoscan: warning: missing AC_CHECK_FUNCS([dup2]) wanted by: 
+	utils/grabclient.c:380
+autoscan: warning: missing AC_CHECK_FUNCS([ftime]) wanted by: 
+	utils/vms-gtod.c:27
+autoscan: warning: missing AC_CHECK_FUNCS([gettimeofday]) wanted by: 
+	hacks/screenhack.c:423
+	hacks/screenhack.c:425
+	hacks/glx/fps.c:266
+	hacks/glx/fps.c:268
+	utils/yarandom.c:108
+	utils/yarandom.c:110
+	utils/vms-gtod.c:23
+	utils/erase.c:65
+	utils/erase.c:67
+	utils/fade.c:240
+	utils/fade.c:242
+	utils/fade.c:325
+	utils/fade.c:327
+	utils/fade.c:475
+	utils/fade.c:477
+	utils/fade.c:526
+	utils/fade.c:528
+	utils/fade.c:703
+	utils/fade.c:705
+	utils/fade.c:753
+	utils/fade.c:755
+	OSX/XScreenSaverView.m:353
+	OSX/XScreenSaverView.m:380
+autoscan: warning: missing AC_CHECK_FUNCS([memset]) wanted by: 
+	hacks/twinkle.c:223
+	hacks/glx/xpm-ximage.c:221
+	hacks/glx/xpm-ximage.c:222
+	utils/grabclient.c:427
+	utils/minixpm.c:211
+	utils/grabscreen.c:90
+	utils/grabscreen.c:744
+	utils/grabscreen.c:838
+	utils/grabscreen.c:839
+	utils/colors.c:119
+	utils/colors.c:334
+	OSX/jwxyz-timers.m:122
+	OSX/XScreenSaverView.m:467
+	OSX/jwxyz.m:1050
+	OSX/jwxyz.m:1143
+	OSX/jwxyz.m:2307
+autoscan: warning: missing AC_CHECK_FUNCS([select]) wanted by: 
+	utils/usleep.c:56
+	OSX/jwxyz-timers.m:152
+	OSX/jwxyz-timers.m:287
+autoscan: warning: missing AC_CHECK_FUNCS([sqrt]) wanted by: 
+	utils/colors.c:273
+	utils/colors.c:516
+autoscan: warning: missing AC_CHECK_FUNCS([strcasecmp]) wanted by: 
+	hacks/screenhack.c:828
+	hacks/xlockmore.c:230
+	utils/resources.c:181
+	OSX/PrefsReader.m:58
+	OSX/PrefsReader.m:58
+	OSX/PrefsReader.m:60
+	OSX/PrefsReader.m:60
+	OSX/jwxyz.m:1228
+	OSX/jwxyz.m:1230
+	OSX/jwxyz.m:1232
+	OSX/jwxyz.m:1234
+	OSX/jwxyz.m:1236
+	OSX/jwxyz.m:1238
+	OSX/jwxyz.m:1240
+	OSX/jwxyz.m:1242
+autoscan: warning: missing AC_CHECK_FUNCS([strchr]) wanted by: 
+	hacks/screenhack.c:756
+	hacks/screenhack.c:758
+	hacks/screenhack.c:759
+	hacks/screenhack.c:760
+	hacks/screenhack.c:761
+	hacks/xlockmore.c:192
+	hacks/xlockmore.c:227
+	hacks/glx/fps.c:139
+	OSX/PrefsReader.m:168
+	OSX/jwxyz.m:2214
+autoscan: warning: missing AC_CHECK_FUNCS([strdup]) wanted by: 
+	hacks/screenhack.c:756
+	hacks/xlockmore.c:108
+	hacks/xlockmore.c:188
+	hacks/xlockmore.c:218
+	hacks/xlockmore.c:225
+	utils/grabclient.c:265
+	utils/grabclient.c:705
+	utils/grabclient.c:748
+	utils/grabclient.c:800
+	utils/vms-strdup.c:18
+	utils/visual.c:56
+	OSX/PrefsReader.m:31
+	OSX/PrefsReader.m:210
+	OSX/jwxyz.m:1995
+	OSX/jwxyz.m:2037
+	OSX/jwxyz.m:2090
+	OSX/jwxyz.m:2213
+autoscan: warning: missing AC_CHECK_FUNCS([strncasecmp]) wanted by: 
+	hacks/glx/xpm-ximage.c:267
+	utils/minixpm.c:117
+autoscan: warning: missing AC_CHECK_FUNCS([strpbrk]) wanted by: 
+	OSX/XScreenSaverConfigSheet.m:65
+autoscan: warning: missing AC_CHECK_FUNCS([strrchr]) wanted by: 
+	hacks/xlockmore.c:91
+	hacks/xlockmore.c:221
+	hacks/xlockmore.c:222
+	hacks/xlockmore.c:228
+	hacks/xlockmore.c:229
+	OSX/jwxyz.m:2031
+autoscan: warning: missing AC_CHECK_FUNCS([strstr]) wanted by: 
+	hacks/xlockmore.c:104
+autoscan: warning: missing AC_CHECK_HEADERS([sys/time.h]) wanted by: 
+	utils/usleep.c:34
+	utils/yarandom.c:61
+	utils/erase.c:23
+	utils/fade.c:14
+autoscan: warning: missing AC_CHECK_HEADERS([values.h]) wanted by: 
+	hacks/screenhackI.h:67
+autoscan: warning: missing AC_FUNC_FORK wanted by: 
+	utils/grabclient.c:284
+	utils/grabclient.c:362
+autoscan: warning: missing AC_FUNC_MALLOC wanted by: 
+	hacks/screenhack.c:181
+	hacks/screenhack.c:193
+	hacks/screenhack.c:209
+	hacks/daisy.c:113
+	hacks/xlockmore.c:86
+	hacks/xlockmore.c:171
+	hacks/xlockmore.c:179
+	hacks/xlockmore.c:206
+	hacks/twinkle.c:185
+	hacks/glx/xpm-ximage.c:106
+	hacks/glx/xpm-ximage.c:256
+	hacks/glx/xpm-ximage.c:389
+	hacks/glx/xlock-gl-utils.c:125
+	utils/grabclient.c:240
+	utils/grabclient.c:460
+	utils/grabclient.c:513
+	utils/minixpm.c:207
+	utils/vms-strdup.c:21
+	utils/resources.c:55
+	utils/alpha.c:184
+	utils/colors.c:31
+	utils/colors.c:150
+	utils/colors.c:392
+	utils/colors.c:647
+	utils/colors.c:691
+	utils/erase.c:377
+	utils/fade.c:467
+	utils/fade.c:469
+	utils/fade.c:471
+	utils/fade.c:927
+	utils/fade.c:928
+	utils/fade.c:929
+	OSX/XScreenSaverView.m:75
+	OSX/XScreenSaverView.m:97
+	OSX/jwxyz.m:440
+	OSX/jwxyz.m:1376
+	OSX/jwxyz.m:1574
+	OSX/jwxyz.m:1638
+	OSX/jwxyz.m:1772
+	OSX/jwxyz.m:1812
+	OSX/jwxyz.m:1984
+	OSX/jwxyz.m:1990
+	OSX/jwxyz.m:2012
+	OSX/jwxyz.m:2406
+	OSX/osxgrabscreen.m:145
+	OSX/XScreenSaverConfigSheet.m:1046
+autoscan: warning: missing AC_FUNC_REALLOC wanted by: 
+	utils/spline.c:80
+autoscan: warning: missing AC_FUNC_SELECT_ARGTYPES wanted by: 
+	utils/usleep.c:56
+	OSX/jwxyz-timers.m:152
+	OSX/jwxyz-timers.m:287
+autoscan: warning: missing AC_HEADER_STDBOOL wanted by: 
+	OSX/XScreenSaverView.m:49
+autoscan: warning: missing AC_PROG_AWK wanted by: 
+	hacks/Makefile.in:316
+	hacks/glx/Makefile.in:250
+	utils/Makefile.in:166
+autoscan: warning: missing AC_PROG_CXX wanted by: 
+	Makefile.in:261
+	Makefile.in:271
+autoscan: warning: missing AC_PROG_LN_S wanted by: 
+	Makefile.in:74

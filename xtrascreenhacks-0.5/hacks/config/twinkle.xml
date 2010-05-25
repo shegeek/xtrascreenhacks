@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="twinkle" _label="Twinkle">
+
+  <command arg="-root"/>
+
+  <number id="speed" type="slider" arg="-delay %"
+          _label="Speed" _low-label="Slow" _high-label="Fast"
+          low="0" high="100000" default="50000"
+          convert="invert"/>
+
+  <!-- high stops at one too many in the spinbox -->
+  <number id="density" type="slider" arg="-density %"
+          _label="Number of twinklers" _low-label="Few" _high-label="Many"
+           low="3" high="19" default="8"/>
+
+  <number id="ncolors" type="slider" arg="-ncolors %"
+            _label="Number of Colors" _low-label="One" _high-label="Many"
+            low="1" high="255" default="64"/>
+
+  <!-- #### -speed [15] -->
+
+
+  <boolean id="db" _label="Double Buffer" arg-unset="-no-db"/>
+
+  <_description>
+This hack looks somewhat
+like a twinkling starfield.
+Written by Kelley Nielsen.
+  </_description>
+</screensaver>

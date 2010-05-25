@@ -1,0 +1,2 @@
+M-x toggle-read-only C^x C^q
+M-x [un]comment-region
