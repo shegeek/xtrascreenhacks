@@ -3,10 +3,6 @@ Up next:  test make install  (leave make tar for next release)
 	    -> add provision for soma database file
 
 
-Get rid of /usr/lib/xscreensaver/config (is mistake file)
-Put refs to the really slicks screensavers back in some .xscreensaver
-
-
 Make sure all the targets in the top level makefile.in work correctly
   -> vms files, dtd still in make tar;
 Clean unneeded tests out of configure.ac
@@ -43,9 +39,6 @@ hopefuly one that is proper and compliant and all that
 ? put a link on homepage to freshmeat page
 
 from actodo:
-Needed files: configure.in Makefile.in hacks/Makefile.in utils/Makefile.in
-              configure.guess aclocal.m4(regenerate?), all .com/.vms files
-              (incuding ones in utils--ones in driver?), install-sh(?)
 
 General:
 
@@ -53,7 +46,6 @@ General:
  (uses utils/version.h and Makefile.in somehow)
 -figure out how xscreensaver.spec is used and update/customize it
 -make a better ChangeLog
--figure out if INSTALL is handwritten or generated, and make a new one
 -figure out how to pass install dir arg to configure, and put in INSTALL
 -is driver/screensaver-properties.desktop.in good for anything?
   ->no--is only for xscreensaver-demo
