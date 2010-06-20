@@ -74,16 +74,16 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		  $(UTILS_SRC)/visual.o $(UTILS_SRC)/visual-gl.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o
 
-SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c
+SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c
 
 
 
 OBJS		=  xlock-gl-utils.o fps.o xpm-ximage.o flyer.o xbmread.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
-		   bevelcube.o
+		   bevelcube.o skylark.o
 
 
-GL_EXES		=  flyer  berlinuhr soma
+GL_EXES		=  flyer  berlinuhr soma skylark
 #GLE_EXES	= extrusion
 #GL_UTIL_EXES	= xscreensaver-gl-helper
 HACK_EXES	= @GL_EXES@ # @GLE_EXES@
@@ -99,9 +99,9 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 		  $(UTILS_BIN)/yarandom.o $(UTILS_BIN)/hsv.o \
 		  $(UTILS_BIN)/colors.o xbmread.o
 
-HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h
+HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h
 
-GL_MEN		= flyer.man berlinuhr.man soma.man 
+GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man
 MEN		= @GL_MEN@
 EXTRAS		= README Makefile.in
 
@@ -370,12 +370,31 @@ berlinuhr: berlinuhr.o bclockhousing.o bclocklamps.o $(HACK_OBJS)
 soma: soma.o bevelcube.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o bevelcube.o $(HACK_OBJS) $(XPM_LIBS)
 
+skylark: skylark.o	 $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o  $(HACK_OBJS)  $(XPM_LIBS)
+
 
 
 
 ##############################################################################
 #
 # DO NOT DELETE: updated by make distdepend
+
+skylark.o: ../../config.h
+skylark.o: $(HACK_SRC)/screenhackI.h
+skylark.o: $(UTILS_SRC)/colors.h
+skylark.o: $(UTILS_SRC)/grabscreen.h
+skylark.o: $(UTILS_SRC)/hsv.h
+skylark.o: $(UTILS_SRC)/resources.h
+skylark.o: $(UTILS_SRC)/usleep.h
+skylark.o: $(UTILS_SRC)/visual.h
+skylark.o: $(UTILS_SRC)/xshm.h
+skylark.o: $(UTILS_SRC)/yarandom.h
+skylark.o: $(srcdir)/boomerangs.h
+skylark.o: $(HACK_SRC)/xlockmore.h
+skylark.o: $(HACK_SRC)/xlockmore.h
+skylark.o: $(HACK_SRC)/xlockmoreI.h
+
 
 bevelcube.o: $(srcdir)/bevelcube.h
 soma.o: $(srcdir)/bevelcube.h
