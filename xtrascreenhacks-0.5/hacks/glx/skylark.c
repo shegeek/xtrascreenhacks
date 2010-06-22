@@ -51,11 +51,13 @@
 
 
 typedef struct {
-  int index;
 /*   GLfloat color[4];  */
+  GLfloat pathcontrol[6];
   GLfloat position[3];
+  GLfloat tposition;
   GLfloat rotangle;
   GLfloat rotincrement;
+  int index;
 } boomerang;
 
 typedef struct {
@@ -73,6 +75,7 @@ typedef struct {
   int cduration;
   GLfloat tincrement;
   GLfloat aincrement;
+  float winaspect;
 
 } skylark_configuration;
 
@@ -168,6 +171,13 @@ static void advance_color (skylark_configuration *lp)
 static void advance_boomerang (skylark_configuration *lp, boomerang *b)
 {
 
+  b->tposition += lp->tincrement;
+  if (b->tposition >= 6.28) b->tposition -= 6.28;
+  b->position[0] = (b->pathcontrol[0] * cos(b->pathcontrol[1]*b->tposition)) +
+		    b->pathcontrol[2];
+  b->position[1] = (b->pathcontrol[3] * sin(b->pathcontrol[4]*b->tposition)) +
+                   b->pathcontrol[5];
+
   b->rotangle += b->rotincrement;
   if ((b->rotincrement > 0) && (b->rotangle > 360.0)) b->rotangle -= 360.0;
   if ((b->rotincrement < 0) && (b->rotangle < 360.0)) b->rotangle += 360.0;
@@ -180,23 +190,40 @@ new_boomerang(skylark_configuration *lp)
 {
   boomerang * newboom;
 
-  newboom = malloc (sizeof (newboom));
+  newboom =  malloc (sizeof (boomerang));
   if (NULL == newboom) return NULL;
 
   newboom->index = random() % NUMBOOMS;
+
+  /* Variables controlling the lissajous paths for the boomerangs: 
+   * 0 and 3 control scaling in x and y respectively;
+   * 1 and 4 are parameters for the sine and cosine functions,
+   * 2 and 5 shift the path
+   */
+  newboom->pathcontrol[0] = 1. * WINSIZE * lp->winaspect;
+  newboom->pathcontrol[1] = (GLfloat)((random() % 4) * 2 + 1);
+  newboom->pathcontrol[2] = ((float)(random() % 10) - 4.) / 5.;
+  newboom->pathcontrol[3] = 1. * WINSIZE;
+  newboom->pathcontrol[4] = newboom->pathcontrol[1] + 1.;
+  newboom->pathcontrol[5] = ((float)(random() % 10) - 4.) / 5.;
+  newboom->tposition = ((random() % 628) / 100.);
 
   newboom->rotincrement = lp->aincrement * (random() % 5) + 1.;
   if (random() % 2 == 0) newboom->rotincrement *= -1;
 
   /* get aspect ratio and extend ranges to sides of screen */
-  newboom->position[0] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0;
-  if (random() % 2) newboom->position[0] *= -1;
-  newboom->position[1] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0;
-  if (random() % 2) newboom->position[1] *= -1;
+/*   newboom->position[0] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0; */
+/*   if (random() % 2) newboom->position[0] *= -1; */
+/*   newboom->position[1] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0; */
+/*   if (random() % 2) newboom->position[1] *= -1; */
   newboom->position[2] = 0.0;
   newboom->rotangle = (GLfloat)(random() % 360);
 
+  advance_boomerang(lp, newboom);
 
+/*   printf("Leaving constructor\n"); */
+  printf("Control array: %f, %f, %f, %f, %f, %f\n", newboom->pathcontrol[0], newboom->pathcontrol[1], newboom->pathcontrol[2], newboom->pathcontrol[3], newboom->pathcontrol[4], newboom->pathcontrol[5]);
+/*   printf("Position: %f, %f, t: %f\n", newboom->position[0], newboom->position[1], newboom->tposition); */
   return newboom;
 
   }
@@ -209,13 +236,12 @@ new_boomerang(skylark_configuration *lp)
 /* ENTRYPOINT void reshape_skylark (ModeInfo *mi, int width, int height); */
 ENTRYPOINT void reshape_skylark (ModeInfo *mi, int width, int height)
 {
-    GLfloat aspect = (GLfloat) height / (GLfloat) width;
+    GLfloat aspect = (GLfloat) width / (GLfloat) height;
 
     glViewport(0, 0, (GLint) width, (GLint) height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-WINSIZE, WINSIZE, -WINSIZE * aspect, WINSIZE * aspect);
-/*     gluPerspective(45.0, 1/h, 1.0, 500.0); */
+    gluOrtho2D(-WINSIZE * aspect, WINSIZE * aspect, -WINSIZE, WINSIZE);
     glMatrixMode(GL_MODELVIEW);
     handleGLerrors("reshape");
 }
@@ -255,9 +281,11 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
   }
   glLineWidth(3.0);
  
-
-     lp->tincrement = ((step > 0 && step <= 1000) ? step / 1000.0 : 0.2);
+  /* this is awkward--fix */
+     lp->tincrement = ((step > 0 && step <= 1000) ? step / 1000000.0 : 0.02);
+     printf("tincrement: %f\n", lp->tincrement);
       lp->aincrement = ((spinrate >= 0 && spinrate <= 100) ? (spinrate / 50.0) : 2.0);
+      lp->winaspect = (float)MI_WIDTH(mi) / (float)MI_HEIGHT(mi);
  
     lp->boomsize = ((size > 0 && size <=  MAX_BOOMSIZE) ?
 		     size / 100.0 : 1.0);
@@ -316,6 +344,8 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
     reshape_skylark(mi, MI_WIDTH(mi), MI_HEIGHT(mi));
 
     glFlush();
+
+    printf("Leaving init\n");
 }
 
 
@@ -399,6 +429,7 @@ draw_skylark (ModeInfo *mi)
 
 /*         glScalef(1.0, 1.0, 1.); */
          glColor4fv(grey);
+
        gluBeginCurve(lp->boomnurb);
         gluNurbsCurve(lp->boomnurb, nKnots2, Knots2, kStride,
                       &pointsWeights2[cboom->index][0][0], 
@@ -449,3 +480,17 @@ XSCREENSAVER_MODULE ("Skylark", skylark)
 
 /* cycle drawing order so that the same boomerangs aren't always on top */
 
+/* xlockmore.h restricts number of colors to 256--is this an issue? 
+*  (color steps, at present, are visible)
+*/
+
+/* is window width and height available outside of modeinfo,
+ * to accurately resize paths after a window resize?
+ * in other words, can I readjust paths after init has run?
+ */
+
+/* refine paths, esp. do offsets--booms are bunching up in corners */
+
+/* screen becomes pixel filled before there is a 
+ *high enough boomerang count to look good (probably my machine's problem)
+ */
