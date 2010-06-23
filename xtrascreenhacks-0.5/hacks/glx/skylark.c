@@ -17,7 +17,7 @@
 #define DEBUG 1
 #define DEBUGMSG False
 
-#define WINSIZE 5
+#define WINSIZE 2
 
 # define refresh_skylark 0
 # define skylark_handle_event 0
@@ -32,7 +32,7 @@
 
 
 
-#define DEFAULTS        "*delay:	30000           \n" \
+#define DEFAULTS        "*delay:	20000           \n" \
 			"*showFPS:      False           \n" \
 
 #ifdef USE_GL /* whole file */
@@ -41,7 +41,7 @@
 #define MAX_BOOMSIZE   200
 
 
-#define DEF_COUNT       "100"
+#define DEF_COUNT       "200"
 #define DEF_NCOLORS     "128"
 #define DEF_COLORCHANGERATE "10"
 #define DEF_SPINRATE        "10"
@@ -62,7 +62,7 @@ typedef struct {
 
 typedef struct {
   GLXContext *glx_context;
-  GLUnurbsObj *boomnurb;
+  GLint boomdlists[NUMBOOMS];
    boomerang **booms; 
   int numbooms;
   XColor *colors;
@@ -150,6 +150,61 @@ static void nurbsError(GLenum errorcode)
 
 /* ------------------------------------------------------ */
 
+static void makeboomdlists(skylark_configuration *lp)
+{
+  GLUnurbsObj *boomnurb = NULL;
+  int itor;
+
+    GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+/*     GLfloat black[] = {1.0, 1.0, 1.0, 1.0}; */
+    GLfloat grey[] = {1.0, 1.0, 1.0, 1.0};
+   if (!MI_IS_MONO(mi)) 
+      { 
+/*     black[0] = black[1] = black[2] = 0.;  */
+    grey[0] = grey[1] = grey[2] = 0.6; 
+      } 
+
+  if (!boomnurb)
+  {
+    boomnurb = gluNewNurbsRenderer();
+    gluNurbsProperty(boomnurb, GLU_SAMPLING_TOLERANCE, 15.0f);
+    gluNurbsProperty(boomnurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
+/*     gluNurbsProperty(boomnurb, GLU_DISPLAY_MODE, (GLfloat)GLU_FILL); */
+    gluNurbsCallback(boomnurb, GLU_NURBS_ERROR, (GLvoid (*) ()) nurbsError);
+  }
+
+ 
+  for (itor = 0; itor < NUMBOOMS; itor++)
+    {
+      lp->boomdlists[itor] = glGenLists(1);
+      glNewList(lp->boomdlists[itor], GL_COMPILE);
+
+      glPushMatrix();
+         glColor4fv(grey);
+	 glTranslatef(-0.2, 0., 0.);
+          gluBeginCurve(boomnurb);
+        gluNurbsCurve(boomnurb, nKnots2, Knots2, kStride,
+                      &pointsWeights2[itor][0][0], 
+                      order2, GL_MAP1_VERTEX_4);
+        gluEndCurve(boomnurb);
+	glColor4fv(white);
+	glTranslatef(0.4, 0.1, 0.);
+          gluBeginCurve(boomnurb);
+        gluNurbsCurve(boomnurb, nKnots2, Knots2, kStride,
+                      &pointsWeights2[itor][0][0], 
+                      order2, GL_MAP1_VERTEX_4);
+        gluEndCurve(boomnurb);
+	
+	glPopMatrix();
+   
+      glEndList();
+    }
+  /* destroy the nurbs object */
+  gluDeleteNurbsRenderer(boomnurb);
+}
+
+/* ------------------------------------------------------ */
+
 static void advance_color (skylark_configuration *lp)
 {
   XColor tempcolor;
@@ -211,11 +266,6 @@ new_boomerang(skylark_configuration *lp)
   newboom->rotincrement = lp->aincrement * (random() % 5) + 1.;
   if (random() % 2 == 0) newboom->rotincrement *= -1;
 
-  /* get aspect ratio and extend ranges to sides of screen */
-/*   newboom->position[0] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0; */
-/*   if (random() % 2) newboom->position[0] *= -1; */
-/*   newboom->position[1] = (GLfloat)(random() % (WINSIZE * 50)) / 50.0; */
-/*   if (random() % 2) newboom->position[1] *= -1; */
   newboom->position[2] = 0.0;
   newboom->rotangle = (GLfloat)(random() % 360);
 
@@ -271,14 +321,8 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
     lp = &lps[MI_SCREEN(mi)];
     lp->glx_context = init_GL(mi);
 
-  if (!lp->boomnurb)
-  {
-    lp->boomnurb = gluNewNurbsRenderer();
-    gluNurbsProperty(lp->boomnurb, GLU_SAMPLING_TOLERANCE, 5.0f);
-/*     gluNurbsProperty(lp->boomnurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON); */
-    gluNurbsProperty(lp->boomnurb, GLU_DISPLAY_MODE, (GLfloat)GLU_FILL);
-    gluNurbsCallback(lp->boomnurb, GLU_NURBS_ERROR, (GLvoid (*) ()) nurbsError);
-  }
+    makeboomdlists(lp);
+
   glLineWidth(3.0);
  
   /* this is awkward--fix */
@@ -290,7 +334,7 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
     lp->boomsize = ((size > 0 && size <=  MAX_BOOMSIZE) ?
 		     size / 100.0 : 1.0);
 
-    lp->numbooms = ((count > 0 && count <= MAX_BOOMS) ? count : 100 );
+    lp->numbooms = ((count > 0 && count <= MAX_BOOMS) ? count : 200 );
     lp->booms = calloc (lp->numbooms, sizeof(boomerang *));
 
     if (MI_IS_MONO(mi))
@@ -382,14 +426,6 @@ draw_skylark (ModeInfo *mi)
     Window window = MI_WINDOW(mi);
     boomerang *cboom = NULL;
     int loop = 0;
-    GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat black[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat grey[] = {1.0, 1.0, 1.0, 1.0};
-   if (!MI_IS_MONO(mi)) 
-      { 
-    black[0] = black[1] = black[2] = 0.; 
-    grey[0] = grey[1] = grey[2] = 0.6; 
-      } 
 
     if (!lp->glx_context)
       return;
@@ -405,7 +441,7 @@ draw_skylark (ModeInfo *mi)
      cboom = lp->booms[loop];
 
         glPushMatrix();
-        glTranslatef(cboom->position[0] - 0.1, cboom->position[1],
+        glTranslatef(cboom->position[0], cboom->position[1],
                      cboom->position[2]);
 	glRotatef(cboom->rotangle, 0., 0., 1.);
 
@@ -428,26 +464,21 @@ draw_skylark (ModeInfo *mi)
 /*           } */
 
 /*         glScalef(1.0, 1.0, 1.); */
-         glColor4fv(grey);
 
-       gluBeginCurve(lp->boomnurb);
-        gluNurbsCurve(lp->boomnurb, nKnots2, Knots2, kStride,
-                      &pointsWeights2[cboom->index][0][0], 
-                      order2, GL_MAP1_VERTEX_4);
-        gluEndCurve(lp->boomnurb);
+	glCallList(lp->boomdlists[cboom->index]);
+/*    glBegin(GL_QUADS); */
+/*    glVertex2f(-lp->boomsize, -lp->boomsize); */
+/*       glVertex2f(lp->boomsize, -lp->boomsize); */
+/*      glVertex2f(lp->boomsize, lp->boomsize); */
+/*       glVertex2f(-lp->boomsize, lp->boomsize); */
+/*    glEnd(); */
 
-	glPopMatrix();
-	glPushMatrix();
-
-        glTranslatef(cboom->position[0] + 0.1, cboom->position[1],
-                     cboom->position[2]);
-	glRotatef(cboom->rotangle, 0., 0., 1.);
-	glColor4fv(white);
-       gluBeginCurve(lp->boomnurb);
-        gluNurbsCurve(lp->boomnurb, nKnots2, Knots2, kStride,
-                      &pointsWeights2[cboom->index][0][0], 
-                      order2, GL_MAP1_VERTEX_4);
-        gluEndCurve(lp->boomnurb);
+/*    glBegin(GL_QUADS); */
+/*    glVertex2f(-lp->boomsize, -lp->boomsize); */
+/*       glVertex2f(lp->boomsize, -lp->boomsize); */
+/*      glVertex2f(lp->boomsize, lp->boomsize); */
+/*       glVertex2f(-lp->boomsize, lp->boomsize); */
+/*    glEnd(); */
 
 
         glPopMatrix();
@@ -494,3 +525,5 @@ XSCREENSAVER_MODULE ("Skylark", skylark)
 /* screen becomes pixel filled before there is a 
  *high enough boomerang count to look good (probably my machine's problem)
  */
+
+/* make sure command line options esp. size are implemented */
