@@ -27,31 +27,27 @@
 #include "xlockmore.h"
 #include <ctype.h>
 #include <math.h>
-
 #include "boomerangs.h"
-
-
 
 #define DEFAULTS        "*delay:	20000           \n" \
 			"*showFPS:      False           \n" \
 
 #ifdef USE_GL /* whole file */
 
-#define MAX_BOOMS      1000
-#define MAX_BOOMSIZE   200
+#define MAX_BOOMS      5000
+#define MAX_BOOMSIZE   500
 
 
-#define DEF_COUNT       "200"
+#define DEF_COUNT       "150"
 #define DEF_NCOLORS     "128"
 #define DEF_COLORCHANGERATE "10"
 #define DEF_SPINRATE        "10"
 #define DEF_SIZE        "100"
-#define DEF_STEP        "200"
+#define DEF_STEP        "500"
 
 
 
 typedef struct {
-/*   GLfloat color[4];  */
   GLfloat pathcontrol[6];
   GLfloat position[3];
   GLfloat tposition;
@@ -63,11 +59,10 @@ typedef struct {
 typedef struct {
   GLXContext *glx_context;
   GLint boomdlists[NUMBOOMS];
-   boomerang **booms; 
+  boomerang **booms; 
   int numbooms;
   XColor *colors;
   int numcolors;
-  GLfloat bgcolor[3];
   int bgcolorindex;
   GLfloat boomsize;
 
@@ -107,12 +102,12 @@ static argtype vars[] = {
 };
 
 static OptionStruct desc[] = {
-    {"-count", "how many flyers appear on the screen at the same time"},
+    {"-count", "how many boomerangs appear on the screen at the same time"},
     {"-ncolors", "how many different colors the screen will use"},
   {"-colorchangerate", "how fast the background color should cycle"},
     {"-spinrate",  "how far the boomerangs should rotate in one frame"},
-      {"-size",  "relative size of the flyers on the screen"},
-    {"-step",  "how far the flyers should move forward in one frame"},
+      {"-size",  "relative size of the boomerangs on the screen"},
+    {"-step",  "how far the boomerangs should move in one frame"},
 };
 
 ENTRYPOINT ModeSpecOpt skylark_opts = {countof(opts), opts, countof(vars), vars, desc};
@@ -156,11 +151,9 @@ static void makeboomdlists(skylark_configuration *lp)
   int itor;
 
     GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
-/*     GLfloat black[] = {1.0, 1.0, 1.0, 1.0}; */
     GLfloat grey[] = {1.0, 1.0, 1.0, 1.0};
    if (!MI_IS_MONO(mi)) 
       { 
-/*     black[0] = black[1] = black[2] = 0.;  */
     grey[0] = grey[1] = grey[2] = 0.6; 
       } 
 
@@ -169,7 +162,6 @@ static void makeboomdlists(skylark_configuration *lp)
     boomnurb = gluNewNurbsRenderer();
     gluNurbsProperty(boomnurb, GLU_SAMPLING_TOLERANCE, 15.0f);
     gluNurbsProperty(boomnurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
-/*     gluNurbsProperty(boomnurb, GLU_DISPLAY_MODE, (GLfloat)GLU_FILL); */
     gluNurbsCallback(boomnurb, GLU_NURBS_ERROR, (GLvoid (*) ()) nurbsError);
   }
 
@@ -181,14 +173,14 @@ static void makeboomdlists(skylark_configuration *lp)
 
       glPushMatrix();
          glColor4fv(grey);
-	 glTranslatef(-0.2, 0., 0.);
+	 glTranslatef(-0.2, 0., -0.5);
           gluBeginCurve(boomnurb);
         gluNurbsCurve(boomnurb, nKnots2, Knots2, kStride,
                       &pointsWeights2[itor][0][0], 
                       order2, GL_MAP1_VERTEX_4);
         gluEndCurve(boomnurb);
 	glColor4fv(white);
-	glTranslatef(0.4, 0.1, 0.);
+	glTranslatef(0.4, 0.1, 0.5);
           gluBeginCurve(boomnurb);
         gluNurbsCurve(boomnurb, nKnots2, Knots2, kStride,
                       &pointsWeights2[itor][0][0], 
@@ -199,7 +191,6 @@ static void makeboomdlists(skylark_configuration *lp)
    
       glEndList();
     }
-  /* destroy the nurbs object */
   gluDeleteNurbsRenderer(boomnurb);
 }
 
@@ -208,6 +199,7 @@ static void makeboomdlists(skylark_configuration *lp)
 static void advance_color (skylark_configuration *lp)
 {
   XColor tempcolor;
+  GLfloat bgcolor[3];
 
   lp->ctimer = lp->cduration;
   lp->bgcolorindex++;
@@ -216,10 +208,10 @@ static void advance_color (skylark_configuration *lp)
       lp->bgcolorindex -= (lp->numcolors );
     }
   tempcolor = (lp->colors[lp->bgcolorindex]);
-  lp->bgcolor[0] = tempcolor.red / 65536.0;
-  lp->bgcolor[1] = tempcolor.green / 65536.0;
-  lp->bgcolor[2] = tempcolor.blue / 65536.0;
-  glClearColor(lp->bgcolor[0], lp->bgcolor[1], lp->bgcolor[2], 0.0f);
+  bgcolor[0] = tempcolor.red / 65536.0;
+  bgcolor[1] = tempcolor.green / 65536.0;
+  bgcolor[2] = tempcolor.blue / 65536.0;
+  glClearColor(bgcolor[0], bgcolor[1], bgcolor[2], 0.0f);
 }
 
 
@@ -253,14 +245,15 @@ new_boomerang(skylark_configuration *lp)
   /* Variables controlling the lissajous paths for the boomerangs: 
    * 0 and 3 control scaling in x and y respectively;
    * 1 and 4 are parameters for the sine and cosine functions,
-   * 2 and 5 shift the path
+   * 2 and 5 shift the path sweeps in an attempt to achieve
+   * an even distribution (ha) with as few outside the viewport as possible
    */
-  newboom->pathcontrol[0] = 1. * WINSIZE * lp->winaspect;
+  newboom->pathcontrol[0] = WINSIZE * lp->winaspect - 0.5;
   newboom->pathcontrol[1] = (GLfloat)((random() % 4) * 2 + 1);
   newboom->pathcontrol[2] = ((float)(random() % 10) - 4.) / 5.;
-  newboom->pathcontrol[3] = 1. * WINSIZE;
+  newboom->pathcontrol[3] = WINSIZE - 0.5;
   newboom->pathcontrol[4] = newboom->pathcontrol[1] + 1.;
-  newboom->pathcontrol[5] = ((float)(random() % 10) - 4.) / 5.;
+  newboom->pathcontrol[5] = ((float)(random() % 10) - 4.5) / 4.5;
   newboom->tposition = ((random() % 628) / 100.);
 
   newboom->rotincrement = lp->aincrement * (random() % 5) + 1.;
@@ -268,22 +261,12 @@ new_boomerang(skylark_configuration *lp)
 
   newboom->position[2] = 0.0;
   newboom->rotangle = (GLfloat)(random() % 360);
-
   advance_boomerang(lp, newboom);
 
-/*   printf("Leaving constructor\n"); */
-  printf("Control array: %f, %f, %f, %f, %f, %f\n", newboom->pathcontrol[0], newboom->pathcontrol[1], newboom->pathcontrol[2], newboom->pathcontrol[3], newboom->pathcontrol[4], newboom->pathcontrol[5]);
-/*   printf("Position: %f, %f, t: %f\n", newboom->position[0], newboom->position[1], newboom->tposition); */
   return newboom;
-
-  }
-
+}
 
 
-
-
-
-/* ENTRYPOINT void reshape_skylark (ModeInfo *mi, int width, int height); */
 ENTRYPOINT void reshape_skylark (ModeInfo *mi, int width, int height)
 {
     GLfloat aspect = (GLfloat) width / (GLfloat) height;
@@ -303,10 +286,7 @@ ENTRYPOINT void reshape_skylark (ModeInfo *mi, int width, int height)
 ENTRYPOINT void init_skylark (ModeInfo *mi)
 {
     int loop;
-/*     GLfloat distparams[3]; */
     skylark_configuration *lp;
-
-
 
     if (!lps) {
       lps = (skylark_configuration *)
@@ -321,20 +301,15 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
     lp = &lps[MI_SCREEN(mi)];
     lp->glx_context = init_GL(mi);
 
-    makeboomdlists(lp);
-
-  glLineWidth(3.0);
- 
-  /* this is awkward--fix */
-     lp->tincrement = ((step > 0 && step <= 1000) ? step / 1000000.0 : 0.02);
-     printf("tincrement: %f\n", lp->tincrement);
-      lp->aincrement = ((spinrate >= 0 && spinrate <= 100) ? (spinrate / 50.0) : 2.0);
-      lp->winaspect = (float)MI_WIDTH(mi) / (float)MI_HEIGHT(mi);
+    lp->tincrement = ((step > 0 && step <= 2000) ? step / 1000000.0 : 0.0005);
+    lp->aincrement = ((spinrate >= 0 && spinrate <= 100) ? 
+			(spinrate / 50.0) : 2.0);
+    lp->winaspect = (float)MI_WIDTH(mi) / (float)MI_HEIGHT(mi);
  
     lp->boomsize = ((size > 0 && size <=  MAX_BOOMSIZE) ?
 		     size / 100.0 : 1.0);
 
-    lp->numbooms = ((count > 0 && count <= MAX_BOOMS) ? count : 200 );
+    lp->numbooms = ((count > 0 && count <= MAX_BOOMS) ? count : 150 );
     lp->booms = calloc (lp->numbooms, sizeof(boomerang *));
 
     if (MI_IS_MONO(mi))
@@ -346,7 +321,7 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
       } 
     else
       {
-	lp->numcolors = ((ncolors > 0 && ncolors < NUMCOLORS) ? 
+	lp->numcolors = ((ncolors > 0 && ncolors < 5000) ? 
                           ncolors : 128);
     lp->colors = calloc ( lp->numcolors,  sizeof (*lp->colors));
     make_smooth_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
@@ -357,24 +332,12 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
 		     colorchangerate: 10);
     advance_color(lp);
 
-
     glShadeModel(GL_SMOOTH);
- /*    glEnable(GL_DEPTH_TEST); */
-/*     glEnable(GL_CULL_FACE);  */
-/*    glEnable(GL_ALPHA_TEST); */
-/*    glAlphaFunc(GL_GEQUAL, 0.5); */
-/*       glEnable(GL_POINT_SMOOTH); */
-/*       glEnable(GL_DEPTH_TEST); */
-/*       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
-/*       distparams[0] = distparams[2] = 0.0; */
-/*       distparams[1] = lp->boomsize; */
-/*       glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distparams); */
-/*       glPointSize(6.0); */
-/*       glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); */
-
+    glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0f);
+    glLineWidth(3.0);
 
-    handleGLerrors("init");
+    makeboomdlists(lp);
 
     for (loop = 0; loop < lp->numbooms; loop++)
     {
@@ -387,9 +350,8 @@ ENTRYPOINT void init_skylark (ModeInfo *mi)
     }
     reshape_skylark(mi, MI_WIDTH(mi), MI_HEIGHT(mi));
 
+    handleGLerrors("init");
     glFlush();
-
-    printf("Leaving init\n");
 }
 
 
@@ -445,53 +407,23 @@ draw_skylark (ModeInfo *mi)
                      cboom->position[2]);
 	glRotatef(cboom->rotangle, 0., 0., 1.);
 
-/* 	if (!dots) */
-/* 	  { */
-/*       glBindTexture(GL_TEXTURE_2D, cflyer->texid);  */
 
-/*    glBegin(GL_QUADS); */
-/*    glTexCoord2f(0.0, 0.0);    glVertex2f(-lp->flyersize, -lp->flyersize); */
-/*    glTexCoord2f(1.0, 0.0);   glVertex2f(lp->flyersize, -lp->flyersize); */
-/*    glTexCoord2f(1.0, 1.0);   glVertex2f(lp->flyersize, lp->flyersize); */
-/*    glTexCoord2f(0.0, 1.0);   glVertex2f(-lp->flyersize, lp->flyersize); */
-/*    glEnd(); */
-/* 	  } */
-/* 	else */
-/* 	  { */
-/* 	    glBegin(GL_POINTS); */
-/*             glVertex2f(0.0, 0.0); */
-/*             glEnd(); */
-/*           } */
 
-/*         glScalef(1.0, 1.0, 1.); */
+        glScalef(lp->boomsize, lp->boomsize, 1.);
 
 	glCallList(lp->boomdlists[cboom->index]);
-/*    glBegin(GL_QUADS); */
-/*    glVertex2f(-lp->boomsize, -lp->boomsize); */
-/*       glVertex2f(lp->boomsize, -lp->boomsize); */
-/*      glVertex2f(lp->boomsize, lp->boomsize); */
-/*       glVertex2f(-lp->boomsize, lp->boomsize); */
-/*    glEnd(); */
-
-/*    glBegin(GL_QUADS); */
-/*    glVertex2f(-lp->boomsize, -lp->boomsize); */
-/*       glVertex2f(lp->boomsize, -lp->boomsize); */
-/*      glVertex2f(lp->boomsize, lp->boomsize); */
-/*       glVertex2f(-lp->boomsize, lp->boomsize); */
-/*    glEnd(); */
 
 
         glPopMatrix();
 	advance_boomerang(lp, cboom);
     }
 
-	lp->ctimer--;
-	if (lp->ctimer <= 0) advance_color(lp);
+   lp->ctimer--;
+    if (lp->ctimer <= 0) advance_color(lp);
     if (mi->fps_p) do_fps (mi);
     glFinish();
     glXSwapBuffers(dpy, window);
     handleGLerrors("draw");
-
 }
 
 XSCREENSAVER_MODULE ("Skylark", skylark)
@@ -502,28 +434,13 @@ XSCREENSAVER_MODULE ("Skylark", skylark)
 
 /* --------------------------------------------------- */
 
-/* count of control point sets is same as count of curves on screen--
- * in fact, all terminology from practice piece needs changed 
+
+/* changing the step parameter doesn't make any noticeable difference
+ * below a certain value--I suspect that this is either because
+ * a) floating point underflow somewhere in the calculations,
+ * b) limitations of per pixel movement
+ * should I care?
+ * path sweeps don't resize when window resizes--
+ * will rarely be run in a window, so not important either
  */
 
-
-/* move increments inside individual boomerangs, give each a unique one */
-
-/* cycle drawing order so that the same boomerangs aren't always on top */
-
-/* xlockmore.h restricts number of colors to 256--is this an issue? 
-*  (color steps, at present, are visible)
-*/
-
-/* is window width and height available outside of modeinfo,
- * to accurately resize paths after a window resize?
- * in other words, can I readjust paths after init has run?
- */
-
-/* refine paths, esp. do offsets--booms are bunching up in corners */
-
-/* screen becomes pixel filled before there is a 
- *high enough boomerang count to look good (probably my machine's problem)
- */
-
-/* make sure command line options esp. size are implemented */
