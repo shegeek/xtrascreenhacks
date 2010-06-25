@@ -12,7 +12,7 @@
 #define LIGHTBANKHEIGHT 1.7
 
 /* for the Boolean type */
-//#include "screenhackI.h"
+/* #include "screenhackI.h" */
 #include <X11/Xdefs.h>
 
 GLint makelampdlists(Bool ismono);

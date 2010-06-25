@@ -2,7 +2,7 @@
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
 
-//#include <GL/gl.h>
+/* #include <GL/gl.h> */
 
 /* Scooped sides: 4 slices, radius 0.500000, dimension 2.250000 x 0.570000 */
 GLfloat connectverts[42][3] = {

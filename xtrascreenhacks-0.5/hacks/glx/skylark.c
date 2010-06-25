@@ -29,7 +29,7 @@
 #include <math.h>
 #include "boomerangs.h"
 
-#define DEFAULTS        "*delay:	20000           \n" \
+#define DEFAULTS        "*delay:	30000           \n" \
 			"*showFPS:      False           \n" \
 
 #ifdef USE_GL /* whole file */
@@ -250,9 +250,11 @@ new_boomerang(skylark_configuration *lp)
    */
   newboom->pathcontrol[0] = WINSIZE * lp->winaspect - 0.5;
   newboom->pathcontrol[1] = (GLfloat)((random() % 4) * 2 + 1);
-  newboom->pathcontrol[2] = ((float)(random() % 10) - 4.) / 5.;
+/*   newboom->pathcontrol[1] = 3.; */
+  newboom->pathcontrol[2] = ((float)(random() % 10) - 4.5) / 4.5;
   newboom->pathcontrol[3] = WINSIZE - 0.5;
   newboom->pathcontrol[4] = newboom->pathcontrol[1] + 1.;
+/*   newboom->pathcontrol[4] = 4.; */
   newboom->pathcontrol[5] = ((float)(random() % 10) - 4.5) / 4.5;
   newboom->tposition = ((random() % 628) / 100.);
 
