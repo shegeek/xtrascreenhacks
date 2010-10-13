@@ -74,16 +74,16 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		  $(UTILS_SRC)/visual.o $(UTILS_SRC)/visual-gl.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o
 
-SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c
+SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c craters.c crater4.c
 
 
 
 OBJS		=  xlock-gl-utils.o fps.o xpm-ximage.o flyer.o xbmread.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
-		   bevelcube.o skylark.o
+		   bevelcube.o skylark.o craters.o crater4.o
 
 
-GL_EXES		=  flyer  berlinuhr soma skylark
+GL_EXES		=  flyer  berlinuhr soma skylark craters
 #GLE_EXES	= extrusion
 #GL_UTIL_EXES	= xscreensaver-gl-helper
 HACK_EXES	= @GL_EXES@ # @GLE_EXES@
@@ -99,9 +99,9 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 		  $(UTILS_BIN)/yarandom.o $(UTILS_BIN)/hsv.o \
 		  $(UTILS_BIN)/colors.o xbmread.o
 
-HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h
+HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h crater4.h
 
-GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man
+GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man
 MEN		= @GL_MEN@
 EXTRAS		= README Makefile.in
 
@@ -373,12 +373,31 @@ soma: soma.o bevelcube.o $(HACK_OBJS)
 skylark: skylark.o	 $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o  $(HACK_OBJS)  $(XPM_LIBS)
 
+craters: craters.o crater4.o $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o crater4.o $(HACK_OBJS) $(XPM_LIBS)
+
+
 
 
 
 ##############################################################################
 #
 # DO NOT DELETE: updated by make distdepend
+
+crater4.o: $(srcdir)/crater4.h
+craters.o: $(srcdir)/crater4.h
+craters.o: ../../config.h
+craters.o: $(HACK_SRC)/screenhackI.h
+craters.o: $(UTILS_SRC)/colors.h
+craters.o: $(UTILS_SRC)/grabscreen.h
+craters.o: $(UTILS_SRC)/hsv.h
+craters.o: $(UTILS_SRC)/resources.h
+craters.o: $(UTILS_SRC)/usleep.h
+craters.o: $(UTILS_SRC)/visual.h
+craters.o: $(UTILS_SRC)/xshm.h
+craters.o: $(UTILS_SRC)/yarandom.h
+craters.o: $(HACK_SRC)/xlockmore.h
+craters.o: $(HACK_SRC)/xlockmoreI.h
 
 skylark.o: ../../config.h
 skylark.o: $(HACK_SRC)/screenhackI.h

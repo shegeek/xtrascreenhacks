@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="skylark" _label="Skylark">
+
+  <command arg="-root"/>
+
+  <number id="delay" type="slider" arg="-delay %"
+          _label="Per-frame delay" _low-label="Slow" _high-label="Fast"
+           low="0" high="50000" default="30000"
+          convert="invert"/>
+
+  <number id="count" type="slider" arg="-count %"
+          _label="Number of boomerangs" _low-label="Few" _high-label="Many"
+          low="1" high="500" default="150"/>
+
+  <number id="ncolors" type="slider" arg="-ncolors %"
+          _label="Number of colors" _low-label="Few" _high-label="Many"
+          low="1" high="500" default="128"/>
+
+  <number id="colorchangerate" type="slider" arg="-colorchangerate %"
+          _label="Color cycling rate" _low-label="Slow" _high-label="Fast"
+          low="1" high="1000" default="10" convert="invert"/>
+
+  <number id="spinrate" type="slider" arg="-spinrate %"
+          _label="Rotation speed" _low-label="Slow" _high-label="Fast"
+          low="1" high="100" default="10" />
+
+ <number id="size" type="slider" arg="-size %"
+          _label="Size of boomerangs" _low-label="Small" _high-label="Large"
+          low="1" high="500" default="100"/>
+
+  <number id="step" type="slider" arg="-step %"
+          _label="Movement per frame" _low-label="Short" _high-label="Long"
+          low="1" high="1000" default="200"/>
+
+  <boolean id="showfps" _label="Show Frames-per-Second" arg-set="-fps"/>
+  <boolean id="mono" _label="Mono (all white on black)" arg-set="-mono"/>
+
+  <_description>
+Skylark looks like the classic kitchen
+table top from the 1950's,
+developed by the Formica Corporation.
+
+For more information, see:
+
+ http://www.newretrodining.com/boomerang_article.htm
+ http://www.formica.com/
+
+
+Written by Kelley Nielsen 2010.
+  </_description>
+</screensaver>

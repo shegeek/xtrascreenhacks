@@ -135,7 +135,7 @@ ModStruct flyer_description =
      "Flying through space with icons zooming by", 0, NULL};
 #endif /* USE_MODULES */
 
-void handleGLerrors(char *guiltyfunction)
+static void handleGLerrors(char *guiltyfunction)
 {
   GLenum errcode;
   const GLubyte *errstring;

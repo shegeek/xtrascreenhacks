@@ -1,0 +1,85 @@
+.TH "XtraScreenHacks" "1" "" "X Version 11" ""
+.SH "NAME"
+skylark \- an animated 1950s kitchen table top
+.SH "SYNOPSIS"
+.B skylark
+[\-display \fIhost:display.screen\fP]
+[\-visual \fIvisual\fP]
+[\-window]
+[\-root]
+[\-delay \fInumber\fP]
+[\-count \fInumber\fP]
+[\-ncolors \fInumber\fP]
+[\-mono]
+[\-colorchangerate \fInumber\fP]
+[\-spinrate \fInumber\fP]
+[\-size \fInumber\fP]
+[\-step \fInumber\fP]
+[\-fps]
+.SH "DESCRIPTION"
+Skylark looks like the classic kitchen table top from the 1950s, with the boomerangs moving around like you're drunk.
+
+"Skylark" was the original name for the design, developed by the Formica Corporation, that is now marketed as "Boomerang." For more information, see:
+
+http://www.newretrodining.com/boomerang_article.htm
+http://www.formica.com/
+.SH "OPTIONS"
+.TP 8
+.B \-visual \fIvisual\fP
+Specify which visual to use.  Legal values are the name of a visual class,
+or the id number (decimal or hex) of a specific visual.
+.TP 8
+.B \-window
+Draw on a newly\-created window.  This is the default.
+.TP 8
+.B \-root
+Draw on the root window.
+.TP 8
+.B \-delay \fInumber\fP
+Per\-frame delay, in microseconds.  Default: 30000 (0.03 seconds.).
+.TP 8
+.B \-count \fInumber\fP
+How many boomerangs there should be on the screen at one time. Legal values are from 1 to 5000.  Default: 150.
+.TP 8
+.B \-ncolors \fInumber\fP
+How many different colors the background should cycle through. Legal values are from 1 to 5000.  Default: 128.
+.TP 8
+.B \-colorchangerate \fInumber\fP
+How long the background color should take to cycle. Legal values are from 1 to 1000.  Default: 10.
+.TP 8
+.B \-mono
+Draw all boomerangs in white (or whatever your display uses for white) on a black background. Overrides \-ncolors.
+.TP 8
+.B \-spinrate \fInumber\fP
+How fast the boomerangs should rotate. Legal values are from 1 to 100. Default: 10.
+.TP 8
+.B \-size \fInumber\fP
+How big the boomerangs should be. Large ones look better than small ones, and it will take less of them to fill the screen. Legal values are from 1 to 500.  Default: 100.
+.TP 8
+.B \-step \fInumber\fP
+How far the boomerangs should advance in one frame. Higher values may speed up the movement more gracefully than using \-delay. Legal values are from 1 to 2000.  Default: 200.
+.TP 8
+.B \-fps | \-no\-fps
+Whether to show a frames\-per\-second display at the bottom of the screen.
+.SH "ENVIRONMENT"
+.PP 
+.TP 8
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.SH "SEE ALSO"
+.BR X (1),
+.BR xscreensaver (1),
+.SH "COPYRIGHT"
+Copyright \(co 2010 by Kelley Nielsen.  Permission to use, copy, modify, 
+distribute, and sell this software and its documentation for any purpose is 
+hereby granted without fee, provided that the above copyright notice appear 
+in all copies and that both that copyright notice and this permission notice
+appear in supporting documentation.  No representations are made about the 
+suitability of this software for any purpose.  It is provided "as is" without
+express or implied warranty.
+.SH "AUTHOR"
+Kelley Nielsen <shegeek\-dev@comcast.net>

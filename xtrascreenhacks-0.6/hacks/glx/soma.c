@@ -132,7 +132,7 @@ static soma_configuration *lps = NULL;
 /* ---- main body of code */ 
 
 
-void handleGLerrors(char *guiltyfunction)
+static void handleGLerrors(char *guiltyfunction)
 {
   GLenum errcode;
   const GLubyte *errstring;
