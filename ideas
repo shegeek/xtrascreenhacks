@@ -9,11 +9,15 @@ soma cube similar to tangram and snake
 3d version of berlinuhr
  -> could also be a desktop clock and/or gnome panel applet
 
+============================================================
+
+
 everblooming lotus
 
 lunar surface being cratered
 
 raindrops hitting pool and making wave patterns
+  -> is already destop effect in compiz, maybe not good idea
 
 ocean waves breaking
 
@@ -28,8 +32,6 @@ ball machine, like the one in front of the tech museum
 
 cake sprinkles falling or blowing in the wind
 
-
-
 space filling solid dropping (the unusual one, have link)
 
 more polyhedra: szilassi, etc
@@ -43,10 +45,24 @@ balls bouncing in a volume and hitting a special ball, making it change
 
 snake slithering
 
-flying through a city
+flying through a city -> found inside window rendering code, in bookmarks
 
  face generator (draw human faces with a nurbs given parameters)
 
 twistycurve: 3d curves (like for skylark, only more complex) that mutate and twist
 
+seashell generator
+
+snowflake generator
+
+dragon fractal
+
+fractal tree "growing"
+
+
+bacteria in a petri dish
+
+dominoes falling
+
+streaks that look like traffic or freeways
 

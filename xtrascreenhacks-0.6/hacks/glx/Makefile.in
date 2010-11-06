@@ -67,20 +67,20 @@ INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../.. @INCLUDES@
 UTIL_SRCS	= $(UTILS_SRC)/colors.c $(UTILS_SRC)/hsv.c \
 		  $(UTILS_SRC)/resources.c $(UTILS_SRC)/usleep.c \
 		  $(UTILS_SRC)/visual.c $(UTILS_SRC)/visual-gl.c \
-		  $(UTILS_SRC)/yarandom.c $(UTILS_SRC)/xshm.c
+		  $(UTILS_SRC)/yarandom.c $(UTILS_SRC)/xshm.c $(UTILS_SRC)/erase.c
 
 UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		  $(UTILS_SRC)/resources.o $(UTILS_SRC)/usleep.o \
 		  $(UTILS_SRC)/visual.o $(UTILS_SRC)/visual-gl.o \
-		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o
+		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o $(UTILS_SRC)/erase.o
 
-SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c craters.c crater4.c
+SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c craters.c crater4.c ejecta.c
 
 
 
 OBJS		=  xlock-gl-utils.o fps.o xpm-ximage.o flyer.o xbmread.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
-		   bevelcube.o skylark.o craters.o crater4.o
+		   bevelcube.o skylark.o craters.o crater4.o ejecta.o
 
 
 GL_EXES		=  flyer  berlinuhr soma skylark craters
@@ -97,9 +97,10 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 		  $(UTILS_BIN)/resources.o $(UTILS_BIN)/visual.o \
 		  $(UTILS_BIN)/visual-gl.o $(UTILS_BIN)/usleep.o \
 		  $(UTILS_BIN)/yarandom.o $(UTILS_BIN)/hsv.o \
-		  $(UTILS_BIN)/colors.o xbmread.o
+		  $(UTILS_BIN)/colors.o xbmread.o $(UTILS_BIN)/erase.o
 
-HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h crater4.h
+
+HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h crater4.h ejecta.h
 
 GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man
 MEN		= @GL_MEN@
@@ -373,8 +374,8 @@ soma: soma.o bevelcube.o $(HACK_OBJS)
 skylark: skylark.o	 $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o  $(HACK_OBJS)  $(XPM_LIBS)
 
-craters: craters.o crater4.o $(HACK_OBJS)
-	$(CC_HACK) -o $@ $@.o crater4.o $(HACK_OBJS) $(XPM_LIBS)
+craters: craters.o crater4.o ejecta.o $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o crater4.o ejecta.o $(HACK_OBJS) $(XPM_LIBS)
 
 
 
@@ -385,7 +386,10 @@ craters: craters.o crater4.o $(HACK_OBJS)
 # DO NOT DELETE: updated by make distdepend
 
 crater4.o: $(srcdir)/crater4.h
+ejecta.o:  $(srcdir)/ejecta.h
+ejecta.o:  $(UTILS_SRC)/yarandom.h
 craters.o: $(srcdir)/crater4.h
+craters.o: $(srcdir)/ejecta.h
 craters.o: ../../config.h
 craters.o: $(HACK_SRC)/screenhackI.h
 craters.o: $(UTILS_SRC)/colors.h
@@ -396,6 +400,7 @@ craters.o: $(UTILS_SRC)/usleep.h
 craters.o: $(UTILS_SRC)/visual.h
 craters.o: $(UTILS_SRC)/xshm.h
 craters.o: $(UTILS_SRC)/yarandom.h
+craters.o: $(UTILS_SRC)/erase.h
 craters.o: $(HACK_SRC)/xlockmore.h
 craters.o: $(HACK_SRC)/xlockmoreI.h
 
