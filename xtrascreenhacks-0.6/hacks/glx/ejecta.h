@@ -17,7 +17,6 @@
 
 typedef struct {
   GLdouble initpos[3]; /* local xyz coordinates of initial location */
-  GLdouble dircos[2];  /* direction cosines, used to update trajectory */ 
   GLdouble initvelocity[3];
   GLdouble currpos[3];
 } ejparticle;

@@ -23,7 +23,6 @@
 #define countof(x) (sizeof((x))/sizeof((*x)))
 
 #include "xlockmore.h"
-#include <ctype.h>  /* I can get rid of this, right? */
 #include <math.h>
 #include <stdbool.h>
 #include "erase.h"
@@ -32,7 +31,7 @@
 
 
 
-#define DEFAULTS        "*delay:	30000           \n" \
+#define DEFAULTS        "*delay:	50000           \n" \
 			"*showFPS:      False           \n" \
 
 #ifdef USE_GL			/* whole file */
@@ -68,6 +67,7 @@ typedef struct
   GLfloat fogDepth;
   GLfloat groundRadius;
   GLfloat groundlevel;
+  GLuint craterdlist, grounddlist;
 
   int timer;
   int ctimer;
@@ -134,6 +134,15 @@ handleGLerrors (char *guiltyfunction)
     }
 }
 
+static void errorCallback(GLenum errorCode)
+{
+   const GLubyte *estring;
+
+   estring = gluErrorString(errorCode);
+   fprintf(stderr, "Quadric Error: %s\n", estring);
+   exit(0);
+}
+
 
 static crater *
 new_crater (crater_configuration * lp)
@@ -154,7 +163,7 @@ new_crater (crater_configuration * lp)
   newcrater->position[0] = r * cos (theta);
   newcrater->position[2] = lp->groundlevel;
   newcrater->position[1] = r * sin (theta);
-  newcrater->sizefactor = ((float) (random () % 200) / 100.) + 2.;
+  newcrater->sizefactor = ((float) (random () % 200) / 100.) + 4.;
 
 /*   { */
 /*     float distance = sqrt(newcrater->position[0] * newcrater->position[0] +newcrater->position[1] * newcrater->position[1] + newcrater->position[2] * newcrater->position[2]); */
@@ -187,7 +196,8 @@ init_craters (ModeInfo * mi)
 {
   GLfloat specular[] = { 0.5, 0.5, 0.5, 1. };
   GLfloat color[4] = { 0.5, 0.5, 0.5, 1. };
-  GLfloat pos[4] = { 0.0, 1.0, 1.0, 0.0 };
+  /* change light position back to coming from side when done with ejecta */
+  GLfloat pos[4] = { 5.0, 5.0, 0., 0.0 };
   GLfloat amb[4] = { 0.2, 0.2, 0.2, 1.0 };
   GLfloat dif[4] = { 1.0, 1.0, 1.0, 1.0 };
   GLfloat spc[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -197,6 +207,7 @@ init_craters (ModeInfo * mi)
   /* too large of dots or a quadratic coord causes an appearance of */
   /* dots taking a curved path and veering away from the eye coordinate */
   GLfloat distparams[3];
+  GLUquadricObj * groundquad;
   crater_configuration *lp;
   int loop;
 
@@ -219,6 +230,7 @@ init_craters (ModeInfo * mi)
   lp->groundRadius = 50.0;
   lp->groundlevel = -6.;
 
+  /* I don't think this is needed */
   lp->cratersize = ((size > 0 && size <= MAX_CRATERSIZE) ?
 		    size / 100.0 : 1.0);
 
@@ -229,8 +241,23 @@ init_craters (ModeInfo * mi)
 
   lp->ctimer = lp->timer = 10;
   lp->erasing = false;
-  lp->eruption = init_ejemitter(2500, 0.01, 25.);
+  lp->eruption = init_ejemitter(5000, 0.01, 25.);
   lp->erupting = false;
+
+  groundquad = gluNewQuadric();
+  gluQuadricCallback(groundquad, GLU_ERROR, errorCallback);
+  gluQuadricDrawStyle(groundquad, GLU_FILL); 
+  gluQuadricNormals(groundquad, GLU_SMOOTH);
+  lp->craterdlist = glGenLists(1);
+  glNewList(lp->craterdlist, GL_COMPILE);
+  drawcrater4();
+  glEndList();
+  lp->grounddlist = glGenLists(1);
+  glNewList(lp->grounddlist, GL_COMPILE);
+  gluDisk(groundquad, 0., lp->groundRadius, 45, 15);
+  glEndList();
+  gluDeleteQuadric(groundquad);
+  
 
   if (do_fog)
     {
@@ -251,9 +278,9 @@ init_craters (ModeInfo * mi)
   glEnable (GL_POINT_SMOOTH);
   glEnable (GL_DEPTH_TEST);
   distparams[0] = distparams[2] = 0.0;
-  distparams[1] = lp->cratersize;
+  distparams[1] = 0.3;
   glPointParameterfv (GL_POINT_DISTANCE_ATTENUATION, distparams);
-  glPointSize (6.0);
+  glPointSize (10.0);
   glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
 
   glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -298,6 +325,7 @@ release_craters (ModeInfo * mi)
 	    }
 	  free (lp->craters);
 	  if (lp->eraser != NULL) free (lp->eraser);
+/*       delete_ejemitter(lp->eruption); */
 	}
       free (lps);
       lps = 0;
@@ -336,10 +364,15 @@ draw_craters (ModeInfo * mi)
       glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  
       glLoadIdentity ();
-
       glTranslatef (0., 0., -20.);
 
+
       /* draw the ground */
+      glPushMatrix();
+	  glRotatef (90., -1., 0., 0.);
+	  glTranslatef(0., 0., lp->groundlevel);
+	glCallList(lp->grounddlist);
+	glPopMatrix();
 
       /* loop over the craters */
       for (loop = 0; loop < lp->countcraters; loop++)
@@ -353,7 +386,7 @@ draw_craters (ModeInfo * mi)
 	  glScalef (ccrater->sizefactor, ccrater->sizefactor, ccrater->sizefactor);
 
 	  /* draw the crater */
-	  drawcrater4 ();
+	  glCallList(lp->craterdlist);
 /* 	printf("Just drew crater number %d at %f, %f, %f\n", loop, ccrater->position[0], ccrater->position[1], ccrater->position[2]); */
 	  
 	  if ((loop == lp->countcraters - 1) && (lp->erupting == true))
@@ -367,7 +400,6 @@ draw_craters (ModeInfo * mi)
 
 
 	}
-      /* advance ground rotation */
 
       if (lp->erupting == false) lp->ctimer--;
 
@@ -391,7 +423,7 @@ draw_craters (ModeInfo * mi)
 	    {
 /* 	      printf("room for another crater at %d\n", lp->countcraters - 1); */
 	      lp->craters[lp->countcraters - 1] = new_crater (lp);
-	      reset_ejemitter(lp->eruption, 0.35);
+	      reset_ejemitter(lp->eruption, 0.6);
 	      lp->erupting = true;
 	    }
 	}
@@ -421,21 +453,24 @@ XSCREENSAVER_MODULE ("CRATERS", craters)
  * reconcile size of ejecta cloud with size of mesh
  * get ejecta to look more realistic, presently is a big cloud
  *
- * put in the ground quadric--craters are still floating in space
+ * set lighting positon appropriately 
+ *   (remember ejecta must show against other objects)
  *
  * put in meteor strike
+ *
+ * create starfield 
  *
  * reconcile normal and erasing delays, add usleep code if necessary
  *  -> rotating old craters offscreen and freeing is still an option
  *
  * refine options and defaults
  *
+ * modelview matrix manipulation is inefficient
+ *
  *
  * get craters to instantiate in the viewable area at the proper size
  *  -> determine desired size, particle system will influence this
  *     (tenatively done)
- *
- * create starfield (optional?)
  *
  * solve the problem of craters intersecting
  *

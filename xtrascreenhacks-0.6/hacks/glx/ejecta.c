@@ -9,23 +9,25 @@
 
 void reset_ejparticle(ejparticle * redux, double maxradius)
 {
-  GLdouble r, theta;
+  double r, theta;
+  double xcomp, zcomp;
   theta = (double)(random() % 314) / 50.;
   r = (double)(random() % 100) / 100. * maxradius;
-  redux->dircos[0] = cos(theta);
-  redux->dircos[1] = sin(theta);
-  redux->initpos[0] = r * redux->dircos[0];
+  xcomp = cos(theta);
+  zcomp = sin(theta);
+  redux->initpos[0] = r * xcomp;
   redux->initpos[1] = 0.;
-    redux->initpos[2] = r * redux->dircos[1];
-    redux->initvelocity[0] = ((double)(random() % 200) / 100.)* redux->dircos[0];
-    redux->initvelocity[1] = ((double)(random() % 200) / 100. + 8.) ;
-    redux->initvelocity[2] = ((double)(random() % 200) / 100.)* redux->dircos[1]  ;
+    redux->initpos[2] = r * zcomp;
+    redux->initvelocity[0] =/*  ((double)(random() % 20) / 100.)* */ xcomp * 3 * (maxradius - r);
+/*     redux->initvelocity[1] = ((double)(random() % 200) / 100. + 5.) ; */
+    redux->initvelocity[1] = exp((maxradius - r) + 1) * ((double)(random() % 130) / 100.);
+    redux->initvelocity[2] = /* ((double)(random() % 20) / 100.)*  */ zcomp * 3 *(maxradius - r);
 
-  if (random() % 300 == 0)
+    if ((random() % 20 == 0) && (r < maxradius * 0.2))
     {
-      redux->initvelocity[0] += 2.;
+      redux->initvelocity[0] += 2. * xcomp;
       redux->initvelocity[1] += 0.5;
-      redux->initvelocity[2] += 2.;
+      redux->initvelocity[2] += 2. * zcomp;
     }
 } 
 
@@ -132,6 +134,7 @@ void delete_ejemitter(ejemitter * doomed)
     }
   free(doomed->ejectum);
   free(doomed);
+  doomed = NULL;
 }
 
 
@@ -153,3 +156,20 @@ void delete_ejemitter(ejemitter * doomed)
  * points blend into ground when they are of the same material
  * make them stand out, and possibly add shadows
  */
+
+
+/* points comprising crater outline, ordered inward to outward:
+ *
+ *
+v7 0.000145 -0.002416 0.000034
+v6 0.156413 -0.002416 0.007709
+v5 0.208796 -0.002416 0.023462
+v4 0.271345 -0.002416 0.057688
+v3 0.355245 -0.002416 0.179949
+v2 0.427474 -0.002416 0.115025
+v8 0.538759 -0.002416 0.061143
+v9 0.688434 -0.002416 0.000061
+v1 0.699854 -0.002416 0.000174
+*
+* v9x / v3x = 1.938 (ratio of outside of berm to top of lip)
+*/
