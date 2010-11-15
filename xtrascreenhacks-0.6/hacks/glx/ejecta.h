@@ -26,14 +26,15 @@ typedef struct {
   ejparticle ** ejectum;
   int numejparticles;
   double radius;
-  double tcounter;
+  double taccum;
   double tincrement;
   double grav;
+  int numsteps;
 } ejemitter;
 
 ejemitter * init_ejemitter(int count, double timestep, double gravconstant);
 
-void reset_ejemitter(ejemitter * redux, GLdouble newradius);
+int reset_ejemitter(ejemitter * redux, GLdouble newradius);
 
 
 bool spew_ejecta(ejemitter * ejspew);

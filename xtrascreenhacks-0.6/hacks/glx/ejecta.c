@@ -6,6 +6,8 @@
 #include <math.h>
 #include "yarandom.h"
 
+#define EJECTSPREAD 100
+
 
 void reset_ejparticle(ejparticle * redux, double maxradius)
 {
@@ -18,11 +20,15 @@ void reset_ejparticle(ejparticle * redux, double maxradius)
   redux->initpos[0] = r * xcomp;
   redux->initpos[1] = 0.;
     redux->initpos[2] = r * zcomp;
-    redux->initvelocity[0] =/*  ((double)(random() % 20) / 100.)* */ xcomp * 3 * (maxradius - r);
-/*     redux->initvelocity[1] = ((double)(random() % 200) / 100. + 5.) ; */
-    redux->initvelocity[1] = exp((maxradius - r) + 1) * ((double)(random() % 130) / 100.);
-    redux->initvelocity[2] = /* ((double)(random() % 20) / 100.)*  */ zcomp * 3 *(maxradius - r);
+    redux->initvelocity[0] = xcomp * 3 * (maxradius - r);
+    /* warning: this equation is coupled to the calculation for 
+     * step count in reset_ejemitter
+     */
+    redux->initvelocity[1] = exp((maxradius - r) + 1) * 
+      ((double)(random() % EJECTSPREAD) / 100.);
+    redux->initvelocity[2] = zcomp * 3 *(maxradius - r);
 
+    /* wildly scatter a few particles */
     if ((random() % 20 == 0) && (r < maxradius * 0.2))
     {
       redux->initvelocity[0] += 2. * xcomp;
@@ -30,6 +36,7 @@ void reset_ejparticle(ejparticle * redux, double maxradius)
       redux->initvelocity[2] += 2. * zcomp;
     }
 } 
+
 
 
 bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
@@ -44,15 +51,21 @@ bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
   return islive;
 }
 
-void reset_ejemitter(ejemitter * redux, GLdouble newradius)
+int reset_ejemitter(ejemitter * redux, GLdouble newradius)
 {
+    double maxvnought;
+    double t2maxh;
   int itor;
-  redux->tcounter = 0;
+  redux->taccum = 0;
   redux->radius = newradius;
   for (itor = 0; itor < redux->numejparticles; itor++)
     {
       reset_ejparticle(redux->ejectum[itor], newradius);
     }
+  maxvnought = (exp(newradius + 1.) * EJECTSPREAD / 100.);
+    t2maxh = maxvnought / -redux->grav;
+    redux->numsteps = t2maxh / redux->tincrement;
+  return redux->numsteps;
 }
 
 ejemitter * init_ejemitter(int count, double timestep, double gravconstant)
@@ -76,8 +89,8 @@ ejemitter * init_ejemitter(int count, double timestep, double gravconstant)
 /* the first of these uses points; the second, little solids
  * the first one runs faster, of course
  * the ground is darker with the second, not yet sure why 
- * the solids can't be casting the entire ground in shadow
  * at a scalefactor of 0.05, the solids look just like the points
+ * WARNING: the one with solids uses a glut primitive
  */
 void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
 {
@@ -113,11 +126,11 @@ bool spew_ejecta(ejemitter * ejspew)
   bool emitterislive = false;
   bool particleislive;
   int itor;
-  ejspew->tcounter += ejspew->tincrement;
+  ejspew->taccum += ejspew->tincrement;
   for (itor = 0; itor < ejspew->numejparticles; itor++)
     {
       particleislive = advance_ejparticle(ejspew->ejectum[itor], 
-					  ejspew->tcounter, ejspew->grav);
+					  ejspew->taccum, ejspew->grav);
       if (particleislive) emitterislive = true;
     }
   render_ejparticles(ejspew->ejectum, ejspew->numejparticles);
@@ -142,19 +155,11 @@ void delete_ejemitter(ejemitter * doomed)
 
 /* left to do:
  *
- * at the beginning of the eruption, it should look more like
- * the ground is swelling and bursting, and less like a mushroom cloud
- * translating to slightly below ground level and starting from there helps
- *
- * decide how to send message to caller that it's safe to draw mesh
- *
  * possibly put in another flag so that 
  *  emitter won't run if not properly reset
  *
  * add error checking and other correct usage constraints, as mentioned above
  *
- * points blend into ground when they are of the same material
- * make them stand out, and possibly add shadows
  */
 
 
