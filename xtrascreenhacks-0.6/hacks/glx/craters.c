@@ -153,7 +153,7 @@ GLuint make_starfield(double distance)
   GLfloat starglow[] = {1., 1., 1., 1.};
   GLfloat normal[] = {0., 0., 0., 1.};
 /*   GLdouble stdistance = distance - 10.; */
-  GLdouble stdistance = -10.;
+  GLdouble stdistance = -50.;
   stf = glGenLists(1);
   glNewList(stf, GL_COMPILE);
 
