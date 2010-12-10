@@ -1,3 +1,15 @@
+/*ejecta.c, Copyright (c) 2010 Kelley Nielsen <shegeek-dev@comcast.net>
+ * part of the xtrascreenhacks package
+ *
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation.  No representations are made about the suitability of this
+ * software for any purpose.  It is provided "as is" without express or 
+ * implied warranty.
+ */
 
 
 #include "ejecta.h"
@@ -8,6 +20,19 @@
 
 #define EJECTSPREAD 100
 
+static void
+handleGLerrors (char *guiltyfunction)
+{
+  GLenum errcode;
+  const GLubyte *errstring;
+
+  errcode = glGetError ();
+  if (GL_NO_ERROR != errcode)
+    {
+      errstring = gluErrorString (errcode);
+      fprintf (stderr, "GL error in %s: %s\n", guiltyfunction, errstring);
+    }
+}
 
 void reset_ejparticle(ejparticle * redux, double maxradius)
 {
@@ -21,9 +46,6 @@ void reset_ejparticle(ejparticle * redux, double maxradius)
   redux->initpos[1] = 0.;
     redux->initpos[2] = r * zcomp;
     redux->initvelocity[0] = xcomp * 3 * (maxradius - r);
-    /* warning: this equation is coupled to the calculation for 
-     * step count in reset_ejemitter
-     */
     redux->initvelocity[1] = exp((maxradius - r) + 1) * 
       ((double)(random() % EJECTSPREAD) / 100.);
     redux->initvelocity[2] = zcomp * 3 *(maxradius - r);
@@ -103,6 +125,7 @@ void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
 	       ejectoids[iterator]->currpos[2]); 
     }
   glEnd();
+  handleGLerrors("ejecta: render_ejparticles");
 }
 
 
@@ -152,16 +175,6 @@ void delete_ejemitter(ejemitter * doomed)
 
 
 /* =================================== */
-
-/* left to do:
- *
- * possibly put in another flag so that 
- *  emitter won't run if not properly reset
- *
- * add error checking and other correct usage constraints, as mentioned above
- *
- */
-
 
 /* points comprising crater outline, ordered inward to outward:
  *

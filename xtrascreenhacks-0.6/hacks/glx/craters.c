@@ -1,4 +1,5 @@
-/*craters, Copyright (c) 2010 Kelley Nielsen <shegeek-dev@comcast.net>
+/*craters.c, Copyright (c) 2010 Kelley Nielsen <shegeek-dev@comcast.net>
+ * part of the xtrascreenhacks package
  *
  * Based on:
  * various things found in the original code from the xscreensaver hacks
@@ -75,6 +76,8 @@ typedef struct
   bool erupting;
   int eruptframes;
   double eruptincrement;
+  bool impacting;
+  int impactframes, impactframecount;
 
 } crater_configuration;
 
@@ -145,13 +148,10 @@ make_starfield (double distance)
   GLfloat xpos, ypos;
   int itor, numstars = 80;
   GLuint stf;
-  GLfloat starglow[] = { 1., 1., 1., 1. };
-  GLfloat normal[] = { 0., 0., 0., 1. };
   GLdouble stdistance = -60.;
+
   stf = glGenLists (1);
   glNewList (stf, GL_COMPILE);
-
-  glMaterialfv (GL_FRONT, GL_EMISSION, starglow);
   glPointSize (2.0);
    glBegin (GL_POINTS);
   for (itor = 0; itor < numstars; itor++)
@@ -160,11 +160,8 @@ make_starfield (double distance)
     ypos = (float)(random() % 190) / 10. - 4.;
   glVertex3f (xpos, ypos, stdistance);
   }
-    glVertex3f(0., 1., -0.5);
   glEnd ();
-  glMaterialfv (GL_FRONT, GL_EMISSION, normal);
   glPointSize (10.0);
- 
   glEndList ();
   return stf;
 }
@@ -176,7 +173,6 @@ new_crater (crater_configuration * lp)
   crater *newcrater;
   float r, theta;
 
-/*   newcrater = (struct crater *) malloc (sizeof (struct crater)); */
   newcrater = malloc (sizeof (newcrater));
   if (NULL == newcrater)
     return NULL;
@@ -214,10 +210,9 @@ reshape_craters (ModeInfo * mi, int width, int height)
 ENTRYPOINT void
 init_craters (ModeInfo * mi)
 {
-  GLfloat specular[] = { 0.5, 0.5, 0.5, 1. };
+  GLfloat specular[] = { 1., 1., 1., 1. };
   GLfloat color[4] = { 0.5, 0.5, 0.5, 1. };
-  /* change light position back to coming from side when done with ejecta */
-  GLfloat pos[4] = { 5.0, 5.1, 0., 0.0 };
+  GLfloat pos[4] = { 5.0, 1.2, 5., 0.0 };
   GLfloat amb[4] = { 0.2, 0.2, 0.2, 1.0 };
   GLfloat dif[4] = { 1.0, 1.0, 1.0, 1.0 };
   GLfloat spc[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -257,6 +252,8 @@ init_craters (ModeInfo * mi)
   tstep = ((step > 0 && step <= 20) ? ((float)step / 1000.) : 0.01);
   lp->eruption = init_ejemitter (5000, tstep, 25.);
   lp->erupting = false;
+  lp->impacting = false;
+  lp->impactframes = lp->impactframecount = 2;
 
   groundquad = gluNewQuadric ();
   gluQuadricCallback (groundquad, GLU_ERROR, errorCallback);
@@ -276,13 +273,17 @@ init_craters (ModeInfo * mi)
   glEnable (GL_CULL_FACE);
   glCullFace (GL_BACK);
   glEnable (GL_POINT_SMOOTH);
+  glEnable(GL_LINE_SMOOTH);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable (GL_DEPTH_TEST);
   pointdistparams[0] = pointdistparams[2] = 0.0;
   pointdistparams[1] = 0.3;
   glPointParameterfv (GL_POINT_DISTANCE_ATTENUATION, pointdistparams);
-  glPointSize (10.0);
+/*  glPointSize (10.0);*/
+  glLineWidth(2.);
+  glEnable(GL_LINE_STIPPLE);
+  glLineStipple(1, 43690);
   glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
 
   lp->stardlist = make_starfield (lp->groundRadius);
@@ -316,7 +317,7 @@ release_craters (ModeInfo * mi)
       for (screen = 0; screen < MI_NUM_SCREENS (mi); screen++)
 	{
 	  crater_configuration *lp = &lps[screen];
-	  if ((lp != NULL) && (lp->numcraters != NULL))
+	  if ((lp != NULL) && (lp->numcraters != 0))
 	    {
 	      for (loop = 0; loop < lp->numcraters; loop++)
 		{
@@ -344,6 +345,8 @@ draw_craters (ModeInfo * mi)
   Display *dpy = MI_DISPLAY (mi);
   Window window = MI_WINDOW (mi);
   crater *ccrater = NULL;
+  GLfloat starglow[] = { 1., 1., 1., 1. };
+  GLfloat normal[] = { 0., 0., 0., 1. };
   int loop = 0;
 
   if (!lp->glx_context)
@@ -361,18 +364,12 @@ draw_craters (ModeInfo * mi)
       glXMakeCurrent (MI_DISPLAY (mi), MI_WINDOW (mi), *(lp->glx_context));
 
       glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+      
       glLoadIdentity ();
-      glCallList (lp->stardlist);
+       glMaterialfv(GL_FRONT, GL_EMISSION, starglow);
+             glCallList (lp->stardlist);
       glTranslatef (0., 0., -20);
 
-
-      /* draw the ground */
-      glPushMatrix ();
-      glRotatef (90., -1., 0., 0.);
-      glTranslatef (0., 0., lp->groundlevel);
-      glCallList (lp->grounddlist);
-      glPopMatrix ();
 
       /* loop over the craters */
       for (loop = 0; loop < lp->countcraters; loop++)
@@ -383,10 +380,25 @@ draw_craters (ModeInfo * mi)
 	  glRotatef (90., -1., 0., 0.);
 	  glTranslatef (ccrater->position[0], ccrater->position[1],
 			ccrater->position[2]);
-	  glScalef (ccrater->sizefactor, ccrater->sizefactor,
+   	  glScalef (ccrater->sizefactor, ccrater->sizefactor,
 		    ccrater->sizefactor);
 
-	  if (loop == lp->countcraters - 1)
+       /* draw the streak of the impacting meteor */
+      if ((lp->impacting == true) && (loop == lp->countcraters - 1))
+      {
+        glMaterialfv(GL_FRONT, GL_EMISSION, starglow);
+        glBegin(GL_LINES);
+        glVertex3f(0., 0., 0.);
+        glVertex3f(2., 0., 5.);
+         glEnd();
+        lp->impactframecount--;
+         if (lp->impactframecount == 0) lp->impacting = false; 
+        }
+        
+       glMaterialfv(GL_FRONT, GL_EMISSION, normal);
+
+
+  	  if (loop == lp->countcraters - 1)
 	    {
 	      glPushMatrix ();
 	      glTranslatef (0., 0., lp->eruptframes * lp->eruptincrement);
@@ -402,12 +414,19 @@ draw_craters (ModeInfo * mi)
 	    }
 	  else
 	    glCallList (lp->craterdlist);
-
-
 	  glPopMatrix ();
+}
+      /* draw the ground */
+        glMaterialfv(GL_FRONT, GL_EMISSION, normal);
+             glPushMatrix ();
+      glRotatef (90., -1., 0., 0.);
+      glTranslatef (0., 0., lp->groundlevel);
+      glCallList (lp->grounddlist);
+      glPopMatrix ();
+      
 
 
-	}
+
 
       if (lp->erupting == false)
 	lp->wtimer--;
@@ -416,6 +435,8 @@ draw_craters (ModeInfo * mi)
 	{
 	  lp->wtimer = lp->timer;
 	  lp->countcraters++;
+	  lp->impacting = true;
+	  lp->impactframecount = lp->impactframes;
 	  if (lp->countcraters > lp->numcraters)
 	    {
 	      for (loop = 0; loop < lp->countcraters - 1; loop++)
@@ -435,7 +456,7 @@ draw_craters (ModeInfo * mi)
 	      lp->eruptincrement = -0.18 / (double) lp->eruptframes;
 	    }
 	}
-
+	
       if (mi->fps_p)
 	do_fps (mi);
       glFinish ();
@@ -449,12 +470,8 @@ draw_craters (ModeInfo * mi)
 XSCREENSAVER_MODULE ("CRATERS", craters)
 #endif /* USE_GL */
   /* -------------------------------------------------------- */
-/* set lighting and materials appropriately 
- *
- * put in meteor strike
- *
- * modelview matrix manipulation is inefficient
- *
+/* modelview matrix manipulation is inefficient,
+ *  probably because crater and ejecta are oriented 90 degrees from each other
  *
  * pass in MI for star and crater distribution
  *
@@ -462,4 +479,9 @@ XSCREENSAVER_MODULE ("CRATERS", craters)
  *
  * make shadows for the craters
  *
+ * there is an inherent problem with what I am trying to display...
+ * if there is any difference in final color between ground, crater walls and ejecta
+ * it looks funny, but if there isn't, nothing can be seen.
+ * With real moon craters, there are shadows, but it's still difficult for the eye
+ * and doesn't lend itself to an attractive animation.
  */

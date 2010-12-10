@@ -48,9 +48,10 @@ the following lines into the "programs" section:
 -                       "Daisy" daisy -root                                 \n\
 -                     "Twinkle" twinkle -root                               \n\
 -GL:                    "Flyer" flyer -root                                 \n\
--GL:		   "Berlin-Uhr" berlinuhr -root				    \n\
--GL:		         "Soma" soma -root				    \n\
--GL:		       Skylark" skylark -root				    \n\
+-GL:		       "Berlin-Uhr" berlinuhr -root				                \n\
+-GL:		             "Soma" soma -root				                    \n\
+-GL:		          "Skylark" skylark -root				                \n\
+-GL:		          "Craters" craters -root				                \n\
 --snip----------------
 
 Then run xscreensaver-demo to activate and configure the hacks. If 
