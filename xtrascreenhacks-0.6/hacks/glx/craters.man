@@ -1,24 +1,19 @@
 .TH "XtraScreenHacks" "1" "" "X Version 11" ""
 .SH "NAME"
-flyer \- little images zooming by like stars
+craters \- a lunar surface being cratered
 .SH "SYNOPSIS"
-.B flyer
+.B craters
 [\-display \fIhost:display.screen\fP]
 [\-visual \fIvisual\fP]
 [\-window]
 [\-root]
 [\-delay \fInumber\fP]
-[\-bitmap \fIpath\fP]
-[\-count \fInumber\fP]
-[\-ncolors \fInumber\fP]
-[\-mono]
-[\-size \fInumber\fP]
+[[\-count \fInumber\fP]
 [\-step \fInumber\fP]
-[\-dots]
-[\-fog]
+[\-waittime \fInumber\fP]
 [\-fps]
 .SH "DESCRIPTION"
-Flyer is like the classic screen saver from Redmond that featured its logo, except now you can fly anything.
+Craters is an animation of a lunar surface being cratered.
 .SH "OPTIONS"
 .TP 8
 .B \-visual \fIvisual\fP
@@ -34,29 +29,14 @@ Draw on the root window.
 .B \-delay \fInumber\fP
 Per\-frame delay, in microseconds.  Default: 30000 (0.03 seconds.).
 .TP 8
-.B \-bitmap \fIpath\fP
-Path to an X bitmap file that will be used as the flyer image. Maximum size: 1024x1024. Must be valid xbm, color xpms are disallowed. Power of two sized square bitmaps are best, although all bitmaps up to and including the maximum size are accepted. Non\-square bitmaps will appear distorted (to fix this, pad the bitmap to a square shape with background pixels). Larger bitmaps show less aliasing. See \-size if using a very small (for instance, 8x8) bitmap. Default: the X11 logo.
-.TP 8
 .B \-count \fInumber\fP
-How many flyers there should be on the screen at one time. Legal values are from 1 to 1000.  Default: 20.
-.TP 8
-.B \-ncolors \fInumber\fP
-How many different colors should be used. Legal values are from 1 to 256.  Default: 16.
-.TP 8
-.B \-mono
-Draw all flyers in white (or whatever your display uses for white). Nice for simple star\-like flyers with \-dot. Overrides \-ncolors.
-.TP 8
-.B \-size \fInumber\fP
-How big the flyers should be. Small bitmaps look better at smaller sizes and vice versa. Legal values are from 1 to 200.  Default: 100.
+How many craters should form before the screen clears and starts over. Legal values are from 1 to 100.  Default: 20.
 .TP 8
 .B \-step \fInumber\fP
-How far the flyers should advance in one frame. For slow motion flyers, this gives a smoother appearance than slowing down the frame rate with \-delay. Legal values are from 1 to 1000.  Default: 200.
+How far the crater ejecta should fly in one frame.  Legal values are from 1 to 20.  Default: 10.
 .TP 8
-.B \-dots
-Make flyers be simple dots or points instead of pictures. Doesn't use texture mapping, so it may work better on slower machines. Overrides \-bitmap.
-.TP 8
-.B \-fog
-Make flyers in the distance be darker.
+.B \-waittime \fInumber\fP
+Time between crater impacts.  Legal values are from 1 to 200.  Default: 10.
 .TP 8
 .B \-fps | \-no\-fps
 Whether to show a frames\-per\-second display at the bottom of the screen.
@@ -72,9 +52,8 @@ stored in the RESOURCE_MANAGER property.
 .SH "SEE ALSO"
 .BR X (1),
 .BR xscreensaver (1),
-.BR bitmap (1)
 .SH "COPYRIGHT"
-Copyright \(co 2009 by Kelley Nielsen.  Permission to use, copy, modify, 
+Copyright \(co 2010 by Kelley Nielsen.  Permission to use, copy, modify, 
 distribute, and sell this software and its documentation for any purpose is 
 hereby granted without fee, provided that the above copyright notice appear 
 in all copies and that both that copyright notice and this permission notice
