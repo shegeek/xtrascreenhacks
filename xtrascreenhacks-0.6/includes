@@ -1,0 +1,114 @@
+hacks/glx/bclockhousing.c:#include <stdio.h>
+hacks/glx/bclockhousing.c:#include <stdlib.h>
+acks/glx/bclocklamps.h:#include <X11/Xdefs.h>
+acks/glx/craters.c:#include <stdbool.h>
+hacks/glx/ejecta.h:#include <stdbool.h>
+hacks/glx/solutionparser.c:#include <stdbool.h>
+hacks/glx/ejecta.h:#include <GL/gl.h> 
+hacks/glx/ejecta.h:#include <GL/glu.h> 
+acks/glx/fps.c:# include <AGL/agl.h>
+hacks/glx/fps.c:# include <GL/glx.h>
+hacks/glx/fps.c:# include <OpenGL/gl.h>
+hacks/glx/fps.c:# include <OpenGL/glu.h>
+hacks/glx/solutionparser.c:#include <ctype.h>  
+hacks/glx/solutionparser.c:#include <string.h> 
+hacks/glx/xpm-ximage.c:# include <gdk-pixbuf/gdk-pixbuf.h>
+hacks/glx/xpm-ximage.c:#  include <gdk-pixbuf/gdk-pixbuf-xlib.h>
+hacks/glx/xpm-ximage.c:#  include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+hacks/glx/xpm-ximage.c:#include <X11/Intrinsic.h>
+hacks/glx/xpm-ximage.c:# include <X11/Xlib.h>
+hacks/glx/xpm-ximage.c:#include <X11/xpm.h>
+hacks/glx/xpm-ximage.c:#include <X11/Xutil.h>
+cks/screenhack.c:#include <X11/CoreP.h>
+hacks/screenhack.c:#include <X11/Intrinsic.h>
+hacks/screenhack.c:#include <X11/IntrinsicP.h>
+hacks/screenhack.c:#include <X11/keysym.h>
+hacks/screenhack.c:# include <X11/SGIScheme.h>	/* for SgiUseSchemes() */
+hacks/screenhack.c:#include <X11/Shell.h>
+hacks/screenhack.c:#include <X11/StringDefs.h>
+hacks/screenhack.c:#  include <X11/Xmu/Error.h>
+hacks/screenhack.c:#  include <Xmu/Error.h>
+hacks/screenhackI.h:# include <values.h>
+hacks/screenhackI.h:# include <X11/Xlib.h>
+hacks/screenhackI.h:# include <X11/Xos.h>
+hacks/screenhackI.h:# include <X11/Xresource.h>
+hacks/screenhackI.h:# include <X11/Xutil.h>
+hacks/xlockmore.c:# include <X11/Intrinsic.h>
+hacks/xlockmore.h:#  include <GL/glu.h>
+hacks/xlockmore.h:#  include <GL/glx.h>
+hacks/xlockmore.h:#  include <OpenGL/gl.h>
+hacks/xlockmore.h:#  include <OpenGL/glu.h>
+hacks/xlockmoreI.h:#  include <GL/gl.h>
+hacks/xlockmoreI.h:#  include <GL/glx.h>
+hacks/xlockmoreI.h:#  include <OpenGL/gl.h>
+hacks/xlockmoreI.h:#include <time.h>
+hacks/xpm-pixmap.c:# include <gdk-pixbuf/gdk-pixbuf.h>
+hacks/xpm-pixmap.c:#  include <gdk-pixbuf/gdk-pixbuf-xlib.h>
+hacks/xpm-pixmap.c:#  include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+hacks/xpm-pixmap.c:#include <X11/Intrinsic.h>
+hacks/xpm-pixmap.c:# include <X11/Xlib.h>
+hacks/xpm-pixmap.c:#  include <X11/Xmu/Drawing.h>
+hacks/xpm-pixmap.c:#include <X11/xpm.h>
+hacks/xpm-pixmap.c:# include <X11/Xutil.h>
+hacks/xpm-pixmap.c:#  include <Xmu/Drawing.h>
+utils/alpha.c:#include <X11/Xutil.h>
+utils/erase.c:#include <sys/time.h> /* for gettimeofday() */
+utils/grabclient.c:# include <sys/wait.h>		/* for waitpid() and associated macros */
+utils/grabclient.c:# include <unistd.h>
+utils/grabclient.c:# include <X11/Intrinsic.h>   /* for XtInputId, etc */
+utils/grabclient.c:# include <X11/Xatom.h>
+utils/grabscreen.c:# include <X11/extensions/readdisplay.h>
+utils/grabscreen.c:#include <X11/Xatom.h>
+utils/grabscreen.c:#  include <X11/Xmu/WinUtil.h>
+utils/grabscreen.c:#include <X11/Xutil.h>
+utils/grabscreen.c:#  include <Xmu/WinUtil.h>
+utils/minixpm.c:# include <X11/Xlib.h>
+utils/minixpm.c:# include <X11/Xutil.h>
+tils/overlay.c:#include <X11/Xproto.h>
+utils/overlay.c:#include <X11/Xutil.h>
+utils/resources.c:#include <X11/Xresource.h>
+utils/usleep.c:# include <descrip.h>
+utils/usleep.c:# include <lib$routines.h>
+utils/usleep.c:# include <sys/time.h>		/* for struct timeval */
+utils/usleep.c:# include <unistd.h>
+utils/utils.h:#include <math.h>
+tils/utils.h:# include <X11/Xlib.h>
+utils/utils.h:# include <X11/Xos.h>
+utils/utils.h:# include <X11/Xutil.h>
+utils/visual.c:#include <X11/Xutil.h>
+utils/visual-gl.c:# include <GL/gl.h>
+utils/visual-gl.c:# include <GL/glx.h>
+tils/vms-gtod.c:#include <signal.h>
+utils/vms-gtod.c:#include <time.h>
+tils/vroot.h: * #include <X11/vroot.h>
+utils/vroot.h:#include <X11/Xatom.h>
+utils/vroot.h:#include <X11/X.h>
+utils/vroot.h:#include <X11/Xlib.h>
+utils/xdbe.c:# include <X11/Xmu/Error.h>
+utils/xdbe.h:# include <X11/extensions/Xdbe.h>
+utils/xmu.c:#include <X11/Intrinsic.h>	/* for XtSpecificationRelease */
+utils/xmu.c:# include <X11/Xlib.h>
+utils/xmu.c:# include <X11/Xlibint.h>	/* for _XExtension */
+utils/xmu.c:# include <X11/Xproto.h>	/* for xEvent (used by Xlibint.h) */
+utils/xmu.h:#include <X11/Xlib.h>
+utils/xshm.c:#include <errno.h>		/* for perror() */
+utils/xshm.c:# include <X11/Xmu/Error.h>
+utils/xshm.c:#include <X11/Xutil.h>		/* for XDestroyImage() */
+tils/xshm.h:# include <sys/ipc.h>
+utils/xshm.h:# include <sys/shm.h>
+utils/xshm.h:# include <X11/extensions/XShm.h>
+tils/yarandom.c:#include <sys/time.h> /* for gettimeofday() */
+utils/yarandom.c:# include <unistd.h>  /* for getpid() */
+
+-> put in test for stdbool.h
+-> gdk-pixbuf is only gtk thing left, is only in xpm-ximage and xpm-pixmap
+   there are separate tests for all of gtk and for gdk-pixbuf
+-> can probably take out motif stuff, is only for configurator and is
+   deprecated anyway
+-> how does the compiler use bc, or what is it used for in general?
+   (test for it is commented out but left in place)
+-> perl stuff also commented out but left in, for same reasons,
+   and because I might eventually want it
+
+
+

@@ -18,7 +18,7 @@ echo "command line was: $0 $@"
 ###############################################################################
 
 AH_TOP([
-/* config.h.in --- xscreensaver, Copyright (c) 1998-2000 Jamie Zawinski.
+/* config.h.in --- xtrascreenhacks, Copyright (c) 2010 Kelley Nielsen.
  *
  *  The best way to set these parameters is by running the included `configure'
  *  script.  That examines your system, and generates `config.h' from 
@@ -28,78 +28,6 @@ AH_TOP([
  *  that your changes will be lost if you ever run `configure' again.
  */
 ])
-
-AH_TEMPLATE([HAVE_READ_DISPLAY_EXTENSION],
-	    [Define this if you have the XReadDisplay extension (I think
-             this is an SGI-only thing; it's in
-             <X11/extensions/readdisplay.h>.) A few of the screenhacks will
-             take advantage of this if it's available.])
-
-AH_TEMPLATE([HAVE_XHPDISABLERESET],
-	    [Define this if you have the XHPDisableReset function (an HP only
-	    thing which allows the Ctrl-Sh-Reset key sequence to be
-	    temporarily disabled.)])
-
-AH_TEMPLATE([HAVE_XIDLE_EXTENSION],
-	    [Define this if you have the XIDLE extension installed. If you
-	    have the XIDLE extension, this is recommended.  (You have this
-	    extension if the file /usr/include/X11/extensions/xidle.h
-	    exists.) Turning on this flag lets XScreenSaver work better with
-	    servers which support this extension; but it will still work
-	    with servers which do not suport it, so it's a good idea to
-	    compile in support for it if you can.])
-
-AH_TEMPLATE([HAVE_MIT_SAVER_EXTENSION],
-	    [Define this if you have the MIT-SCREEN-SAVER extension
-            installed.  See the caveats about this extension, above.
-            (It's available if /usr/include/X11/extensions/scrnsaver.h
-            exists.)])
-
-AH_TEMPLATE([HAVE_SGI_SAVER_EXTENSION],
-	    [Define this if you have the SGI SCREEN_SAVER extension.  This is
-	    standard on Irix systems, and not available elsewhere.])
-
-AH_TEMPLATE([HAVE_SGI_VC_EXTENSION],
-	    [Define this if you have the SGI-VIDEO-CONTROL extension.  This
-	    is standard on Irix systems, and not available elsewhere.])
-
-AH_TEMPLATE([HAVE_XF86VMODE],
-	    [Define this if you have the functions XF86VidModeGetModeLine()
-	    and XF86VidModeGetViewPort(), in support of virtual desktops
-	    where the X server's root window is bigger than the actual
-	    screen.  This is an XFree86 thing, and probably doesn't exist
-	    elsewhere.  (It's available if the file
-	    /usr/include/X11/extensions/xf86vmode.h exists.)])
-
-AH_TEMPLATE([HAVE_XF86VMODE_GAMMA],
-	    [Define this if you have the functions XF86VidModeGetGamma() and
-	    XF86VidModeSetGamma(), which allow clients to change the gamma
-	    response of the monitor.  This is an XFree86 4.0.x thing, and
-	    probably doesn't exist elsewhere.  (It's available if the file
-	    /usr/include/X11/extensions/xf86vmode.h exists and has stuff about
-	    gamma in it.)])
-
-AH_TEMPLATE([HAVE_XF86VMODE_GAMMA_RAMP],
-	    [Define this if you have the functions XF86VidModeGetGammaRamp()
-	    and XF86VidModeSetGammaRamp(), which provide finer-grained
-	    control than XF86VidMode[GS]etGamma().  These appeared in
-	    XFree86 4.1.0.])
-
-AH_TEMPLATE([HAVE_XF86MISCSETGRABKEYSSTATE],
-	    [Define this if you have the XF86MiscSetGrabKeysState function
-	    (which allows the Ctrl-Alt-KP_star and Ctrl-Alt-KP_slash key
-	    sequences to be temporarily disabled.  Sadly, it doesn't affect
-	    Ctrl-Alt-BS or Ctrl-Alt-F1.)])
-
-AH_TEMPLATE([HAVE_PROC_INTERRUPTS],
-	    [Define this if you have a Linux-like /proc/interrupts file which
-	    can be examined to determine when keyboard activity has
-	    occurred.])
-
-AH_TEMPLATE([HAVE_MOTIF],[Define this if you have Motif.])
-
-AH_TEMPLATE([HAVE_XMCOMBOBOX],
-	    [Define this if you have the XmComboBox Motif widget (Motif 2.0.)])
 
 AH_TEMPLATE([HAVE_GTK],[Define this if you have Gtk (any version.)])
 AH_TEMPLATE([HAVE_GTK2],[Define this if you have Gtk 2.x.])
@@ -447,21 +375,20 @@ AC_DEFUN(AC_GETTIMEOFDAY_ARGS,
 #
 ###############################################################################
 
-# M4 sucks!!  perl sucks too!!
-changequote(X,Y)
-perl_version_cmd='print $]'
-changequote([,])
+#changequote(X,Y)
+#perl_version_cmd='print $]'
+#changequote([,])
 
-AC_DEFUN(AC_PROG_PERL,
- [AC_PATH_PROGS(PERL, [perl5 perl],,)
-  if test -z "$PERL" ; then
-    PERL_VERSION=0
-  else
-    AC_CACHE_CHECK([perl version], ac_cv_perl_version,
-                   [ac_cv_perl_version=`$PERL -e "$perl_version_cmd"`])
-    PERL_VERSION=$ac_cv_perl_version
-  fi
- ])
+#AC_DEFUN(AC_PROG_PERL,
+# [AC_PATH_PROGS(PERL, [perl5 perl],,)
+#  if test -z "$PERL" ; then
+#    PERL_VERSION=0
+#  else
+#    AC_CACHE_CHECK([perl version], ac_cv_perl_version,
+#                   [ac_cv_perl_version=`$PERL -e "$perl_version_cmd"`])
+#    PERL_VERSION=$ac_cv_perl_version
+#  fi
+# ])
 
 
 ###############################################################################
@@ -470,19 +397,19 @@ AC_DEFUN(AC_PROG_PERL,
 #
 ###############################################################################
 
-AC_DEFUN(AC_DEMAND_BC,
- [ac_bc_result=`echo 6+9 | bc 2>/dev/null`
-  AC_MSG_CHECKING([for bc])
-  if test "$ac_bc_result" = "15" ; then
-    AC_MSG_RESULT(yes)
-  else
-    AC_MSG_RESULT(no)
-    echo ''
-    AC_MSG_ERROR([Your system doesn't have \"bc\", which has been a standard
-                  part of Unix since the 1970s.  Come back when your vendor
-                  has grown a clue.])
-  fi
- ])
+#AC_DEFUN(AC_DEMAND_BC,
+# [ac_bc_result=`echo 6+9 | bc 2>/dev/null`
+#  AC_MSG_CHECKING([for bc])
+#  if test "$ac_bc_result" = "15" ; then
+#    AC_MSG_RESULT(yes)
+#  else
+#    AC_MSG_RESULT(no)
+#    echo ''
+#    AC_MSG_ERROR([Your system doesn't have \"bc\", which has been a standard
+#                  part of Unix since the 1970s.  Come back when your vendor
+#                  has grown a clue.])
+#  fi
+# ])
 
 
 
@@ -674,19 +601,6 @@ AC_DEFUN(AC_X_RANDOM_PATHS,
         fi
       done
 
-      # Now find Motif.  Thanks for not making xmkmf find this by
-      # default, you losers.
-      #
-      if test -d /usr/include/Motif2.1 ; then
-        X_CFLAGS="$X_CFLAGS -I/usr/include/Motif2.1"
-        X_LIBS="$X_LIBS -L/usr/lib/Motif2.1"
-      elif test -d /usr/include/Motif1.2 ; then
-        X_CFLAGS="$X_CFLAGS -I/usr/include/Motif1.2"
-        X_LIBS="$X_LIBS -L/usr/lib/Motif1.2"
-      elif test -d /usr/include/Motif1.1 ; then
-        X_CFLAGS="$X_CFLAGS -I/usr/include/Motif1.1"
-        X_LIBS="$X_LIBS -L/usr/lib/Motif1.1"
-      fi
 
       # Now let's check for the pseudo-standard locations for OpenGL and XPM.
       #
@@ -726,10 +640,6 @@ AC_DEFUN(AC_X_RANDOM_PATHS,
       #
       if test -f /usr/dt/include/Xm/Xm.h ; then
         X_CFLAGS="$X_CFLAGS -I/usr/dt/include"
-        MOTIF_LIBS="$MOTIF_LIBS -L/usr/dt/lib -R/usr/dt/lib"
-
-        # Some versions of Slowlaris Motif require -lgen.  But not all.  Why?
-        AC_CHECK_LIB(gen, regcmp, [MOTIF_LIBS="$MOTIF_LIBS -lgen"])
       fi
 
     ;;
@@ -910,7 +820,7 @@ AC_PROG_CPP
 AC_C_CONST
 AC_C_INLINE
 AC_EXEEXT
-AC_DEMAND_BC
+#AC_DEMAND_BC
 
 # stuff for Makefiles
 AC_PROG_INSTALL
@@ -940,12 +850,12 @@ AC_CHECK_FUNCS(fcntl uname nice setpriority getcwd getwd putenv sbrk)
 #AC_CHECK_FUNCS(sigaction syslog realpath setrlimit)
 AC_CHECK_FUNCS(sigaction realpath setrlimit)
 AC_CHECK_FUNCS(setlocale)
-AC_PROG_PERL
+#AC_PROG_PERL
 
-if test -z "$PERL" ; then
+#if test -z "$PERL" ; then
   # don't let it be blank...
-  PERL=/usr/bin/perl
-fi
+#  PERL=/usr/bin/perl
+#fi
 
 AC_PATH_XTRA
 
@@ -1113,299 +1023,6 @@ else
 fi
 
 
-
-
-###############################################################################
-#
-#       Check for the SGI SCREEN_SAVER server extension.
-#
-###############################################################################
-
-have_sgi=no
-with_sgi_req=unspecified
-AC_ARG_WITH(sgi-ext,
-[Except where noted, all of the --with options below can also take a
-directory argument: for example, `--with-motif=/opt/Motif'.  That would
-cause /opt/Motif/include/ to be added to the -I list, and /opt/Motif/lib/
-to be added to the -L list, assuming those directories exist.  
-
-By default, support for each of these options will be built in, if the
-relevant library routines exist.  At run time, they will then be used
-only if the X server being used supports them.  Each --with option has
-a corresponding --without option, to override building support for them
-at all.
-
-Screen blanking and idle-detection options:
-
-  --with-sgi-ext          Include support for the SGI SCREEN_SAVER extension.],
-  [with_sgi="$withval"; with_sgi_req="$withval"],[with_sgi=yes])
-
-HANDLE_X_PATH_ARG(with_sgi, --with-sgi-ext, SGI SCREEN_SAVER)
-
-if test "$with_sgi" = yes; then
-  AC_CHECK_X_HEADER(X11/extensions/XScreenSaver.h,
-                    [have_sgi=yes
-                     AC_DEFINE(HAVE_SGI_SAVER_EXTENSION)],,
-                    [#include <X11/Xlib.h>])
-
-elif test "$with_sgi" != no; then
-  echo "error: must be yes or no: --with-sgi-ext=$with_sgi"
-  exit 1
-fi
-
-
-###############################################################################
-#
-#       Check for the XIDLE server extension.
-#
-###############################################################################
-
-have_xidle=no
-with_xidle_req=unspecified
-AC_ARG_WITH(xidle-ext,
-[  --with-xidle-ext        Include support for the XIDLE extension.],
-  [with_xidle="$withval"; with_xidle_req="$withval"],[with_xidle=yes])
-
-HANDLE_X_PATH_ARG(with_xidle, --with-xidle-ext, XIDLE)
-
-if test "$with_xidle" = yes; then
-  AC_CHECK_X_HEADER(X11/extensions/xidle.h,
-                    [have_xidle=yes
-                     AC_DEFINE(HAVE_XIDLE_EXTENSION)],,
-                    [#include <X11/Xlib.h>])
-elif test "$with_xidle" != no; then
-  echo "error: must be yes or no: --with-xidle-ext=$with_xidle"
-  exit 1
-fi
-
-
-###############################################################################
-#
-#       Check for the SGI-VIDEO-CONTROL server extension.
-#
-###############################################################################
-
-have_sgivc=no
-with_sgivc_req=unspecified
-AC_ARG_WITH(sgivc-ext,
-[  --with-sgivc-ext        Include support for the SGI-VIDEO-CONTROL extension.],
-  [with_sgivc="$withval"; with_sgivc_req="$withval"],[with_sgivc=yes])
-
-HANDLE_X_PATH_ARG(with_sgivc, --with-sgivc-ext, SGI-VIDEO-CONTROL)
-
-if test "$with_sgivc" = yes; then
-
-  # first check for XSGIvc.h
-  AC_CHECK_X_HEADER(X11/extensions/XSGIvc.h, [have_sgivc=yes],,
-                    [#include <X11/Xlib.h>])
-
-  # if that succeeded, then check for the -lXsgivc
-  if test "$have_sgivc" = yes; then
-    have_sgivc=no
-    AC_CHECK_X_LIB(Xsgivc, XSGIvcQueryGammaMap,
-                  [have_sgivc=yes; SAVER_LIBS="$SAVER_LIBS -lXsgivc"], [true],
-                  -lXext -lX11)
-  fi
-
-  # if that succeeded, then we've really got it.
-  if test "$have_sgivc" = yes; then
-    AC_DEFINE(HAVE_SGI_VC_EXTENSION)
-  fi
-
-elif test "$with_sgivc" != no; then
-  echo "error: must be yes or no: --with-sgivc-ext=$with_sgivc"
-  exit 1
-fi
-
-
-
-
-
-
-###############################################################################
-#
-#       Check for the XF86VMODE server extension (for virtual screens.)
-#
-###############################################################################
-
-have_xf86vmode=no
-with_xf86vmode_req=unspecified
-AC_ARG_WITH(xf86vmode-ext,
-[  --with-xf86vmode-ext    Include support for XFree86 virtual screens.],
-  [with_xf86vmode="$withval"; with_xf86vmode_req="$withval"],
-  [with_xf86vmode=yes])
-
-HANDLE_X_PATH_ARG(with_xf86vmode, --with-xf86vmode-ext, xf86vmode)
-
-VIDMODE_LIBS=""
-
-if test "$with_xf86vmode" = yes; then
-
-  # first check for xf86vmode.h
-  AC_CHECK_X_HEADER(X11/extensions/xf86vmode.h, [have_xf86vmode=yes],,
-                    [#include <X11/Xlib.h>])
-
-  # if that succeeded, then check for the -lXxf86vm
-  if test "$have_xf86vmode" = yes; then
-    have_xf86vmode=no
-    AC_CHECK_X_LIB(Xxf86vm, XF86VidModeGetViewPort,
-                  [have_xf86vmode=yes;
-                   VIDMODE_LIBS="-lXxf86vm";
-                   SAVER_LIBS="$SAVER_LIBS $VIDMODE_LIBS"],
-                   [true], -lXext -lX11)
-  fi
-
-  # if that succeeded, then we've really got it.
-  if test "$have_xf86vmode" = yes; then
-    AC_DEFINE(HAVE_XF86VMODE)
-  fi
-
-elif test "$with_xf86vmode" != no; then
-  echo "error: must be yes or no: --with-xf86vmode-ext=$with_xf86vmode"
-  exit 1
-fi
-
-
-###############################################################################
-#
-#       Check for the XF86VMODE server extension (for gamma fading.)
-#
-###############################################################################
-
-have_xf86gamma=no
-have_xf86gamma_ramp=no
-with_xf86gamma_req=unspecified
-AC_ARG_WITH(xf86gamma-ext,
-[  --with-xf86gamma-ext    Include support for XFree86 gamma fading.],
-  [with_xf86gamma="$withval"; with_xf86gamma_req="$withval"],
-  [with_xf86gamma=yes])
-
-HANDLE_X_PATH_ARG(with_xf86gamma, --with-xf86gamma-ext, xf86gamma)
-
-if test "$with_xf86gamma" = yes; then
-
-  # first check for xf86vmode.h, if we haven't already
-  if test "$have_xf86vmode" = yes; then
-    have_xf86gamma=yes
-  else
-    AC_CHECK_X_HEADER(X11/extensions/xf86vmode.h, [have_xf86gamma=yes],,
-                      [#include <X11/Xlib.h>])
-  fi
-
-  # if that succeeded, then check for the -lXxf86vm
-  if test "$have_xf86gamma" = yes; then
-    have_xf86gamma=no
-    AC_CHECK_X_LIB(Xxf86vm, XF86VidModeSetGamma,
-                  [have_xf86gamma=yes],
-                   [true], -lXext -lX11)
-  fi
-
-  # check for the Ramp versions of the functions too.
-  if test "$have_xf86gamma" = yes; then
-    have_xf86gamma_ramp=no
-    AC_CHECK_X_LIB(Xxf86vm, XF86VidModeSetGammaRamp,
-                  [have_xf86gamma_ramp=yes],
-                   [true], -lXext -lX11)
-  fi
-
-  # if those tests succeeded, then we've really got the functions.
-  if test "$have_xf86gamma" = yes; then
-    AC_DEFINE(HAVE_XF86VMODE_GAMMA)
-  fi
-
-  if test "$have_xf86gamma_ramp" = yes; then
-    AC_DEFINE(HAVE_XF86VMODE_GAMMA_RAMP)
-  fi
-
-  # pull in the lib, if we haven't already
-  if test "$have_xf86gamma" = yes -a "$have_xf86vmode" = no; then
-    SAVER_LIBS="$SAVER_LIBS -lXxf86vm"
-  fi
-
-elif test "$with_xf86gamma" != no; then
-  echo "error: must be yes or no: --with-xf86gamma-ext=$with_xf86vmode"
-  exit 1
-fi
-
-
-
-###############################################################################
-#
-#       Check for XF86MiscSetGrabKeysState (but only bother if we are already
-#	using other XF86 stuff.)
-#
-###############################################################################
-
-have_xf86miscsetgrabkeysstate=no
-if test "$have_xf86gamma" = yes -o "$have_xf86vmode" = yes; then
-  AC_CHECK_X_LIB(Xxf86misc, XF86MiscSetGrabKeysState,
-                [have_xf86miscsetgrabkeysstate=yes],
-                [true], -lXext -lX11)
-  if test "$have_xf86miscsetgrabkeysstate" = yes ; then
-    SAVER_LIBS="$SAVER_LIBS -lXxf86misc"
-    AC_DEFINE(HAVE_XF86MISCSETGRABKEYSSTATE)
-  fi
-fi
-
-
-###############################################################################
-#
-#       Check for HP XHPDisableReset and XHPEnableReset.
-#
-###############################################################################
-
-AC_MSG_CHECKING([for XHPDisableReset in X11/XHPlib.h])
-AC_EGREP_X_HEADER(XHPDisableReset, X11/XHPlib.h,
-                  [AC_DEFINE(HAVE_XHPDISABLERESET)
-                   SAVER_LIBS="-lXhp11 $SAVER_LIBS"
-                   AC_MSG_RESULT(yes)],
-                  [AC_MSG_RESULT(no)])
-
-
-###############################################################################
-#
-#       Check for /proc/interrupts.
-#
-###############################################################################
-
-have_proc_interrupts=no
-with_proc_interrupts_req=unspecified
-AC_ARG_WITH(proc-interrupts,
-[  --with-proc-interrupts  Include support for consulting the /proc/interrupts
-                          file to notice keyboard activity.],
-  [with_proc_interrupts="$withval"; with_proc_interrupts_req="$withval"],
-  [with_proc_interrupts=yes])
-
-if test "$with_proc_interrupts" = yes; then
-
-  # Note that we may be building in an environment (e.g. Debian buildd chroot)
-  # without a proper /proc filesystem. If /proc/interrupts exists, then we'll
-  # check that it has the bits we need, but otherwise we'll just go on faith.
-  #
-  have_proc_interrupts=yes
-
-  if test -f /proc/interrupts; then
-   AC_CACHE_CHECK([whether /proc/interrupts contains keyboard data],
-    ac_cv_have_proc_interrupts,
-    [ac_cv_have_proc_interrupts=no
-     if grep 'keyboard\|i8042' /proc/interrupts >/dev/null 2>&1 ; then
-       ac_cv_have_proc_interrupts=yes
-     fi
-    ])
-   have_proc_interrupts=$ac_cv_have_proc_interrupts
-  fi
-
-  if test "$have_proc_interrupts" = yes; then
-    AC_DEFINE(HAVE_PROC_INTERRUPTS)
-  fi
-
-elif test "$with_proc_interrupts" != no; then
-  echo "error: must be yes or no: --with-proc-interrupts=$with_proc_interrupts"
-  exit 1
-fi
-
-
-
 ###############################################################################
 #
 #       Check for -lgtk (and Gnome stuff)
@@ -1559,187 +1176,6 @@ WITH_BROWSER=gnome-open
 if test "$have_gtk" = yes; then
   AC_CHECK_PROGS(gnome_open_program,     gnome-open)
   AC_CHECK_PROGS(gnome_url_show_program, gnome-url-show)
-fi
-
-
-###############################################################################
-#
-#       Check for -lXm.
-#
-###############################################################################
-
-have_motif=no
-with_motif_req=unspecified
-AC_ARG_WITH(motif,[  --with-motif            Use the Motif toolkit for the user interface
-                          (not recommended.)],
-  [with_motif="$withval"; with_motif_req="$withval"],[with_motif=no])
-
-HANDLE_X_PATH_ARG(with_motif, --with-motif, Motif)
-
-if test "$with_motif" != yes -a "$with_motif" != no ; then
-  echo "error: must be yes or no: --with-motif=$with_motif"
-  exit 1
-fi
-
-if test "$with_motif" = yes; then
-  have_motif=no
-  AC_CHECK_X_HEADER(Xm/Xm.h,
-                    [have_motif=yes
-                     AC_DEFINE(HAVE_MOTIF)
-                     MOTIF_LIBS="$MOTIF_LIBS -lXm"],,
-                    [#include <stdlib.h>
-                     #include <stdio.h>
-                     #include <X11/Intrinsic.h>])
-fi
-
-
-if test "$have_motif" = yes; then
-  AC_CHECK_X_HEADER(Xm/ComboBox.h, [AC_DEFINE(HAVE_XMCOMBOBOX)],,
-                    [#include <stdlib.h>
-                     #include <stdio.h>
-                     #include <X11/Intrinsic.h>])
-fi
-
-
-###############################################################################
-#
-#       Checking whether Motif is really Lesstif.
-#
-###############################################################################
-
-have_lesstif=no
-if test "$have_motif" = yes ; then
-  AC_CACHE_CHECK([whether Motif is really LessTif], 
-                 ac_cv_have_lesstif,
-                 [AC_TRY_X_COMPILE([#include <Xm/Xm.h>],
-                                   [long vers = LesstifVersion;],
-                                   [ac_cv_have_lesstif=yes],
-                                   [ac_cv_have_lesstif=no])])
-  have_lesstif=$ac_cv_have_lesstif
-fi
-
-
-lesstif_version=unknown
-lesstif_version_string=unknown
-
-if test "$have_lesstif" = yes ; then
-  ltv=unknown
-  echo unknown > conftest-lt
-  AC_CACHE_CHECK([LessTif version number],
-                 ac_cv_lesstif_version_string,
-      [AC_TRY_X_RUN([#include <stdio.h>
-                     #include <Xm/Xm.h>
-                     int main() {
-                       FILE *f = fopen("conftest-lt", "w");
-                       if (!f) exit(1);
-                       fprintf(f, "%d %d.%d\n", LesstifVersion,
-                          LESSTIF_VERSION, LESSTIF_REVISION);
-                       fclose(f);
-                       exit(0);
-                     }],
-                    [ltv=`cat conftest-lt`
-                     ac_cv_lesstif_version=`echo $ltv | sed 's/ .*//'`
-                     ac_cv_lesstif_version_string=`echo $ltv | sed 's/.* //'`],
-                    [ac_cv_lesstif_version=unknown
-                     ac_cv_lesstif_version_string=unknown],
-                    [ac_cv_lesstif_version=unknown
-                     ac_cv_lesstif_version_string=unknown])])
-  rm -f conftest-lt
-  lesstif_version=$ac_cv_lesstif_version
-  lesstif_version_string=$ac_cv_lesstif_version_string
-
-fi
-
-
-if test "$have_motif" = yes ; then
-  mtv=unknown
-  echo unknown > conftest-mt
-  AC_CACHE_CHECK([Motif version number],
-                 ac_cv_motif_version_string,
-      [AC_TRY_X_RUN([#include <stdio.h>
-                     #include <Xm/Xm.h>
-                     int main() {
-                       FILE *f = fopen("conftest-mt", "w");
-                       if (!f) exit(1);
-                       fprintf(f, "%d %d.%d\n", XmVersion,
-                          XmVERSION, XmREVISION);
-                       fclose(f);
-                       exit(0);
-                     }],
-                    [mtv=`cat conftest-mt`
-                     ac_cv_motif_version=`echo $mtv | sed 's/ .*//'`
-                     ac_cv_motif_version_string=`echo $mtv | sed 's/.* //'`],
-                    [ac_cv_motif_version=unknown
-                     ac_cv_motif_version_string=unknown],
-                    [ac_cv_motif_version=unknown
-                     ac_cv_motif_version_string=unknown])])
-  rm -f conftest-mt
-  motif_version=$ac_cv_motif_version
-  motif_version_string=$ac_cv_motif_version_string
-
-fi
-
-
-###############################################################################
-#
-#       Checking whether Motif requires -lXpm.
-#
-#       If this is Motif 2.x, and we have XPM, then link against XPM as well.
-#       The deal is, Motif 2.x requires XPM -- but it's a compilation option
-#       of the library whether to build the XPM code into libXm, or whether
-#       to rely on an external libXm.  So the only way to tell whether XPM is
-#       a link-time requirement is to examine libXm.a, which is very
-#       difficult to do in an autoconf script.  So... if it's Motif 2.x, we
-#       always link against XPM if the XPM lib exists (and this will be a
-#       no-op if libXm happens to already have the XPM code in it.)
-#
-###############################################################################
-
-motif_requires_xpm=no
-if test "$have_motif" = yes ; then
-   AC_MSG_CHECKING(whether Motif requires XPM)
-   if test "$motif_version" = "unknown" || test "$motif_version" -ge 2000
-   then
-     motif_requires_xpm=yes
-     AC_MSG_RESULT(maybe)
-   else
-     AC_MSG_RESULT(no)
-   fi
-fi
-
-
-###############################################################################
-#
-#       Checking whether Motif requires -lXp.
-#
-#       Some versions of Motif (2.1.0, at least) require -lXp, the "X Printing
-#       Extension".   Why this extension isn't in -lXext with all the others,
-#       I have no idea.
-#
-###############################################################################
-
-have_xp_ext=no
-if test "$have_motif" = yes ; then
-   have_xp_ext=no
-   AC_CHECK_X_LIB(Xp, XpQueryExtension,
-                  [have_xp_ext=yes; MOTIF_LIBS="$MOTIF_LIBS -lXp"],
-                  [true], -lX11 -lXext -lm)
-fi
-
-
-###############################################################################
-#
-#       Checking whether Motif requires -lXintl (for _Xsetlocale.)
-#
-###############################################################################
-
-have_xintl=no
-if test "$have_motif" = yes ; then
-  AC_CHECK_X_LIB(Xintl, _Xsetlocale, [have_xintl=yes], [have_xintl=no],
-                 -lX11 -lXext -lm)
-  if test "$have_xintl" = yes; then
-    MOTIF_LIBS="$MOTIF_LIBS -lXintl"
-  fi
 fi
 
 
@@ -2187,11 +1623,11 @@ fi
 # See comment near $motif_requires_xpm, above.
 # Need to do this here, after both Motif and XPM have been checked for.
 #
-if test "$have_motif" = yes -a "$have_xpm" = yes ; then
-  if test "$motif_requires_xpm" = yes ; then
-    MOTIF_LIBS="$MOTIF_LIBS $XPM_LIBS"
-  fi
-fi
+#if test "$have_motif" = yes -a "$have_xpm" = yes ; then
+#  if test "$motif_requires_xpm" = yes ; then
+#    MOTIF_LIBS="$MOTIF_LIBS $XPM_LIBS"
+#  fi
+#fi
 
 if test "$XPM_LIBS" = "" ; then
   XPM_LIBS=$(MINIXPM)
@@ -2320,35 +1756,6 @@ if test "$with_xdbe" = yes; then
 
 elif test "$with_xdbe" != no; then
   echo "error: must be yes or no: --with-xdbe-ext=$with_xshm"
-  exit 1
-fi
-
-
-###############################################################################
-#
-#       Check for the SGI XReadDisplay server extension.
-#
-#       Note: this has to be down here, rather than up with the other server
-#       extension tests, so that the output of `configure --help' is in the
-#       right order.  Arrgh!
-#
-###############################################################################
-
-have_readdisplay=no
-with_readdisplay_req=unspecified
-AC_ARG_WITH(readdisplay,
-[  --with-readdisplay      Include support for the XReadDisplay extension.],
-  [with_readdisplay="$withval"; with_readdisplay_req="$withval"],
-  [with_readdisplay=yes])
-
-HANDLE_X_PATH_ARG(with_readdisplay, --with-readdisplay, XReadDisplay)
-
-if test "$with_readdisplay" = yes; then
-  AC_CHECK_X_HEADER(X11/extensions/readdisplay.h,
-                    AC_DEFINE(HAVE_READ_DISPLAY_EXTENSION),,
-                    [#include <X11/Xlib.h>])
-elif test "$with_readdisplay" != no; then
-  echo "error: must be yes or no: --with-readdisplay=$with_readdisplay"
   exit 1
 fi
 
@@ -2547,10 +1954,10 @@ fi
 
 PREFERRED_DEMO_PROGRAM=''
 ALL_DEMO_PROGRAMS=
-if test "$have_motif" = yes; then
-  PREFERRED_DEMO_PROGRAM=xscreensaver-demo-Xm
-  ALL_DEMO_PROGRAMS="$PREFERRED_DEMO_PROGRAM $ALL_DEMO_PROGRAMS"
-fi
+#if test "$have_motif" = yes; then
+#  PREFERRED_DEMO_PROGRAM=xscreensaver-demo-Xm
+#  ALL_DEMO_PROGRAMS="$PREFERRED_DEMO_PROGRAM $ALL_DEMO_PROGRAMS"
+#fi
 if test "$have_gtk" = yes; then
   PREFERRED_DEMO_PROGRAM=xscreensaver-demo-Gtk
   ALL_DEMO_PROGRAMS="$PREFERRED_DEMO_PROGRAM $ALL_DEMO_PROGRAMS"
@@ -2637,7 +2044,6 @@ AC_SUBST(INCLUDES)
 AC_SUBST(PREFERRED_DEMO_PROGRAM)
 AC_SUBST(ALL_DEMO_PROGRAMS)
 AC_SUBST(SAVER_LIBS)
-AC_SUBST(MOTIF_LIBS)
 AC_SUBST(GTK_LIBS)
 AC_SUBST(XML_LIBS)
 AC_SUBST(JPEG_LIBS)
@@ -2684,7 +2090,7 @@ AC_SUBST(APPDEFAULTS)
 AC_SUBST(DEPEND)
 AC_SUBST(DEPEND_FLAGS)
 AC_SUBST(DEPEND_DEFINES)
-AC_SUBST(PERL)
+#AC_SUBST(PERL)
 
 AC_OUTPUT(Makefile
           utils/Makefile
@@ -2747,14 +2153,6 @@ noteL() {
 }
 
 
-if test "$with_sgi_req" = yes -a "$have_sgi" = no ; then
-  warn 'The SGI saver extension was requested, but was not found.'
-fi
-
-if test "$with_xidle_req" = yes -a "$have_xidle" = no ; then
-  warn 'The XIdle extension was requested, but was not found.'
-fi
-
 if test "$with_xshm_req" = yes -a "$have_xshm" = no ; then
   warn 'The XSHM extension was requested, but was not found.'
 fi
@@ -2763,18 +2161,6 @@ if test "$with_xdbe_req" = yes -a "$have_xdbe" = no ; then
   warn 'The DOUBLE-BUFFER extension was requested, but was not found.'
 fi
 
-if test "$with_sgivc_req" = yes -a "$have_sgivc" = no ; then
-  warn 'The SGI-VIDEO-CONTROL extension was requested, but was not found.'
-fi
-
-if test "$with_xf86vmode_req" = yes -a "$have_xf86vmode" = no ; then
-  warn 'The XF86VMODE extension was requested, but was not found.'
-fi
-
-
-if test "$with_proc_interrupts_req" = yes -a "$have_proc_interrupts" = no; then
-  warn "Checking of /proc/interrupts was requested, but it's bogus."
-fi
 
 if test "$pkg_config" = false ; then
   warnL 'The "pkg-config" program was not found.  Without that,'
@@ -2802,36 +2188,8 @@ if test "$gtk_halfassed" != no ; then
   fi
 fi
 
-motif_warn2() {
-  warn2 'Though the Motif front-end to xscreensaver is still'
-  warn2 'maintained, it is no longer being updated with new'
-  warn2 'features: all new development on the xscreensaver-demo'
-  warn2 'program is happening in the GTK version, and not in the'
-  warn2 'Motif version.  It is recommended that you build against'
-  warn2 'GTK instead of Motif.  See <http://www.gtk.org/>.'
-}
 
-if test "$have_motif" = no -a "$have_gtk" = no; then
-
-  if test "$with_motif" = yes; then
-    warnL "Neither the GTK nor Motif libraries were found; the"
-    warn2 "\`xscreensaver-demo' program requires one of these."
-    echo ''
-    motif_warn2
-  else
-    warnL "The GTK libraries do not seem to be available; the"
-    warn2 "\`xscreensaver-demo' program requires them."
-#   echo ''
-#   warn2 'You can use Motif or Lesstif instead of GTK (use the'
-#   warn2 "\`--with-motif' option) but that is NOT recommended."
-#   motif_warn2
-  fi
-
-elif test "$with_motif_req" = yes -a "$have_motif" = no ; then
-  warnL "Use of Motif was requested, but it wasn't found;"
-  warn2 "Gtk will be used instead."
-
-elif test "$jurassic_gtk" = yes ; then
+if test "$jurassic_gtk" = yes ; then
 
   pref_gtk=2.0
 
@@ -2855,31 +2213,6 @@ if test "$have_gtk" = yes -a "$have_gdk_pixbuf" = no ; then
   warn  "GTK is being used, but the GDK-Pixbuf library and/or"
   warn2 "headers were not found.  That can't be good.  Please"
   warn2 "install the GDK-Pixbuf development kit and re-configure."
-fi
-
-if test "$have_motif" = yes -a "$have_lesstif" = yes ; then
-
-  preferred_lesstif=0.92
-
-  if test "$lesstif_version" = unknown; then
-    warnL "Unable to determine the LessTif version number!"
-    warn2 "Make sure you are using version $preferred_lesstif or newer."
-    warn2 "See <http://www.lesstif.org/>."
-
-  elif test \! $lesstif_version -gt 82; then
-    warnL "LessTif version $lesstif_version_string is being used."
-    warn2 "LessTif versions 0.82 and earlier are too buggy to"
-    warn2 "use with XScreenSaver; it is strongly recommended"
-    warn2 "that you upgrade to at least version $preferred_lesstif!"
-    warn2 "See <http://www.lesstif.org/>."
-  fi
-fi
-
-
-if test "$have_motif" = yes -a "$have_gtk" = no ; then
-  warn  'Motif is being used, and GTK is not.'
-  echo  ''
-  motif_warn2
 fi
 
 
@@ -3044,11 +2377,6 @@ if test "$have_gl" = yes -a "$have_gle" = no ; then
 fi
 
 
-if test "$with_readdisplay_req" = yes -a "$have_readdisplay" = no ; then
-  warn 'Use of XReadDisplay was requested, but it was not found.'
-fi
-
-
 # You are in a twisty maze of namespaces and syntaxes, all alike.
 # Fuck the skull of Unix.
 #
@@ -3123,11 +2451,7 @@ if test "$do_dir_warning" = yes; then
   echo ""
   echo "$warnsep"
   echo ""
-  echo '      When you run "make install", the "xscreensaver",'
-  echo '      "xscreensaver-demo", and "xscreensaver-command" executables'
-  echo "      will be installed in ${bindir}/."
-  echo ""
-  echo "      The various graphics demos (190+ different executables) will"
+  echo "      When you run "make install", the various graphics demos will"
   echo "      be installed in ${HACKDIR}/."
   echo ""
   echo "      If you would prefer the demos to be installed elsewhere,"
@@ -3144,9 +2468,7 @@ if test "$do_dir_warning" = no; then
   if test "$warning" = no; then
     echo ''
   fi
-#  echo "User programs will be installed in ${bindir}/" 
   echo "Screen savers will be installed in ${HACKDIR}/"
   echo "Configuration dialogs will be installed in ${HACK_CONF_DIR}/"
-#  echo "System-wide default settings will be installed in ${APPDEFAULTS}/" 
   echo ''
 fi

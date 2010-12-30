@@ -25,7 +25,6 @@
 #define countof(x) (sizeof((x))/sizeof((*x)))
 
 #include "xlockmore.h"
-#include <ctype.h>
 #include <math.h>
 #include "boomerangs.h"
 

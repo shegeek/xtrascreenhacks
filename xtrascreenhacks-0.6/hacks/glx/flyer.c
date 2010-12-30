@@ -26,7 +26,6 @@
 #define countof(x) (sizeof((x))/sizeof((*x)))
 
 #include "xlockmore.h"
-#include <ctype.h>
 #include <math.h>
 
 #define DEFAULTXBM "../images/flyer/xlogo64"

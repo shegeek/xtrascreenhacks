@@ -6,7 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "bclockhousing.h"
 #include "bclocklightbank.h"
 #include "bclockconnector.h"
