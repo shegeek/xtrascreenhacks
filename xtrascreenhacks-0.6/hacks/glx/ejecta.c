@@ -61,14 +61,14 @@ void reset_ejparticle(ejparticle * redux, double maxradius)
 
 
 
-bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
+Bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
 {
-  bool islive = true;
+  Bool islive = True;
   updated->currpos[0] = updated->initvelocity[0] * elapsed 
     + updated->initpos[0];
   updated->currpos[1] = (gconst * elapsed * elapsed) + 
     updated->initvelocity[1] * elapsed + updated->initpos[1];
-  if (updated->currpos[1] < 0.) islive = false;
+  if (updated->currpos[1] < 0.) islive = False;
   updated->currpos[2] = updated->initvelocity[2] * elapsed + updated->initpos[2];
   return islive;
 }
@@ -144,17 +144,17 @@ void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
 /*     } */
 /* } */
 
-bool spew_ejecta(ejemitter * ejspew)
+Bool spew_ejecta(ejemitter * ejspew)
 {
-  bool emitterislive = false;
-  bool particleislive;
+  Bool emitterislive = False;
+  Bool particleislive;
   int itor;
   ejspew->taccum += ejspew->tincrement;
   for (itor = 0; itor < ejspew->numejparticles; itor++)
     {
       particleislive = advance_ejparticle(ejspew->ejectum[itor], 
 					  ejspew->taccum, ejspew->grav);
-      if (particleislive) emitterislive = true;
+      if (particleislive) emitterislive = True;
     }
   render_ejparticles(ejspew->ejectum, ejspew->numejparticles);
   return emitterislive;

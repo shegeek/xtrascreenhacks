@@ -1,7 +1,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 
-/* config.h.in --- xscreensaver, Copyright (c) 1998-2000 Jamie Zawinski.
+/* config.h.in --- xtrascreenhacks, Copyright (c) 2010 Kelley Nielsen.
  *
  *  The best way to set these parameters is by running the included `configure'
  *  script.  That examines your system, and generates `config.h' from 
@@ -27,21 +27,12 @@
 /* Define this if you have the X Double Buffer Extension. */
 #undef HAVE_DOUBLE_BUFFER_EXTENSION
 
-/* Define to 1 if you have the `fcntl' function. */
-#undef HAVE_FCNTL
-
 /* Define this if you have the GDK_Pixbuf library installed. Some of the demos
    can make use of this if it is available. */
 #undef HAVE_GDK_PIXBUF
 
-/* Define to 1 if you have the `getcwd' function. */
-#undef HAVE_GETCWD
-
 /* Define this if you have the gettimeofday function. */
 #undef HAVE_GETTIMEOFDAY
-
-/* Define to 1 if you have the `getwd' function. */
-#undef HAVE_GETWD
 
 /* Define this if you have OpenGL. Some of the demos require it, so if you
    don't have it, then those particular demos won't be built. (This won't
@@ -78,61 +69,18 @@
    have different names.) (HAVE_GL should be defined too.) */
 #undef HAVE_MESA_GL
 
-/* Define this if you have the MIT-SCREEN-SAVER extension installed. See the
-   caveats about this extension, above. (It's available if
-   /usr/include/X11/extensions/scrnsaver.h exists.) */
-#undef HAVE_MIT_SAVER_EXTENSION
-
-/* Define this if you have Motif. */
-#undef HAVE_MOTIF
-
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
-
-/* Define to 1 if you have the `nice' function. */
-#undef HAVE_NICE
 
 /* Define this if you have the XML library headers in their old,
    non-namespaced location (you lack the gnome-xml/libxml symlink) */
 #undef HAVE_OLD_XML_HEADERS
 
-/* Define this if you have a Linux-like /proc/interrupts file which can be
-   examined to determine when keyboard activity has occurred. */
-#undef HAVE_PROC_INTERRUPTS
-
 /* Define to 1 if you have the `putenv' function. */
 #undef HAVE_PUTENV
 
-/* Define this if you have the XReadDisplay extension (I think this is an
-   SGI-only thing; it's in <X11/extensions/readdisplay.h>.) A few of the
-   screenhacks will take advantage of this if it's available. */
-#undef HAVE_READ_DISPLAY_EXTENSION
-
-/* Define to 1 if you have the `realpath' function. */
-#undef HAVE_REALPATH
-
-/* Define to 1 if you have the `sbrk' function. */
-#undef HAVE_SBRK
-
-/* Define to 1 if you have the `setlocale' function. */
-#undef HAVE_SETLOCALE
-
-/* Define to 1 if you have the `setpriority' function. */
-#undef HAVE_SETPRIORITY
-
-/* Define to 1 if you have the `setrlimit' function. */
-#undef HAVE_SETRLIMIT
-
-/* Define this if you have the SGI SCREEN_SAVER extension. This is standard on
-   Irix systems, and not available elsewhere. */
-#undef HAVE_SGI_SAVER_EXTENSION
-
-/* Define this if you have the SGI-VIDEO-CONTROL extension. This is standard
-   on Irix systems, and not available elsewhere. */
-#undef HAVE_SGI_VC_EXTENSION
-
-/* Define to 1 if you have the `sigaction' function. */
-#undef HAVE_SIGACTION
+/* Define to 1 if you have the `select' function. */
+#undef HAVE_SELECT
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -169,46 +117,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define this if you have the XF86MiscSetGrabKeysState function (which allows
-   the Ctrl-Alt-KP_star and Ctrl-Alt-KP_slash key sequences to be temporarily
-   disabled. Sadly, it doesn't affect Ctrl-Alt-BS or Ctrl-Alt-F1.) */
-#undef HAVE_XF86MISCSETGRABKEYSSTATE
-
-/* Define this if you have the functions XF86VidModeGetModeLine() and
-   XF86VidModeGetViewPort(), in support of virtual desktops where the X
-   server's root window is bigger than the actual screen. This is an XFree86
-   thing, and probably doesn't exist elsewhere. (It's available if the file
-   /usr/include/X11/extensions/xf86vmode.h exists.) */
-#undef HAVE_XF86VMODE
-
-/* Define this if you have the functions XF86VidModeGetGamma() and
-   XF86VidModeSetGamma(), which allow clients to change the gamma response of
-   the monitor. This is an XFree86 4.0.x thing, and probably doesn't exist
-   elsewhere. (It's available if the file
-   /usr/include/X11/extensions/xf86vmode.h exists and has stuff about gamma in
-   it.) */
-#undef HAVE_XF86VMODE_GAMMA
-
-/* Define this if you have the functions XF86VidModeGetGammaRamp() and
-   XF86VidModeSetGammaRamp(), which provide finer-grained control than
-   XF86VidMode[GS]etGamma(). These appeared in XFree86 4.1.0. */
-#undef HAVE_XF86VMODE_GAMMA_RAMP
-
-/* Define this if you have the XHPDisableReset function (an HP only thing
-   which allows the Ctrl-Sh-Reset key sequence to be temporarily disabled.) */
-#undef HAVE_XHPDISABLERESET
-
-/* Define this if you have the XIDLE extension installed. If you have the
-   XIDLE extension, this is recommended. (You have this extension if the file
-   /usr/include/X11/extensions/xidle.h exists.) Turning on this flag lets
-   XScreenSaver work better with servers which support this extension; but it
-   will still work with servers which do not suport it, so it's a good idea to
-   compile in support for it if you can. */
-#undef HAVE_XIDLE_EXTENSION
-
-/* Define this if you have the XmComboBox Motif widget (Motif 2.0.) */
-#undef HAVE_XMCOMBOBOX
-
 /* Define this if you have the XML library. */
 #undef HAVE_XML
 
@@ -234,6 +142,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION

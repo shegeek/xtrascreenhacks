@@ -1,9 +1,6 @@
 hacks/glx/bclockhousing.c:#include <stdio.h>
 hacks/glx/bclockhousing.c:#include <stdlib.h>
 acks/glx/bclocklamps.h:#include <X11/Xdefs.h>
-acks/glx/craters.c:#include <stdbool.h>
-hacks/glx/ejecta.h:#include <stdbool.h>
-hacks/glx/solutionparser.c:#include <stdbool.h>
 hacks/glx/ejecta.h:#include <GL/gl.h> 
 hacks/glx/ejecta.h:#include <GL/glu.h> 
 acks/glx/fps.c:# include <AGL/agl.h>
@@ -100,15 +97,11 @@ utils/xshm.h:# include <X11/extensions/XShm.h>
 tils/yarandom.c:#include <sys/time.h> /* for gettimeofday() */
 utils/yarandom.c:# include <unistd.h>  /* for getpid() */
 
--> put in test for stdbool.h
+
 -> gdk-pixbuf is only gtk thing left, is only in xpm-ximage and xpm-pixmap
    there are separate tests for all of gtk and for gdk-pixbuf
--> can probably take out motif stuff, is only for configurator and is
-   deprecated anyway
 -> how does the compiler use bc, or what is it used for in general?
    (test for it is commented out but left in place)
--> perl stuff also commented out but left in, for same reasons,
-   and because I might eventually want it
 
 
 

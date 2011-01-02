@@ -25,11 +25,9 @@
 
 #include "xlockmore.h"
 #include <math.h>
-#include <stdbool.h>
 #include "erase.h"
 #include "crater4.h"
 #include "ejecta.h"
-
 
 
 #define DEFAULTS        "*delay:	50000           \n" \
@@ -71,12 +69,12 @@ typedef struct
   int wtimer;
 
   eraser_state *eraser;
-  bool erasing;
+  Bool erasing;
   ejemitter *eruption;
-  bool erupting;
+  Bool erupting;
   int eruptframes;
   double eruptincrement;
-  bool impacting;
+  Bool impacting;
   int impactframes, impactframecount;
 
 } crater_configuration;
@@ -248,11 +246,11 @@ init_craters (ModeInfo * mi)
     lp->craters[loop] = NULL;
 
   lp->wtimer = lp->timer = ((waittime > 0 && waittime <= 200) ? waittime : 10);
-  lp->erasing = false;
+  lp->erasing = False;
   tstep = ((step > 0 && step <= 20) ? ((float)step / 1000.) : 0.01);
   lp->eruption = init_ejemitter (5000, tstep, 25.);
-  lp->erupting = false;
-  lp->impacting = false;
+  lp->erupting = False;
+  lp->impacting = False;
   lp->impactframes = lp->impactframecount = 2;
 
   groundquad = gluNewQuadric ();
@@ -355,7 +353,7 @@ draw_craters (ModeInfo * mi)
   if ((lp->erasing) || (lp->eraser))
     {
       lp->eraser = erase_window (dpy, window, lp->eraser);
-      lp->erasing = false;
+      lp->erasing = False;
       glXWaitX ();
     }
 
@@ -384,7 +382,7 @@ draw_craters (ModeInfo * mi)
 		    ccrater->sizefactor);
 
        /* draw the streak of the impacting meteor */
-      if ((lp->impacting == true) && (loop == lp->countcraters - 1))
+      if ((lp->impacting == True) && (loop == lp->countcraters - 1))
       {
         glMaterialfv(GL_FRONT, GL_EMISSION, starglow);
         glBegin(GL_LINES);
@@ -392,7 +390,7 @@ draw_craters (ModeInfo * mi)
         glVertex3f(2., 0., 5.);
          glEnd();
         lp->impactframecount--;
-         if (lp->impactframecount == 0) lp->impacting = false; 
+         if (lp->impactframecount == 0) lp->impacting = False; 
         }
         
        glMaterialfv(GL_FRONT, GL_EMISSION, normal);
@@ -404,7 +402,7 @@ draw_craters (ModeInfo * mi)
 	      glTranslatef (0., 0., lp->eruptframes * lp->eruptincrement);
 	      glCallList (lp->craterdlist);
 	      glPopMatrix ();
-	      if (lp->erupting == true)
+	      if (lp->erupting == True)
 		{
 		  glRotatef (-90., -1., 0., 0.);
 		  lp->erupting = spew_ejecta (lp->eruption);
@@ -428,14 +426,14 @@ draw_craters (ModeInfo * mi)
 
 
 
-      if (lp->erupting == false)
+      if (lp->erupting == False)
 	lp->wtimer--;
 
       if (lp->wtimer < 0)
 	{
 	  lp->wtimer = lp->timer;
 	  lp->countcraters++;
-	  lp->impacting = true;
+	  lp->impacting = True;
 	  lp->impactframecount = lp->impactframes;
 	  if (lp->countcraters > lp->numcraters)
 	    {
@@ -445,14 +443,14 @@ draw_craters (ModeInfo * mi)
 		  lp->craters[loop] = NULL;
 		}
 	      lp->countcraters = 0;
-	      lp->erasing = true;
+	      lp->erasing = True;
 	      glXWaitGL ();
 	    }
 	  else
 	    {
 	      lp->craters[lp->countcraters - 1] = new_crater (lp);
 	      lp->eruptframes = reset_ejemitter (lp->eruption, 0.6);
-	      lp->erupting = true;
+	      lp->erupting = True;
 	      lp->eruptincrement = -0.18 / (double) lp->eruptframes;
 	    }
 	}

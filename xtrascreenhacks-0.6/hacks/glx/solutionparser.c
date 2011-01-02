@@ -24,7 +24,7 @@
 #include <stdlib.h> 
 #include <ctype.h>  
 #include <string.h> 
-#include <stdbool.h>
+#include <X11/Xlib.h>
 
 enum connections_t{right, down, ahead, left, up, behind};
 
@@ -48,15 +48,15 @@ int (*ofinders[8])(piececube *, int) = {NULL};
  * in a certain direction.
  * accepts a _single_ piececube and the adjoin to search for.
  */
-bool contains(piececube * cube, enum connections_t adjoiner )
+Bool contains(piececube * cube, enum connections_t adjoiner )
 {
-  bool does_it_contain = false;
+  Bool does_it_contain = False;
   int iterator;
   for (iterator = 0; iterator < cube->num_adjoins; iterator++)
     {
       if (cube->adjoins[iterator] == adjoiner)
 	{
-          does_it_contain = true;
+          does_it_contain = True;
           break;
         }
     }
@@ -306,7 +306,7 @@ void emit(piececube epieces[][4], int * erefindices, int * eorients, int numfigs
 {
   int itor;
   float alignment;
-  bool first = false;
+  Bool first = False;
 
   if ((emitfile = fopen("somafigures.h", "a")) == (FILE *)NULL)
   {
@@ -316,7 +316,7 @@ void emit(piececube epieces[][4], int * erefindices, int * eorients, int numfigs
 
   if (ftell(emitfile) == 0)
     {
-      first = true;
+      first = True;
       fprintf(emitfile, "#ifndef SOMAFIGURES_H\n#define SOMAFIGURES_H\n");
         fprintf(emitfile, "typedef struct {\n");
       fprintf(emitfile, "  GLfloat refcubex[8];\n");
@@ -582,7 +582,7 @@ void parse( char solfile[] )
   char inputline[256];
   char * inputtoken;
   char  delims[] = "/|";
-  bool figactive = false;
+  Bool figactive = False;
   int figsfound = 0;
 
   if ((solutionfile = fopen(solfile, "r")) == (FILE *)NULL)
@@ -594,19 +594,19 @@ void parse( char solfile[] )
   while(fgets(inputline, 255, solutionfile)!=NULL)
   {
     if (inputline[0] == ';') continue; /* comment in SOLVER data format */
-    if((strlen(inputline)<3) && (figactive == true))
+    if((strlen(inputline)<3) && (figactive == True))
       {
-	    figactive = false;
+	    figactive = False;
             /* end of figure found--complete processing */
 
             process();
       }
     if(inputline[0]=='/') 
     {
-      if (figactive == false)
+      if (figactive == False)
 	{
     	  /* new figure found */
-      figactive = true;
+      figactive = True;
           figsfound++;
           figlength = figdepth = figwidth = 0;
     memset(figurelayout, '\0', 32*32*32);

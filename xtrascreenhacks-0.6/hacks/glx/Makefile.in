@@ -62,7 +62,8 @@ HACK_BIN	= ..
 UTILS_SRC	= $(HACK_SRC)/../utils
 UTILS_BIN	= $(HACK_BIN)/../utils
 
-INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../.. @INCLUDES@
+# see corresponding line in ../Makefile.in 
+INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
 
 UTIL_SRCS	= $(UTILS_SRC)/colors.c $(UTILS_SRC)/hsv.c \
 		  $(UTILS_SRC)/resources.c $(UTILS_SRC)/usleep.c \
@@ -385,57 +386,6 @@ craters: craters.o crater4.o ejecta.o $(HACK_OBJS)
 #
 # DO NOT DELETE: updated by make distdepend
 
-crater4.o: $(srcdir)/crater4.h
-ejecta.o:  $(srcdir)/ejecta.h
-ejecta.o:  $(UTILS_SRC)/yarandom.h
-craters.o: $(srcdir)/crater4.h
-craters.o: $(srcdir)/ejecta.h
-craters.o: ../../config.h
-craters.o: $(HACK_SRC)/screenhackI.h
-craters.o: $(UTILS_SRC)/colors.h
-craters.o: $(UTILS_SRC)/grabscreen.h
-craters.o: $(UTILS_SRC)/hsv.h
-craters.o: $(UTILS_SRC)/resources.h
-craters.o: $(UTILS_SRC)/usleep.h
-craters.o: $(UTILS_SRC)/visual.h
-craters.o: $(UTILS_SRC)/xshm.h
-craters.o: $(UTILS_SRC)/yarandom.h
-craters.o: $(UTILS_SRC)/erase.h
-craters.o: $(HACK_SRC)/xlockmore.h
-craters.o: $(HACK_SRC)/xlockmoreI.h
-
-skylark.o: ../../config.h
-skylark.o: $(HACK_SRC)/screenhackI.h
-skylark.o: $(UTILS_SRC)/colors.h
-skylark.o: $(UTILS_SRC)/grabscreen.h
-skylark.o: $(UTILS_SRC)/hsv.h
-skylark.o: $(UTILS_SRC)/resources.h
-skylark.o: $(UTILS_SRC)/usleep.h
-skylark.o: $(UTILS_SRC)/visual.h
-skylark.o: $(UTILS_SRC)/xshm.h
-skylark.o: $(UTILS_SRC)/yarandom.h
-skylark.o: $(srcdir)/boomerangs.h
-skylark.o: $(HACK_SRC)/xlockmore.h
-skylark.o: $(HACK_SRC)/xlockmore.h
-skylark.o: $(HACK_SRC)/xlockmoreI.h
-
-
-bevelcube.o: $(srcdir)/bevelcube.h
-soma.o: $(srcdir)/bevelcube.h
-soma.o: $(srcdir)/flipguide.h
-soma.o: $(srcdir)/somafigures.h
-soma.o: ../../config.h
-soma.o: $(HACK_SRC)/screenhackI.h
-soma.o: $(UTILS_SRC)/colors.h
-soma.o: $(UTILS_SRC)/grabscreen.h
-soma.o: $(UTILS_SRC)/hsv.h
-soma.o: $(UTILS_SRC)/resources.h
-soma.o: $(UTILS_SRC)/usleep.h
-soma.o: $(UTILS_SRC)/visual.h
-soma.o: $(UTILS_SRC)/xshm.h
-soma.o: $(UTILS_SRC)/yarandom.h
-soma.o: $(HACK_SRC)/xlockmore.h
-soma.o: $(HACK_SRC)/xlockmoreI.h
 bclockhousing.o: $(srcdir)/bclockconnector.h
 bclockhousing.o: $(srcdir)/bclockhousing.h
 bclockhousing.o: $(srcdir)/bclocklightbank.h
@@ -454,6 +404,25 @@ berlinuhr.o: $(UTILS_SRC)/xshm.h
 berlinuhr.o: $(UTILS_SRC)/yarandom.h
 berlinuhr.o: $(HACK_SRC)/xlockmore.h
 berlinuhr.o: $(HACK_SRC)/xlockmoreI.h
+bevelcube.o: $(srcdir)/bevelcube.h
+crater4.o: $(srcdir)/crater4.h
+craters.o: ../../config.h
+craters.o: $(srcdir)/crater4.h
+craters.o: $(srcdir)/ejecta.h
+craters.o: $(HACK_SRC)/screenhackI.h
+craters.o: $(UTILS_SRC)/colors.h
+craters.o: $(UTILS_SRC)/erase.h
+craters.o: $(UTILS_SRC)/grabscreen.h
+craters.o: $(UTILS_SRC)/hsv.h
+craters.o: $(UTILS_SRC)/resources.h
+craters.o: $(UTILS_SRC)/usleep.h
+craters.o: $(UTILS_SRC)/visual.h
+craters.o: $(UTILS_SRC)/xshm.h
+craters.o: $(UTILS_SRC)/yarandom.h
+craters.o: $(HACK_SRC)/xlockmore.h
+craters.o: $(HACK_SRC)/xlockmoreI.h
+ejecta.o: $(srcdir)/ejecta.h
+ejecta.o: $(UTILS_SRC)/yarandom.h
 flyer.o: ../../config.h
 flyer.o: $(HACK_SRC)/images/xlogo64
 flyer.o: $(HACK_SRC)/screenhackI.h
@@ -479,6 +448,34 @@ fps.o: $(UTILS_SRC)/visual.h
 fps.o: $(UTILS_SRC)/xshm.h
 fps.o: $(UTILS_SRC)/yarandom.h
 fps.o: $(HACK_SRC)/xlockmoreI.h
+skylark.o: $(srcdir)/boomerangs.h
+skylark.o: ../../config.h
+skylark.o: $(HACK_SRC)/screenhackI.h
+skylark.o: $(UTILS_SRC)/colors.h
+skylark.o: $(UTILS_SRC)/grabscreen.h
+skylark.o: $(UTILS_SRC)/hsv.h
+skylark.o: $(UTILS_SRC)/resources.h
+skylark.o: $(UTILS_SRC)/usleep.h
+skylark.o: $(UTILS_SRC)/visual.h
+skylark.o: $(UTILS_SRC)/xshm.h
+skylark.o: $(UTILS_SRC)/yarandom.h
+skylark.o: $(HACK_SRC)/xlockmore.h
+skylark.o: $(HACK_SRC)/xlockmoreI.h
+soma.o: $(srcdir)/bevelcube.h
+soma.o: ../../config.h
+soma.o: $(srcdir)/flipguide.h
+soma.o: $(HACK_SRC)/screenhackI.h
+soma.o: $(srcdir)/somafigures.h
+soma.o: $(UTILS_SRC)/colors.h
+soma.o: $(UTILS_SRC)/grabscreen.h
+soma.o: $(UTILS_SRC)/hsv.h
+soma.o: $(UTILS_SRC)/resources.h
+soma.o: $(UTILS_SRC)/usleep.h
+soma.o: $(UTILS_SRC)/visual.h
+soma.o: $(UTILS_SRC)/xshm.h
+soma.o: $(UTILS_SRC)/yarandom.h
+soma.o: $(HACK_SRC)/xlockmore.h
+soma.o: $(HACK_SRC)/xlockmoreI.h
 xbmread.o: $(srcdir)/xbmread.h
 xlock-gl-utils.o: ../../config.h
 xlock-gl-utils.o: $(HACK_SRC)/screenhackI.h

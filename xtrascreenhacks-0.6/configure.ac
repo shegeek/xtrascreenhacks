@@ -4,9 +4,9 @@
 
 AC_PREREQ(2.52)
 #AC_INIT(driver/subprocs.c)
-AC_INIT([XtraScreenHacks], [0.1])
+AC_INIT([XtraScreenHacks], [0.7])
 AC_CONFIG_SRCDIR(hacks/screenhack.c)
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 
 echo "current directory: `pwd`"
 echo "command line was: $0 $@"
@@ -367,28 +367,6 @@ AC_DEFUN(AC_GETTIMEOFDAY_ARGS,
     AC_MSG_RESULT(unknown)
   fi
 ])
-
-
-###############################################################################
-#
-#       Function to find perl5 (defines PERL and PERL_VERSION.)
-#
-###############################################################################
-
-#changequote(X,Y)
-#perl_version_cmd='print $]'
-#changequote([,])
-
-#AC_DEFUN(AC_PROG_PERL,
-# [AC_PATH_PROGS(PERL, [perl5 perl],,)
-#  if test -z "$PERL" ; then
-#    PERL_VERSION=0
-#  else
-#    AC_CACHE_CHECK([perl version], ac_cv_perl_version,
-#                   [ac_cv_perl_version=`$PERL -e "$perl_version_cmd"`])
-#    PERL_VERSION=$ac_cv_perl_version
-#  fi
-# ])
 
 
 ###############################################################################
@@ -845,17 +823,7 @@ AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
 AC_GETTIMEOFDAY_ARGS
-#AC_CHECK_FUNCS(select fcntl uname nice setpriority getcwd getwd putenv sbrk)
-AC_CHECK_FUNCS(fcntl uname nice setpriority getcwd getwd putenv sbrk)
-#AC_CHECK_FUNCS(sigaction syslog realpath setrlimit)
-AC_CHECK_FUNCS(sigaction realpath setrlimit)
-AC_CHECK_FUNCS(setlocale)
-#AC_PROG_PERL
-
-#if test -z "$PERL" ; then
-  # don't let it be blank...
-#  PERL=/usr/bin/perl
-#fi
+AC_CHECK_FUNCS(select uname putenv)
 
 AC_PATH_XTRA
 
@@ -1938,6 +1906,11 @@ ac_cv_browser="$with_browser"
 #
 ###############################################################################
 
+# ccmakedep is supposedly better than makedepend
+# (there is also a gccmakedep, which calls gcc -M and is better yet)
+# all three are in the xutils-dev package in Maverick,
+# where else they may come from, I don't yet know'
+# see Dependency Tracking in the Automake manual
 DEPEND=makedepend
 DEPEND_FLAGS=
 DEPEND_DEFINES=
@@ -2090,7 +2063,6 @@ AC_SUBST(APPDEFAULTS)
 AC_SUBST(DEPEND)
 AC_SUBST(DEPEND_FLAGS)
 AC_SUBST(DEPEND_DEFINES)
-#AC_SUBST(PERL)
 
 AC_OUTPUT(Makefile
           utils/Makefile

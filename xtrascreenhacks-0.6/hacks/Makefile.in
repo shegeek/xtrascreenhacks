@@ -30,8 +30,6 @@ CFLAGS		= @CFLAGS@
 LDFLAGS		= @LDFLAGS@
 DEFS		= -DSTANDALONE @DEFS@
 LIBS		= @LIBS@
-# is perl needed?
-PERL		= @PERL@
 
 DEPEND		= @DEPEND@
 DEPEND_FLAGS	= @DEPEND_FLAGS@
@@ -39,10 +37,7 @@ DEPEND_DEFINES	= @DEPEND_DEFINES@
 
 SHELL		= /bin/sh
 INSTALL		= @INSTALL@
-#SUID_FLAGS      = -o root -m 4755
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
-#INSTALL_SCRIPT  = @INSTALL_SCRIPT@
-#INSTALL_SETUID  = @INSTALL_SETUID@
 INSTALL_DATA	= @INSTALL_DATA@
 INSTALL_DIRS	= @INSTALL_DIRS@
 
@@ -66,7 +61,10 @@ MINIXPM		= $(UTILS_BIN)/minixpm.o
 UTILS_SRC	= $(srcdir)/../utils
 UTILS_BIN	= ../utils
 
-INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I.. @INCLUDES@
+# makedepend should be finding this compiler directory on its own
+# should be using gccmakedep instead, which outputs differently
+# the processing in make distdepend would need to change
+INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
 
 # ^^^ find out which of these I need, or--
 # better to just include them all, avoid changing the utils
@@ -90,10 +88,10 @@ UTIL_OBJS	= $(UTILS_BIN)/alpha.o $(UTILS_BIN)/colors.o \
 #		  $(UTILS_BIN)/colorbars.o
 
 # does shegeek want sgigl, etc? If so, modify install to check for jwz's
-SRCS		= screenhack.c \ #xscreensaver-sgigl.c \
+SRCS		= screenhack.c \
 		  xpm-pixmap.c xlockmore.c \
 		  daisy.c \
-		  twinkle.c
+		  twinkle.c #\ xscreensaver-sgigl.c \
 
 #SCRIPTS		= vidwhacker webcollage ljlatest
 
@@ -109,10 +107,8 @@ NEXES		= daisy \
                   twinkle
 		  #@JPEG_EXES@
 
-# setuid hacks--shegeek will not have any
-#SEXES		= sonar
-#JPEG_EXES	= webcollage-helper
-EXES		= $(NEXES) # $(SEXES)
+
+EXES		= $(NEXES) 
 
 HACK_OBJS_1	= $(UTILS_BIN)/resources.o $(UTILS_BIN)/visual.o \
 		  $(UTILS_BIN)/usleep.o $(UTILS_BIN)/yarandom.o @XMU_OBJS@
@@ -144,7 +140,7 @@ EXTRAS		= README Makefile.in # xml2man.pl \
 VMSFILES	= compile_axp.com compile_decc.com link_axp.com link_decc.com \
 		  vms_axp.opt vms_axp_12.opt vms_decc.opt vms_decc_12.opt
 
-TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(VMSFILES) # $(SCRIPTS)
+TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(VMSFILES)
 
 
 default: all
@@ -173,52 +169,6 @@ install-program:: $(EXES)
 	else								\
 	  sinst="$(INSTALL_PROGRAM)" ;					\
 	fi # ;								\
-#	for program in $(SEXES); do					\
-#	  instargs="$$program $(install_prefix)$(HACKDIR)/$$program" ;	\
-#	  echo $$sinst $$instargs ;					\
-#	  if   $$sinst $$instargs ; then				\
-#	      true ;							\
-#	  elif [ @SETUID_HACKS@ = yes ]; then				\
-#	    echo $(INSTALL_PROGRAM) $$instargs ;			\
-#	    if   $(INSTALL_PROGRAM) $$instargs ; then			\
-#	      echo "" ;							\
-#	      echo "WARNING: unable to install $$program setuid:"	\
-#	           "installed non-setuid instead." ;			\
-#	      echo "" ;							\
-#	    else							\
-#	      exit 1 ;							\
-#	    fi ;							\
-#	  else								\
-#	    exit 1 ;							\
-#	  fi ;								\
-#	done
-
-#install-scripts: $(SCRIPTS) munge-scripts
-#	@for program in $(SCRIPTS); do					\
-#	  if [ -r $$program ] ; then					\
-#	    p=$$program ;						\
-#	  else								\
-#	    p=$(srcdir)/$$program ;					\
-#	  fi ;								\
-#	  echo $(INSTALL_SCRIPT) $$p					\
-#	    $(install_prefix)$(HACKDIR)/$$program ;			\
-#	  $(INSTALL_SCRIPT) $$p						\
-#	    $(install_prefix)$(HACKDIR)/$$program ;			\
-#	done
-
-#munge-scripts: $(SCRIPTS)
-#	@tmp=/tmp/mf.$$$$ ;						\
-#	perl="${PERL}" ;						\
-#	rm -f $$tmp ;							\
-#	for program in $(SCRIPTS); do					\
-#	  sed "s@^\(#!\)\(/[^ ]*/perl[^ ]*\)\(.*\)\$$@\1$$perl\3@"	\
-#	      < $(srcdir)/$$program > $$tmp ;				\
-#	  if ! cmp -s $(srcdir)/$$program $$tmp ; then			\
-#	    echo "$$program: setting interpreter to $$perl" >&2 ;	\
-#	    cat $$tmp > ./$$program ;					\
-#	  fi ;								\
-#	done ;								\
-#	rm -f $$tmp
 
 # When installing man pages, we install "foo.man" as "foo.N" and update
 # the .TH line in the installed file with one like
@@ -259,7 +209,6 @@ install-xml:
 	   $(INSTALL_DIRS) $$dest ;					\
 	 fi ;								\
 	 src=$(srcdir)/config ;						\
-#	 for file in $(EXES) $(SCRIPTS) $(EXTERNALS) ; do		\
 	 for file in $(EXES) ; do		\
 	   if [ -f $$src/$$file.xml ]; then				\
 	     echo $(INSTALL_DATA) $$src/$$file.xml $$dest/$$file.xml ;	\
@@ -283,7 +232,6 @@ uninstall-man:
 
 uninstall-xml:
 	@dest=$(install_prefix)$(HACK_CONF_DIR) ;			\
-#	 for file in $(EXES) $(SCRIPTS) $(EXTERNALS) ; do		\
 	 for file in $(EXES) ; do		\
 	     echo rm -f $$dest/$$file.xml ;				\
 	          rm -f $$dest/$$file.xml ;				\
@@ -306,6 +254,7 @@ depend:
 # close.  This excludes dependencies on files in /usr/include, etc.  It tries
 # to include only dependencies on files which are themselves a part of this
 # package.
+# kelley: see http://mad-scientist.net/make/autodep.html
 distdepend::
 	@echo updating dependencies in `pwd`/Makefile.in... ;		    \
 	$(DEPEND) -w 0 -f - 						    \
@@ -334,7 +283,6 @@ echo_tarfiles:
 
 check_men:
 	@badmen="" ;							\
-#	 for exe in $(EXES) $(SCRIPTS); do				\
 	 for exe in $(EXES) ;  do				\
 	   if ! [ -f $(srcdir)/$$exe.man				\
 		  -o "$$exe" = webcollage-helper ]; then		\
@@ -437,7 +385,6 @@ $(UTILS_BIN)/spline.o:		$(UTILS_SRC)/spline.c
 $(UTILS_BIN)/usleep.o:		$(UTILS_SRC)/usleep.c
 $(UTILS_BIN)/visual.o:		$(UTILS_SRC)/visual.c
 $(UTILS_BIN)/xmu.o:		$(UTILS_SRC)/xmu.c
-#$(UTILS_BIN)/logo.o:		$(UTILS_SRC)/logo.c
 $(UTILS_BIN)/minixpm.o:		$(UTILS_SRC)/minixpm.c
 $(UTILS_BIN)/yarandom.o:	$(UTILS_SRC)/yarandom.c
 $(UTILS_BIN)/erase.o:		$(UTILS_SRC)/erase.c
@@ -461,15 +408,11 @@ XPM		= xpm-pixmap.o
 ALP		= $(UTILS_BIN)/alpha.o
 HSV		= $(UTILS_BIN)/hsv.o
 SPL		= $(UTILS_BIN)/spline.o
-#LOGO		= $(UTILS_BIN)/logo.o $(UTILS_BIN)/minixpm.o
 GRAB		= $(GRAB_OBJS)
 ERASE		= $(UTILS_BIN)/erase.o
 COL		= $(COLOR_OBJS)
 SHM		= $(XSHM_OBJS)
 DBE		= $(XDBE_OBJS)
-#BARS		= $(UTILS_BIN)/colorbars.o $(LOGO)
-#ATV             = analogtv.o $(SHM)
-#APPLE2          = apple2.o $(ATV)
 
 CC_HACK		= $(CC) $(LDFLAGS)
 
@@ -493,9 +436,6 @@ twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
 	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(HACK_LIBS)
 
 
-
-
-
 # The rules for those hacks which follow the `xlockmore' API.
 #
 # shegeek has none of these yet, but may eventually,
@@ -510,13 +450,21 @@ twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
 #slip:		slip.o		$(XLOCK_OBJS) $(GRAB)
 #	$(CC_HACK) -o $@ $@.o	$(XLOCK_OBJS) $(GRAB) $(HACK_LIBS)
 
-
-# shegeek: rules for xsublim and webcollage-helper removed
-
 ##############################################################################
 #
 # DO NOT DELETE: updated by make distdepend
 
+daisy.o: ../config.h
+daisy.o: $(srcdir)/screenhack.h
+daisy.o: $(srcdir)/screenhackI.h
+daisy.o: $(UTILS_SRC)/colors.h
+daisy.o: $(UTILS_SRC)/erase.h
+daisy.o: $(UTILS_SRC)/grabscreen.h
+daisy.o: $(UTILS_SRC)/hsv.h
+daisy.o: $(UTILS_SRC)/resources.h
+daisy.o: $(UTILS_SRC)/usleep.h
+daisy.o: $(UTILS_SRC)/visual.h
+daisy.o: $(UTILS_SRC)/yarandom.h
 screenhack.o: ../config.h
 screenhack.o: $(srcdir)/screenhackI.h
 screenhack.o: $(UTILS_SRC)/colors.h
@@ -529,4 +477,29 @@ screenhack.o: $(UTILS_SRC)/visual.h
 screenhack.o: $(UTILS_SRC)/vroot.h
 screenhack.o: $(UTILS_SRC)/xmu.h
 screenhack.o: $(UTILS_SRC)/yarandom.h
+twinkle.o: ../config.h
+twinkle.o: $(srcdir)/screenhack.h
+twinkle.o: $(srcdir)/screenhackI.h
+twinkle.o: $(UTILS_SRC)/colors.h
+twinkle.o: $(UTILS_SRC)/grabscreen.h
+twinkle.o: $(UTILS_SRC)/hsv.h
+twinkle.o: $(UTILS_SRC)/resources.h
+twinkle.o: $(UTILS_SRC)/usleep.h
+twinkle.o: $(UTILS_SRC)/visual.h
+twinkle.o: $(UTILS_SRC)/yarandom.h
+xlockmore.o: ../config.h
+xlockmore.o: $(srcdir)/screenhack.h
+xlockmore.o: $(srcdir)/screenhackI.h
+xlockmore.o: $(UTILS_SRC)/colors.h
+xlockmore.o: $(UTILS_SRC)/grabscreen.h
+xlockmore.o: $(UTILS_SRC)/hsv.h
+xlockmore.o: $(UTILS_SRC)/resources.h
+xlockmore.o: $(UTILS_SRC)/usleep.h
+xlockmore.o: $(UTILS_SRC)/visual.h
+xlockmore.o: $(UTILS_SRC)/xshm.h
+xlockmore.o: $(UTILS_SRC)/yarandom.h
+xlockmore.o: $(srcdir)/xlockmoreI.h
+xpm-pixmap.o: ../config.h
+xpm-pixmap.o: $(UTILS_SRC)/visual.h
+xpm-pixmap.o: $(srcdir)/xpm-pixmap.h
 

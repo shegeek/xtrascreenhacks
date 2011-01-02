@@ -24,7 +24,7 @@
 #ifndef _EJECTA_H_
 #define _EJECTA_H_
 
-#include <stdbool.h>
+#include <X11/Xlib.h>
 #include <GL/gl.h> 
 #include <GL/glu.h> 
 
@@ -50,7 +50,7 @@ ejemitter * init_ejemitter(int count, double timestep, double gravconstant);
 int reset_ejemitter(ejemitter * redux, GLdouble newradius);
 
 
-bool spew_ejecta(ejemitter * ejspew);
+Bool spew_ejecta(ejemitter * ejspew);
 
 void delete_ejemitter(ejemitter * doomed);
 
