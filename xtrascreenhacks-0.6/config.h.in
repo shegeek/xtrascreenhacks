@@ -49,11 +49,6 @@
 /* Define this if you have the -lgle from GLE version 3 */
 #undef HAVE_GLE3
 
-/* Define this if you have Gtk (any version.) */
-#undef HAVE_GTK
-
-/* Define this if you have Gtk 2.x. */
-#undef HAVE_GTK2
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -71,10 +66,6 @@
 
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
-
-/* Define this if you have the XML library headers in their old,
-   non-namespaced location (you lack the gnome-xml/libxml symlink) */
-#undef HAVE_OLD_XML_HEADERS
 
 /* Define to 1 if you have the `putenv' function. */
 #undef HAVE_PUTENV
@@ -117,9 +108,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define this if you have the XML library. */
-#undef HAVE_XML
-
 /* Define this if you have the Xmu library. This is standard part of X, and if
    your vendor doesn't ship it, you should report that as a bug. */
 #undef HAVE_XMU
@@ -157,9 +145,6 @@
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
-
-/* Define this to void* if you're using X11R4 or earlier. */
-#undef XPointer
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #undef X_DISPLAY_MISSING

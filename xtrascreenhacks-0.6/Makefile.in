@@ -51,11 +51,12 @@ tags::
 	@$(MAKE_SUBDIR)
 
 clean::
-	@$(MAKE_SUBDIR2)
+	@$(MAKE_SUBDIR)
 
+# these used to try to clean OSX, but there is no Makefile there
 distclean:: clean
 	-rm -f config.h Makefile config.status config.cache config.log TAGS *~ "#"*
-	@$(MAKE_SUBDIR2)
+	@$(MAKE_SUBDIR)
 
 dist:: tar
 
@@ -89,47 +90,10 @@ tar::
   rm $$NAME
 
 
-# This also makes me sick...
-# autoconf generates a configure script that begins with a very hard to read,
-# nearly impossible to customize --help blurb.  This horrid set of regexps
-# go through and clean up the help text, by inserting whitespace and ripping
-# out options we don't use.  Odds are good that this will fail with any version
-# of autoconf other than the ones I've tried (2.12 and 2.13.)
-#
 configure::
 	autoconf
 	autoheader
-#	@TMP=configure.$$$$ ;					#	     \
-#	echo "munging configure's --help message..." ;			     \
-#	( perl -e '							     \
-#		my $$file="";						     \
-#		while (<>) { $$file .= $$_; }				     \
-#		$$_ = $$file;						     \
-#									     \
-#		s/^(Configuration:)$$/\n$$1\n/m;			     \
-#		s/^(Directory and file names:)$$/\n$$1\n/m;		     \
-#		s/^  --sbindir=.*\n//m;					     \
-#		s/^  --sysconfdir.*\n//m;				     \
-#		s/^  --sharedstatedir.*\n.*\n//m;			     \
-#		s/^  --localstatedir.*\n//m;				     \
-#		s/^  --infodir.*\n//m;					     \
-#		s/^(Host type:)$$/\n$$1\n/m;				     \
-#		s/\nFeatures and packages:\n.*library files are in DIR\n/\n/s;\
-#		s/--enable and --with options recognized://m;		     \
-#		s/\n  --with-x .*?(["\n])/$$1/s;			     \
-#		s/\n(Installation options:\n)/$$1/s;			     \
-#									     \
-#		s/^  --oldincludedir=.*$$/ \
-# --x-includes=DIR        X include files are in DIR\n \
-# --x-libraries=DIR       X library files are in DIR/m; \
-#									     \
-#		s@mandir=.\$${prefix}/man.@mandir=\\\$${datadir}/man@;       \
-#									     \
-#		print;'							     \
-#	< configure							     \
-#	> $$TMP &&							     \
-#	cat $$TMP > configure ) ;					     \
-#	rm -f $$TMP
+
 
 bump-version::
 	@								    \

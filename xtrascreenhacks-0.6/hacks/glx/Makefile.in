@@ -75,16 +75,16 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		  $(UTILS_SRC)/visual.o $(UTILS_SRC)/visual-gl.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o $(UTILS_SRC)/erase.o
 
-SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c flyer.c xbmread.c berlinuhr.c bclockhousing.c bclocklamps.c soma.c bevelcube.c skylark.c craters.c crater4.c ejecta.c
+SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c xbmread.c flyer.c \ 		  			berlinuhr.c bclockhousing.c bclocklamps.c soma.c \ 					bevelcube.c skylark.c crater4.c ejecta.c craters.c
 
 
 
-OBJS		=  xlock-gl-utils.o fps.o xpm-ximage.o flyer.o xbmread.o \
+OBJS		= xlock-gl-utils.o fps.o xpm-ximage.o xbmread.o flyer.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
-		   bevelcube.o skylark.o craters.o crater4.o ejecta.o
+		   bevelcube.o skylark.o crater4.o ejecta.o craters.o 
 
 
-GL_EXES		=  flyer  berlinuhr soma skylark craters
+GL_EXES		=  flyer berlinuhr soma skylark craters
 #GLE_EXES	= extrusion
 #GL_UTIL_EXES	= xscreensaver-gl-helper
 HACK_EXES	= @GL_EXES@ # @GLE_EXES@
@@ -94,14 +94,14 @@ HACK_EXES	= @GL_EXES@ # @GLE_EXES@
 EXES		= $(HACK_EXES)
 
 HACK_OBJS	= $(HACK_BIN)/screenhack.o \
-		  xlockmore-gl.o xlock-gl-utils.o fps.o \
+          xlockmore-gl.o xlock-gl-utils.o fps.o \
 		  $(UTILS_BIN)/resources.o $(UTILS_BIN)/visual.o \
 		  $(UTILS_BIN)/visual-gl.o $(UTILS_BIN)/usleep.o \
 		  $(UTILS_BIN)/yarandom.o $(UTILS_BIN)/hsv.o \
 		  $(UTILS_BIN)/colors.o xbmread.o $(UTILS_BIN)/erase.o
 
 
-HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h somafigures.h boomerangs.h crater4.h ejecta.h
+HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h \ 					bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h \ 					somafigures.h boomerangs.h crater4.h ejecta.h
 
 GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man
 MEN		= @GL_MEN@
@@ -133,19 +133,6 @@ install-program:: $(EXES)
 	   done ;							\
 	 fi
 
-# the xscreensaver-gl-helper program, in $bindir
-#install-program:: $(EXES)
-#	@exes="@GL_UTIL_EXES@" ;					\
-#	 idir="$(install_prefix)$(bindir)" ;				\
-#	 if [ "$$exes" != "" ]; then					\
-#	   if [ ! -d $$idir ]; then					\
-#	     $(INSTALL_DIRS) $$idir ;					\
-#	   fi ;								\
-#	   for program in $$exes; do					\
-#	     echo $(INSTALL_PROGRAM) $$program $$idir/$$program ;	\
-#		  $(INSTALL_PROGRAM) $$program $$idir/$$program ;	\
-#	   done ;							\
-#	 fi
 
 # When installing man pages, we install "foo.man" as "foo.N" and update
 # the .TH line in the installed file with one like
@@ -203,14 +190,6 @@ uninstall-program::
 		rm -f $$idir/$$program ;				\
 	 done
 
-# the xscreensaver-gl-helper program, in $bindir
-#uninstall-program::
-#	@exes="$(GL_UTIL_EXES)" ;					\#
-#	 idir="$(install_prefix)$(bindir)" ;				\
-#	 for program in $$exes; do					\
-#	   echo rm -f $$idir/$$program ;				\
-#		rm -f $$idir/$$program ;				\
-#	done
 
 uninstall-man:
 	@men="$(MEN)" ;							\
@@ -343,10 +322,10 @@ $(HACK_BIN)/xlockmore.o: $(HACK_SRC)/xlockmore.c
 # How to build the "xscreensaver-gl-helper" program, that lets the daemon
 # know which visual is the right one for GL programs.
 #
-HELPER_OBJS = xscreensaver-gl-helper.o $(UTILS_BIN)/visual-gl.o \
-	      $(UTILS_BIN)/visual.o $(UTILS_BIN)/resources.o
-xscreensaver-gl-helper: $(HELPER_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(HELPER_OBJS) $(LIBS) $(X_LIBS) $(HACK_POST2)
+#HELPER_OBJS = xscreensaver-gl-helper.o $(UTILS_BIN)/visual-gl.o \
+#	      $(UTILS_BIN)/visual.o $(UTILS_BIN)/resources.o
+#xscreensaver-gl-helper: $(HELPER_OBJS)
+#	$(CC) $(LDFLAGS) -o $@ $(HELPER_OBJS) $(LIBS) $(X_LIBS) $(HACK_POST2)
 
 
 # These hacks use a slightly-differently-compiled variant of xlockmore.c.
@@ -372,7 +351,7 @@ berlinuhr: berlinuhr.o bclockhousing.o bclocklamps.o $(HACK_OBJS)
 soma: soma.o bevelcube.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o bevelcube.o $(HACK_OBJS) $(XPM_LIBS)
 
-skylark: skylark.o	 $(HACK_OBJS)
+skylark: skylark.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o  $(HACK_OBJS)  $(XPM_LIBS)
 
 craters: craters.o crater4.o ejecta.o $(HACK_OBJS)

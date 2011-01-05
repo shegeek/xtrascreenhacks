@@ -1,8 +1,8 @@
-# configure.in --- xtrascreenhacks, Copyright (c) 2009 by Kelley Nielsen
+ # configure.in --- xtrascreenhacks, Copyright (c) 2009 by Kelley Nielsen
 #                  adapted from the original (c) 1997-2009 by Jamie Zawinski.
 #
 
-AC_PREREQ(2.52)
+AC_PREREQ(2.67)
 #AC_INIT(driver/subprocs.c)
 AC_INIT([XtraScreenHacks], [0.7])
 AC_CONFIG_SRCDIR(hacks/screenhack.c)
@@ -29,15 +29,6 @@ AH_TOP([
  */
 ])
 
-AH_TEMPLATE([HAVE_GTK],[Define this if you have Gtk (any version.)])
-AH_TEMPLATE([HAVE_GTK2],[Define this if you have Gtk 2.x.])
-
-
-AH_TEMPLATE([HAVE_XML],[Define this if you have the XML library.])
-
-AH_TEMPLATE([HAVE_OLD_XML_HEADERS],
-	    [Define this if you have the XML library headers in their old,
-	    non-namespaced location (you lack the gnome-xml/libxml symlink)])
 
 AH_TEMPLATE([HAVE_XPM],
 	    [Define this if you have the XPM library installed.  Some of the
@@ -97,8 +88,6 @@ AH_TEMPLATE([HAVE_GETTIMEOFDAY],
 AH_TEMPLATE([GETTIMEOFDAY_TWO_ARGS],
 	    [Define this if gettimeofday() takes two arguments.])
 
-AH_TEMPLATE([XPointer],
-	    [Define this to void* if you're using X11R4 or earlier.])
 
 # After checking to see that --srcdir is correct (which AC_INIT does)
 # check for some random other files that come later in the tar file,
@@ -503,16 +492,6 @@ AC_DEFUN(AC_PATH_X_APP_DEFAULTS,
     eval ac_x_app_defaults="$ac_cv_x_app_defaults"])
 
 
-AC_DEFUN(AC_XPOINTER,
- [AC_CACHE_CHECK([for XPointer], ac_cv_xpointer,
-                 [AC_TRY_X_COMPILE([#include <X11/Xlib.h>],
-                                   [XPointer foo = (XPointer) 0;],
-                                   [ac_cv_xpointer=yes],
-                                   [ac_cv_xpointer=no])])
-  if test "$ac_cv_xpointer" != yes; then
-   AC_DEFINE(XPointer,[char*])
-  fi])
-
 
 # Random special-cases for X on certain pathological OSes.
 # You know who you are.
@@ -833,7 +812,7 @@ fi
 
 AC_PATH_X_APP_DEFAULTS
 AC_X_RANDOM_PATHS
-AC_XPOINTER
+#AC_XPOINTER
 
 AC_MSG_CHECKING(whether this is MacOS X)
   ac_macosx=no
@@ -997,46 +976,6 @@ fi
 #
 ###############################################################################
 
-have_gtk=no
-with_gtk_req=unspecified
-AC_ARG_WITH(gtk,[
-User interface options:
-
-  --with-gtk              Use the Gtk toolkit for the user interface.],
-  [with_gtk="$withval"; with_gtk_req="$withval"],[with_gtk=yes])
-
-# if --with-gtk=/directory/ was specified, remember that directory so that
-# we can also look for the `gtk-config' program in that directory.
-case "$with_gtk" in
-  /*)
-    gtk_dir="$with_gtk"
-    ;;
-  *)
-    gtk_dir=""
-    ;;
-esac
-
-HANDLE_X_PATH_ARG(with_gtk, --with-gtk, Gtk)
-
-if test "$with_gtk" != yes -a "$with_gtk" != no ; then
-  echo "error: must be yes or no: --with-gtk=$with_gtk"
-  exit 1
-fi
-
-
-parse_gtk_version_string() {
-  # M4 sucks!!
-  changequote(X,Y)
-  maj=`echo $ac_gtk_version_string | sed -n 's/\..*//p'`
-  min=`echo $ac_gtk_version_string | sed -n 's/[^.]*\.\([^.]*\).*/\1/p'`
-  changequote([,])
-  ac_gtk_version=`echo "$maj * 1000 + $min" | bc`
-  if test -z "$ac_gtk_version"; then
-    ac_gtk_version=unknown
-    ac_gtk_version_string=unknown
-  fi
-}
-
 # Find pkg-config... (need this for both gtk and gdk_pixbuf.)
 # if the user specified --with-gtk=/foo/ then look there.
 #
@@ -1082,69 +1021,8 @@ pkg_check_version() {
   fi
 }
 
-
-jurassic_gtk=no
-gtk_halfassed=no
-
-if test "$with_gtk" = yes; then
-  have_gtk=no
-  
-  ok="yes"
-  pkg_check_version            gtk+-2.0  2.0.1  ; ac_gtk_version_string="$vers"
-  pkg_check_version         gmodule-2.0  2.0.0
-  pkg_check_version          libxml-2.0  2.4.6
-  pkg_check_version        libglade-2.0  1.99.0
   pkg_check_version      gdk-pixbuf-2.0  2.0.0
   pkg_check_version gdk-pixbuf-xlib-2.0  2.0.0
-  have_gtk="$ok"
-
-  if test "$have_gtk" = no; then
-    if test -n "$ac_gtk_version_string" ; then
-      gtk_halfassed="$ac_gtk_version_string"
-      gtk_halfassed_lib="$req"
-    fi
-  fi
-
-  if test "$have_gtk" = yes; then
-    parse_gtk_version_string
-    jurassic_gtk=no
-  fi
-
-  if test "$have_gtk" = yes; then
-    AC_CACHE_CHECK([for Gtk includes], ac_cv_gtk_config_cflags,
-                   [ac_cv_gtk_config_cflags=`$pkg_config --cflags $pkgs`])
-    AC_CACHE_CHECK([for Gtk libs], ac_cv_gtk_config_libs,
-                   [ac_cv_gtk_config_libs=`$pkg_config --libs $pkgs`])
-  fi
-
-  ac_gtk_config_cflags=$ac_cv_gtk_config_cflags
-  ac_gtk_config_libs=$ac_cv_gtk_config_libs
-
-  GTK_EXTRA_OBJS=""
-  GTK_DATADIR=""
-  if test "$have_gtk" = yes; then
-    GTK_DATADIR=`$pkg_config --variable=prefix gtk+-2.0`
-    GTK_DATADIR="$GTK_DATADIR/share"
-  fi
-
-  if test "$have_gtk" = yes; then
-    INCLUDES="$INCLUDES $ac_gtk_config_cflags"
-    GTK_LIBS="$GTK_LIBS $ac_gtk_config_libs"
-    AC_DEFINE(HAVE_GTK)
-    AC_DEFINE(HAVE_GTK2)
-    AC_DEFINE(HAVE_XML)
-  fi
-
-fi
-
-
-# Check for the various Gnome help and URL loading programs.
-#
-WITH_BROWSER=gnome-open
-if test "$have_gtk" = yes; then
-  AC_CHECK_PROGS(gnome_open_program,     gnome-open)
-  AC_CHECK_PROGS(gnome_url_show_program, gnome-url-show)
-fi
 
 
 ###############################################################################
@@ -1859,50 +1737,10 @@ ac_cv_textfile="$with_textfile"
 DEFAULT_TEXT_FILE="$ac_cv_textfile"
 
 
-###############################################################################
-#
-#       Check the browser to see help URL
-#
-###############################################################################
-
-have_browser=no
-with_browser_req=unspecified
-
-AC_ARG_WITH(browser,
-[  --with-browser=BROWSER   Specify the browser to show help URL.],
-  [with_browser="$withval"; with_browser_req="$withval"],
-  [with_browser=no ])
-# no HANDLE_X_PATH_ARG for this one
-
-case "$with_browser" in
-  no )
-  ;;
-  * )
-    WITH_BROWSER=$with_browser
-    gnome_open_program=$with_browser
-    AC_MSG_CHECKING([for browser $with_browser])
-    with_browser_fullpath=`which $with_browser 2>/dev/null`
-    case $with_browser_fullpath in
-	 /* )
-	        AC_MSG_RESULT(yes)
-		 have_browser=yes
-		 ;;
-	* )
-	       AC_MSG_RESULT(no)
-# Only warning: we don't want to install all packages for the 
-# dependency of the browser in building stage...
-	       echo "WARNING: browser not found: --with-browser=$with_browser"
-	       ;;
-    esac
-  ;;
-esac
-ac_cv_browser="$with_browser"
-
 
 ###############################################################################
 #
-#       Done testing.  Now, set up the various -I and -L variables,
-#       and decide which GUI program to build by default.
+#       Done testing.  Now, set up the various -I and -L variables
 #
 ###############################################################################
 
@@ -1922,18 +1760,6 @@ fi
 
 if test \! -z "$libdir" ; then
   LDFLAGS="$LDFLAGS -L$libdir"
-fi
-
-
-PREFERRED_DEMO_PROGRAM=''
-ALL_DEMO_PROGRAMS=
-#if test "$have_motif" = yes; then
-#  PREFERRED_DEMO_PROGRAM=xscreensaver-demo-Xm
-#  ALL_DEMO_PROGRAMS="$PREFERRED_DEMO_PROGRAM $ALL_DEMO_PROGRAMS"
-#fi
-if test "$have_gtk" = yes; then
-  PREFERRED_DEMO_PROGRAM=xscreensaver-demo-Gtk
-  ALL_DEMO_PROGRAMS="$PREFERRED_DEMO_PROGRAM $ALL_DEMO_PROGRAMS"
 fi
 
 
@@ -1972,24 +1798,6 @@ if test "$have_jpeg" = yes -a "$have_gdk_pixbuf" = yes; then
 fi
 
 
-# Another substitution in the XScreenSaver.ad.in file:
-#
-if test "$gnome_open_program" != ''; then
-  GNOME24=''
-  GNOME22='!	'
-  NOGNOME='!	'
-elif test "$gnome_url_show_program" != ''; then
-  GNOME24='!	'
-  GNOME22=''
-  NOGNOME='!	'
-else
-  GNOME24='!	'
-  GNOME22='!	'
-  NOGNOME=''
-fi
-
-
-
 
 
 # canonicalize slashes.
@@ -2014,11 +1822,7 @@ INCLUDES=`echo "$INCLUDES" | sed 's@ -I${prefix}/include@@g;'`
 
 AC_SUBST(INCLUDES)
 
-AC_SUBST(PREFERRED_DEMO_PROGRAM)
-AC_SUBST(ALL_DEMO_PROGRAMS)
 AC_SUBST(SAVER_LIBS)
-AC_SUBST(GTK_LIBS)
-AC_SUBST(XML_LIBS)
 AC_SUBST(JPEG_LIBS)
 AC_SUBST(HACK_LIBS)
 AC_SUBST(XPM_LIBS)
@@ -2028,7 +1832,6 @@ AC_SUBST(INSTALL_DIRS)
 AC_SUBST(DEFAULT_IMAGES_P)
 AC_SUBST(DEFAULT_IMAGE_DIRECTORY)
 AC_SUBST(DEFAULT_TEXT_FILE)
-AC_SUBST(WITH_BROWSER)
 
 AC_SUBST(OBJCC)
 AC_SUBST(EXES_OSX)
@@ -2048,14 +1851,9 @@ AC_SUBST(GL_MEN)
 AC_SUBST(GL_KLUDGE)
 AC_SUBST(GLE_EXES)
 AC_SUBST(GLE_KLUDGE)
-AC_SUBST(GNOME24)
-AC_SUBST(GNOME22)
-AC_SUBST(NOGNOME)
 AC_SUBST(HACKDIR)
 AC_SUBST(HACKDIR_FULL)
-AC_SUBST(GTK_DATADIR)
 AC_SUBST(HACK_CONF_DIR)
-AC_SUBST(GTK_EXTRA_OBJS)
 
 APPDEFAULTS=$ac_x_app_defaults
 AC_SUBST(APPDEFAULTS)
@@ -2148,44 +1946,6 @@ else
   fi
 fi
 
-if test "$gtk_halfassed" != no ; then
-  warnL "GTK version $gtk_halfassed was found, but at least one supporting"
-  warn2 "library ($gtk_halfassed_lib) was not, so GTK can't be used."
-  warn2 "Perhaps some of the development packages are not installed?"
-  if test "$have_gtk" = yes ; then
-    v="$ac_gtk_version_string"
-    warn2 "GTK $v is also installed, so it will be used instead."
-    warn2 "Please read the above output and the \`config.log' file"
-    warn2 "for more details."
-  fi
-fi
-
-
-if test "$jurassic_gtk" = yes ; then
-
-  pref_gtk=2.0
-
-  v="$ac_gtk_version_string"
-  if test "$with_gtk_req" = yes -a "$ac_gtk_version" = "unknown" ; then
-    warnL "Use of Gtk was requested, but its version number is unknown;"
-  elif test "$with_gtk_req" = yes ; then
-    warnL "Use of Gtk was requested, but it is version $v;"
-  else
-    warnL "Gtk was found on this system, but it is version $v;"
-  fi
-
-  warn2 "Gtk $pref_gtk or newer is required."
-
-elif test "$with_gtk_req" = yes -a "$have_gtk" = no ; then
-  warnL "Use of Gtk was requested, but it wasn't found."
-fi
-
-
-if test "$have_gtk" = yes -a "$have_gdk_pixbuf" = no ; then
-  warn  "GTK is being used, but the GDK-Pixbuf library and/or"
-  warn2 "headers were not found.  That can't be good.  Please"
-  warn2 "install the GDK-Pixbuf development kit and re-configure."
-fi
 
 
 if test "$with_xpm_req" = yes -a "$have_xpm" = no; then
