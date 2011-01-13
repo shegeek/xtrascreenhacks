@@ -111,8 +111,10 @@ done
 ###############################################################################
 
 AC_DEFUN(AC_PROG_CC_ANSI,
- [AC_PROG_CC
+ [AC_REQUIRE([AC_PROG_CC])
 
+  echo "Hostname is: $host"
+  echo "ac prog cc results in $GCC"
   if test -z "$GCC"; then
     # not using GCC
     AC_MSG_CHECKING(how to request ANSI compilation)
@@ -146,11 +148,12 @@ AC_DEFUN(AC_PROG_CC_ANSI,
   OBJCC="$CC"
 
   AC_MSG_CHECKING([whether the compiler works on ANSI C])
-  AC_TRY_RUN([ main(int ac, char **av) { return 0; } ],
-     AC_MSG_RESULT(yes),
-     AC_MSG_RESULT(no)
-     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.),
-     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.))
+  AC_RUN_IFELSE(AC_LANG_SOURCE([ main(int ac, char **av) { return 0; } ]),
+     [AC_MSG_RESULT(yes)],
+# AC_MSG_FAILURE is supposed to be better for this
+     [AC_MSG_RESULT(no)
+     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.)],
+     [AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.)])
 
   if test -n "$GCC"; then
     AC_MSG_RESULT(Turning on gcc compiler warnings.)
@@ -174,6 +177,7 @@ AC_DEFUN(AC_PROG_CC_ANSI,
   fi
 ])
 
+# macro to check for gcc options went here...restore?
 
 ###############################################################################
 #
@@ -915,6 +919,7 @@ else
   HACKDIR=$with_hackdir
 fi
 
+# some of this stuff is repeated below...necessary?
 # canonicalize slashes.
 HACKDIR=`echo "${HACKDIR}" | sed 's@/$@@;s@//*@/@g'`
 
