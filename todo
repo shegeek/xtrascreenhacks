@@ -14,8 +14,6 @@ create a proper history/changelog
 iron out heading at top of man files (some say xtrascreenhacks at both sides
   with a blank middle, some say the hack name on both sides with 
   xtrascreenhacks manual in the middle--is probably in the man files)
-fix default configdir in configure.ac--uses /xscreensaver,
-  doesn't substitute variables down into $datadir or wherever
 Stop trying to install from utils directory--nothing is installed from there
 
 Continue to develop web page (including personal section)
@@ -121,6 +119,7 @@ and I don't have a clue about it. Is there any way to still make it work?
 
 
 Same thing with VMS
+also decide whether to support some of these other weird ancient platforms
 
 write READMEs
 
@@ -138,17 +137,3 @@ screen grab is coming.)
 doesn't look like xscreensaver-sgigl is referenced from anywhere in the code. It is another standalone executable.
 
 
-
-
-from xmldir-problem:
-
-option not given, returns mistake (${datadir}/xscreensaver/config)
-empty option (--with-datadir  ) gives same
-option w/ bogus dir as arg, bogus dir passes
-option with good dir as arg passes
-empty option with = (--with-configdir=   ) wants to install under /
-option with yes arg ( --with-configdir=yes
-) returns mistake
-option with 'no' arg ( --with-configdir=no) returns the error mesage and quits
-
-problem is probably around line 1100 of configure.ac

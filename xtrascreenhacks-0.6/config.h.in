@@ -49,7 +49,6 @@
 /* Define this if you have the -lgle from GLE version 3 */
 #undef HAVE_GLE3
 
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

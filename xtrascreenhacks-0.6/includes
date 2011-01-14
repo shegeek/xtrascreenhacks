@@ -98,10 +98,13 @@ tils/yarandom.c:#include <sys/time.h> /* for gettimeofday() */
 utils/yarandom.c:# include <unistd.h>  /* for getpid() */
 
 
--> gdk-pixbuf is only gtk thing left, is only in xpm-ximage and xpm-pixmap
-   there are separate tests for all of gtk and for gdk-pixbuf
 -> how does the compiler use bc, or what is it used for in general?
    (test for it is commented out but left in place)
 
+-> test for X11/xpm.h not outputting anything on failure
+
+** work in stuff from configure.scan
+** make my images install properly, with user chosen dir option
+** further improve with autotools book
 
 

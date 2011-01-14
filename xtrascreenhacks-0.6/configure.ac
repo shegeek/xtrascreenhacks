@@ -110,11 +110,11 @@ done
 #
 ###############################################################################
 
-AC_DEFUN(AC_PROG_CC_ANSI,
+AC_DEFUN([AC_PROG_CC_ANSI],
  [AC_REQUIRE([AC_PROG_CC])
 
-  echo "Hostname is: $host"
-  echo "ac prog cc results in $GCC"
+#  echo "Hostname is: $host"
+#  echo "ac prog cc results in $GCC"
   if test -z "$GCC"; then
     # not using GCC
     AC_MSG_CHECKING(how to request ANSI compilation)
@@ -199,7 +199,7 @@ AC_DEFUN(AC_PROG_CC_ANSI,
 #
 ###############################################################################
 
-AC_DEFUN(AC_GCC_ACCEPTS_STD,
+AC_DEFUN([AC_GCC_ACCEPTS_STD],
  [if test -n "$GCC"; then
    AC_CACHE_CHECK([whether gcc accepts -std],
      ac_cv_gcc_accepts_std,
@@ -213,7 +213,7 @@ AC_DEFUN(AC_GCC_ACCEPTS_STD,
   fi
 ])
 
-AC_DEFUN(AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE,
+AC_DEFUN([AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE],
  [if test -n "$GCC"; then
    AC_GCC_ACCEPTS_STD
    AC_MSG_RESULT(Disabling C++ comments in ANSI C code.)
@@ -252,7 +252,7 @@ AC_DEFUN(AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE,
 #
 ###############################################################################
 
-AC_DEFUN(AC_GCC_ACCEPTS_NO_CPP_PRECOMP,
+AC_DEFUN([AC_GCC_ACCEPTS_NO_CPP_PRECOMP],
  [if test -n "$GCC"; then
    AC_CACHE_CHECK([whether gcc accepts -no-cpp-precomp],
      ac_cv_gcc_accepts_no_cpp_precomp,
@@ -266,7 +266,7 @@ AC_DEFUN(AC_GCC_ACCEPTS_NO_CPP_PRECOMP,
   fi
 ])
 
-AC_DEFUN(AC_NO_OBJECTIVE_C,
+AC_DEFUN([AC_NO_OBJECTIVE_C],
  [if test -n "$GCC"; then
    AC_GCC_ACCEPTS_NO_CPP_PRECOMP
    if test "$ac_gcc_accepts_no_cpp_precomp" = yes ; then
@@ -283,7 +283,7 @@ AC_DEFUN(AC_NO_OBJECTIVE_C,
 #
 ###############################################################################
 
-AC_DEFUN(AC_PROG_INSTALL_DIRS,
+AC_DEFUN([AC_PROG_INSTALL_DIRS],
  [AC_CACHE_CHECK([whether "\${INSTALL} -d" creates intermediate directories],
     ac_cv_install_d_creates_dirs,
     [ac_cv_install_d_creates_dirs=no
@@ -334,7 +334,7 @@ AC_DEFUN(AC_PROG_INSTALL_DIRS,
 #
 ###############################################################################
 
-AC_DEFUN(AC_GETTIMEOFDAY_ARGS,
+AC_DEFUN([AC_GETTIMEOFDAY_ARGS],
  [AC_MSG_CHECKING(how to call gettimeofday)
   AC_CACHE_VAL(ac_cv_gettimeofday_args,
    [AC_TRY_COMPILE([#include <stdlib.h>
@@ -368,7 +368,7 @@ AC_DEFUN(AC_GETTIMEOFDAY_ARGS,
 #
 ###############################################################################
 
-#AC_DEFUN(AC_DEMAND_BC,
+#AC_DEFUN([AC_DEMAND_BC],
 # [ac_bc_result=`echo 6+9 | bc 2>/dev/null`
 #  AC_MSG_CHECKING([for bc])
 #  if test "$ac_bc_result" = "15" ; then
@@ -393,7 +393,7 @@ AC_DEFUN(AC_GETTIMEOFDAY_ARGS,
 # Try and find the app-defaults directory.
 # It sucks that autoconf doesn't do this already...
 #
-AC_DEFUN(AC_PATH_X_APP_DEFAULTS_XMKMF,[
+AC_DEFUN([AC_PATH_X_APP_DEFAULTS_XMKMF],[
   rm -fr conftestdir
   if mkdir conftestdir; then
     cd conftestdir 2>/dev/null
@@ -421,7 +421,7 @@ AC_ARG_WITH(x-app-defaults,[],
 	[eval ac_x_app_defaults="$withval"])
 
 
-AC_DEFUN(AC_PATH_X_APP_DEFAULTS_DIRECT,[
+AC_DEFUN([AC_PATH_X_APP_DEFAULTS_DIRECT],[
   # Look for the directory under a standard set of common directories.
   # Check X11 before X11Rn because it's often a symlink to the current release.
   for ac_dir in                                 \
@@ -480,7 +480,7 @@ AC_DEFUN(AC_PATH_X_APP_DEFAULTS_DIRECT,[
   done
 ])
 
-AC_DEFUN(AC_PATH_X_APP_DEFAULTS,
+AC_DEFUN([AC_PATH_X_APP_DEFAULTS],
   [AC_REQUIRE_CPP()
     AC_CACHE_CHECK([for X app-defaults directory], ac_cv_x_app_defaults,
      [AC_PATH_X_APP_DEFAULTS_XMKMF
@@ -500,7 +500,7 @@ AC_DEFUN(AC_PATH_X_APP_DEFAULTS,
 # Random special-cases for X on certain pathological OSes.
 # You know who you are.
 #
-AC_DEFUN(AC_X_RANDOM_PATHS,
+AC_DEFUN([AC_X_RANDOM_PATHS],
  [case "$host" in
     *-hpux*)
 
@@ -625,7 +625,7 @@ AC_DEFUN(AC_X_RANDOM_PATHS,
 
 # Like AC_CHECK_HEADER, but it uses the already-computed -I directories.
 #
-AC_DEFUN(AC_CHECK_X_HEADER, [
+AC_DEFUN([AC_CHECK_X_HEADER], [
   ac_save_CPPFLAGS="$CPPFLAGS"
   if test \! -z "$includedir" ; then 
     CPPFLAGS="$CPPFLAGS -I$includedir"
@@ -637,7 +637,7 @@ AC_DEFUN(AC_CHECK_X_HEADER, [
 
 # Like AC_EGREP_HEADER, but it uses the already-computed -I directories.
 #
-AC_DEFUN(AC_EGREP_X_HEADER, [
+AC_DEFUN([AC_EGREP_X_HEADER], [
   ac_save_CPPFLAGS="$CPPFLAGS"
   if test \! -z "$includedir" ; then 
     CPPFLAGS="$CPPFLAGS -I$includedir"
@@ -649,7 +649,7 @@ AC_DEFUN(AC_EGREP_X_HEADER, [
 
 # Like AC_TRY_COMPILE, but it uses the already-computed -I directories.
 #
-AC_DEFUN(AC_TRY_X_COMPILE, [
+AC_DEFUN([AC_TRY_X_COMPILE], [
   ac_save_CPPFLAGS="$CPPFLAGS"
   if test \! -z "$includedir" ; then 
     CPPFLAGS="$CPPFLAGS -I$includedir"
@@ -663,7 +663,7 @@ AC_DEFUN(AC_TRY_X_COMPILE, [
 # Like AC_CHECK_LIB, but it uses the already-computed -I and -L directories.
 # Use this sparingly; it probably doesn't work very well on X programs.
 #
-AC_DEFUN(AC_CHECK_X_LIB, [
+AC_DEFUN([AC_CHECK_X_LIB], [
   ac_save_CPPFLAGS="$CPPFLAGS"
   ac_save_LDFLAGS="$LDFLAGS"
 #  ac_save_LIBS="$LIBS"
@@ -691,7 +691,7 @@ AC_DEFUN(AC_CHECK_X_LIB, [
 # Like AC_TRY_RUN, but it uses the already-computed -I directories.
 # (But not the -L directories!)
 #
-AC_DEFUN(AC_TRY_X_RUN, [
+AC_DEFUN([AC_TRY_X_RUN], [
   ac_save_CPPFLAGS="$CPPFLAGS"
   if test \! -z "$includedir" ; then 
     CPPFLAGS="$CPPFLAGS -I$includedir"
@@ -718,7 +718,7 @@ AC_DEFUN(AC_TRY_X_RUN, [
 # /DIR/include and /DIR/lib exist, and adds them to $X_CFLAGS and $X_LIBS
 # as appropriate.
 #
-AC_DEFUN(HANDLE_X_PATH_ARG, [
+AC_DEFUN([HANDLE_X_PATH_ARG], [
    case "$[$1]" in
     yes) ;;
     no)  ;;
@@ -1611,137 +1611,6 @@ elif test "$with_xdbe" != no; then
 fi
 
 
-###############################################################################
-#
-#       Check for a directory full of images to use as the default value
-#	of the "imageDirectory" preference.
-#
-###############################################################################
-
-have_imagedir=no
-with_imagedir_req=unspecified
-
-AC_ARG_WITH(image-directory,
-[  --with-image-directory=DIR  By default, some demos may display random images
-                          from this directory.],
-  [with_imagedir="$withval"; with_imagedir_req="$withval"],
-  [with_imagedir=yes])
-# no HANDLE_X_PATH_ARG for this one
-
-case "$with_imagedir" in
-  /*)
-    # absolute path
-    AC_MSG_CHECKING([for image directory $with_imagedir])
-    if test -d "$with_imagedir" ; then
-      AC_MSG_RESULT(yes)
-    else
-      AC_MSG_RESULT(no)
-      with_imagedir=""
-    fi
-  ;;
-  yes)
-    with_imagedir=""
-
-    #### Could use some more defaults here...
-    for dd in \
-      "/usr/share/backgrounds/images/"          \
-      "/usr/share/wallpapers/"                  \
-      "/Library/Desktop Pictures/"              \
-    ; do
-      if test -z "$with_imagedir"; then
-        AC_MSG_CHECKING([for image directory $dd])
-        if test -d "$dd" ; then
-          AC_MSG_RESULT(yes)
-          with_imagedir="$dd"
-        else
-          AC_MSG_RESULT(no)
-        fi
-      fi
-    done
-
-  ;;
-  no)
-    with_imagedir=""
-  ;;
-
-  *)
-    echo "error: must be an absolute path: --with-image-directory=$with_imagedir_req"
-    exit 1
-  ;;
-esac
-ac_cv_imagedir="$with_imagedir"
-
-DEFAULT_IMAGES_P='True'
-DEFAULT_IMAGE_DIRECTORY="$ac_cv_imagedir"
-
-if test -z "$DEFAULT_IMAGE_DIRECTORY" ; then
-  DEFAULT_IMAGES_P='False'
-fi
-
-
-###############################################################################
-#
-#       Pick a text file to use as the default of the "textFile" preference.
-#	Any old file will do, but preferably one that will make interesting
-#	shapes when displayed by "starwars" and "fontglide".
-#
-###############################################################################
-
-have_textfile=no
-with_textfile_req=unspecified
-
-AC_ARG_WITH(text-file,
-[  --with-text-file=FILE   By default, some demos may display this file.],
-  [with_textfile="$withval"; with_textfile_req="$withval"],
-  [with_textfile=yes])
-# no HANDLE_X_PATH_ARG for this one
-
-case "$with_textfile" in
-  /*)
-    # absolute path
-    AC_MSG_CHECKING([for text file $with_textfile])
-    if test -f "$with_textfile" ; then
-      AC_MSG_RESULT(yes)
-    else
-      AC_MSG_RESULT(no)
-      with_textfile=""
-    fi
-  ;;
-  yes)
-    with_textfile=""
-
-    #### Could use some more defaults here...
-    for f in \
-      "/usr/X11R6/lib/X11/doc/README"		\
-      "/usr/share/doc/xserver-common/copyright"	\
-      "/usr/X11R6/README"			\
-    ; do
-      if test -z "$with_textfile"; then
-        AC_MSG_CHECKING([for text file $f])
-        if test -f "$f" ; then
-          AC_MSG_RESULT(yes)
-          with_textfile="$f"
-        else
-          AC_MSG_RESULT(no)
-        fi
-      fi
-    done
-
-  ;;
-  no)
-    with_textfile=""
-  ;;
-
-  *)
-    echo "error: must be an absolute path: --with-text-file=$with_textfile_req"
-    exit 1
-  ;;
-esac
-ac_cv_textfile="$with_textfile"
-
-DEFAULT_TEXT_FILE="$ac_cv_textfile"
-
-
 
 ###############################################################################
 #
@@ -1834,9 +1703,6 @@ AC_SUBST(XPM_LIBS)
 AC_SUBST(GL_LIBS)
 AC_SUBST(GLE_LIBS)
 AC_SUBST(INSTALL_DIRS)
-AC_SUBST(DEFAULT_IMAGES_P)
-AC_SUBST(DEFAULT_IMAGE_DIRECTORY)
-AC_SUBST(DEFAULT_TEXT_FILE)
 
 AC_SUBST(OBJCC)
 AC_SUBST(EXES_OSX)
@@ -2119,7 +1985,7 @@ fi
 #
 bindir=`eval eval eval eval eval eval eval echo $bindir`
 HACKDIR=`eval eval eval eval eval eval eval echo $HACKDIR`
-HACKDIR_CONF_DIR=`eval eval eval eval eval eval eval echo $HACKDIR_CONF_DIR`
+HACK_CONF_DIR=`eval eval eval eval eval eval eval echo $HACK_CONF_DIR`
 
 # canonicalize slashes.
 bindir=`echo  "${bindir}"              | sed 's@/$@@;s@//*@/@g'`
@@ -2209,3 +2075,6 @@ if test "$do_dir_warning" = no; then
   echo "Configuration dialogs will be installed in ${HACK_CONF_DIR}/"
   echo ''
 fi
+
+# not using, but left in for possible future use:
+# gdk-pixbuf (for xpm-ximage), jpeglib, gle, rpm stuff
