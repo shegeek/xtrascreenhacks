@@ -34,7 +34,7 @@ handleGLerrors (char *guiltyfunction)
     }
 }
 
-void reset_ejparticle(ejparticle * redux, double maxradius)
+static void reset_ejparticle(ejparticle * redux, double maxradius)
 {
   double r, theta;
   double xcomp, zcomp;
@@ -61,7 +61,7 @@ void reset_ejparticle(ejparticle * redux, double maxradius)
 
 
 
-Bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
+static Bool advance_ejparticle(ejparticle * updated, double elapsed, double gconst)
 {
   Bool islive = True;
   updated->currpos[0] = updated->initvelocity[0] * elapsed 
@@ -114,7 +114,7 @@ ejemitter * init_ejemitter(int count, double timestep, double gravconstant)
  * at a scalefactor of 0.05, the solids look just like the points
  * WARNING: the one with solids uses a glut primitive
  */
-void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
+static void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
 {
   int iterator;
   glBegin(GL_POINTS);
@@ -129,7 +129,7 @@ void render_ejparticles(ejparticle ** ejectoids, int numejectoids)
 }
 
 
-/* void render_ejparticles(ejparticle ** ejectoids, int numejectoids) */
+/* static void render_ejparticles(ejparticle ** ejectoids, int numejectoids) */
 /* { */
 /*   int iterator; */
 /*   for (iterator = 0; iterator < numejectoids; iterator++) */

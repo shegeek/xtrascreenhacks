@@ -142,11 +142,11 @@ ENTRYPOINT void reshape_berlinuhr (ModeInfo *mi, int width, int height)
 ENTRYPOINT void init_berlinuhr (ModeInfo *mi)
 {
     float tempradius;
-    int loop;
+/*    int loop;*/
     berlinuhr_configuration *lp;
   GLint buf, samples;
     GLfloat fogColor[4] = {0,0,0,1};
-  GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
+/*  GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};*/
   GLfloat light_position[] = {0.0, 1.0, 1.0, 0.0};
   GLfloat lightmodel_amb[] = {0.7, 0.7, 0.7, 1.0};
 

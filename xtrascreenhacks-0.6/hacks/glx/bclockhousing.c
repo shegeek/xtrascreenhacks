@@ -38,7 +38,7 @@ static void errorCallback(GLenum errorCode)
 
 
 
-GLint makebankdlist(void)
+static GLint makebankdlist(void)
 {
   int iterator;
   GLint locallistindex;
@@ -74,7 +74,7 @@ GLint makebankdlist(void)
   return (locallistindex);
 }
 
-GLint makeconnectdlist(void)
+static GLint makeconnectdlist(void)
 {
   int iterator, jterator;
   GLint locallistindex;
@@ -126,7 +126,7 @@ GLint makeconnectdlist(void)
  * the sides don't scoop inward far enough because the curve
  * flattens as it scales.
  */
-GLint makesecconnectdlist(void)
+static GLint makesecconnectdlist(void)
 {
   int iterator, jterator;
   GLint locallistindex;

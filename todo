@@ -132,6 +132,8 @@ What happens when a hack that uses a screen grab is run with another daemon,
 or no daemon? (the daemon passes the screen grab to the hack, and the 
 hack needs grabscreen, etc in utils because it needs to know if the
 screen grab is coming.)
+Speaking of grabscreen.h, it seems to be the only thing using xshm.
+OK to get rid of both?
 
 
 doesn't look like xscreensaver-sgigl is referenced from anywhere in the code. It is another standalone executable.

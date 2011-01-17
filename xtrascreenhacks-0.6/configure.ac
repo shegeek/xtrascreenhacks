@@ -2,9 +2,25 @@
 #                  adapted from the original (c) 1997-2009 by Jamie Zawinski.
 #
 
+# there is a bunch of stuff left in here from xscreensaver that
+# are not presently being used, but that may be used in the future.
+# gdk-pixbuf (for xpm-pixmap/ximage), gle, jpeg libs, xpm libs.
+# if xpm libs are restored, make sure tests and warning messages work.
+# also, there is a bunch of xpm related stuff still in the makefiles.
+
+# remaining problems:
+#
+# does not detect mesa version number correctly,
+# probably because "preferred_mesagl" is 3.4 but 7.9 is current
+#
+# what else in this file is moldy old?
+#
+# should fail immediately, not warn and continue, if ansi c check fails
+#
+# what is the deal with bc?
+
 AC_PREREQ(2.67)
-#AC_INIT(driver/subprocs.c)
-AC_INIT([XtraScreenHacks], [0.7])
+AC_INIT([XtraScreenHacks], [0.7], [shegeek-dev@comcast.net])
 AC_CONFIG_SRCDIR(hacks/screenhack.c)
 AC_CONFIG_HEADERS(config.h)
 
@@ -18,7 +34,7 @@ echo "command line was: $0 $@"
 ###############################################################################
 
 AH_TOP([
-/* config.h.in --- xtrascreenhacks, Copyright (c) 2010 Kelley Nielsen.
+/* config.h.in --- xtrascreenhacks, Copyright (c) 2011 Kelley Nielsen.
  *
  *  The best way to set these parameters is by running the included `configure'
  *  script.  That examines your system, and generates `config.h' from 
@@ -30,18 +46,18 @@ AH_TOP([
 ])
 
 
-AH_TEMPLATE([HAVE_XPM],
-	    [Define this if you have the XPM library installed.  Some of the
-	    demos can make use of this if it is available.])
+#AH_TEMPLATE([HAVE_XPM],
+#	    [Define this if you have the XPM library installed.  Some of the
+#	    demos can make use of this if it is available.])
 
-AH_TEMPLATE([HAVE_GDK_PIXBUF],
-	    [Define this if you have the GDK_Pixbuf library installed.  Some
-	    of the demos can make use of this if it is available.])
+#AH_TEMPLATE([HAVE_GDK_PIXBUF],
+#	    [Define this if you have the GDK_Pixbuf library installed.  Some
+#	    of the demos can make use of this if it is available.])
 
-AH_TEMPLATE([HAVE_JPEGLIB],
-	    [Define this if you have the Independent JPEG Group's JPEG
-	    library installed.  Some of the demos can make use of this if it
-	    is available.])
+#AH_TEMPLATE([HAVE_JPEGLIB],
+#	    [Define this if you have the Independent JPEG Group's JPEG
+#	    library installed.  Some of the demos can make use of this if it
+#	    is available.])
 
 AH_TEMPLATE([HAVE_XMU],
 	    [Define this if you have the Xmu library.  This is standard part
@@ -63,24 +79,18 @@ AH_TEMPLATE([HAVE_GLBINDTEXTURE],
 	    routine.  This is the case for OpenGL 1.1, but not for OpenGL
 	    1.0.])
 
-AH_TEMPLATE([HAVE_GLE],
-	    [Define this if you have the -lgle and -lmatrix libraries (GL 
-	    extrusion.)])
+#AH_TEMPLATE([HAVE_GLE],
+#	    [Define this if you have the -lgle and -lmatrix libraries (GL 
+#	    extrusion.)])
 
-AH_TEMPLATE([HAVE_GLE3],[Define this if you have the -lgle from GLE version 3])
+#AH_TEMPLATE([HAVE_GLE3],
+#        [Define this if you have the -lgle from GLE version 3])
 
 AH_TEMPLATE([HAVE_XSHM_EXTENSION],
 	    [Define this if you have the X Shared Memory Extension.])
 
 AH_TEMPLATE([HAVE_DOUBLE_BUFFER_EXTENSION],
 	    [Define this if you have the X Double Buffer Extension.])
-
-AH_TEMPLATE([FORTUNE_PROGRAM],
-	    [Some screenhacks like to run an external program to generate
-	    random pieces of text; set this to the one you like.  Note that
-	    this is just the default; X resources can be used to override
-	    it.])
-
 
 AH_TEMPLATE([HAVE_GETTIMEOFDAY],
 	    [Define this if you have the gettimeofday function.])
@@ -575,10 +585,10 @@ AC_DEFUN([AC_X_RANDOM_PATHS],
       fi
 
 
-      if test -d /opt/xpm/lib/X11 ; then
-        X_CFLAGS="-I/opt/xpm/include $X_CFLAGS"
-        X_LIBS="-L/opt/xpm/lib/X11 $X_LIBS"
-      fi
+#      if test -d /opt/xpm/lib/X11 ; then
+#        X_CFLAGS="-I/opt/xpm/include $X_CFLAGS"
+#        X_LIBS="-L/opt/xpm/lib/X11 $X_LIBS"
+#      fi
 
       # On HPUX, default to installing in /opt/xscreensaver/ instead of
       # in /usr/local/, unless there is already an xscreensaver in
@@ -797,13 +807,15 @@ INSTALL_SCRIPT='${INSTALL}'
 
 # random libc stuff
 AC_HEADER_STDC
-AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS_ONCE([sys/time.h unistd.h values.h])
 AC_TYPE_MODE_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_SIGNAL
-AC_HEADER_TIME
-AC_HEADER_SYS_WAIT
+# these two are supposedly obsolescent,
+# although configure.scan suggests the sys_wait check.
+#AC_HEADER_TIME
+#AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
 AC_GETTIMEOFDAY_ARGS
 AC_CHECK_FUNCS(select uname putenv)
@@ -1245,46 +1257,47 @@ fi
 #
 ###############################################################################
 
-have_gle=no
-with_gle_req=unspecified
-gle_halfassed=no
-AC_ARG_WITH(gle,
-[  --with-gle              Build those demos which depend on GLE
-                          (the OpenGL "extrusion" library.)],
-  [with_gle="$withval"; with_gle_req="$withval"],[with_gle=yes])
+#have_gle=no
+#with_gle_req=unspecified
+#gle_halfassed=no
+#AC_ARG_WITH(gle,
+#[  --with-gle              Build those demos which depend on GLE
+#                          (the OpenGL "extrusion" library.)],
+#  [with_gle="$withval"; with_gle_req="$withval"],[with_gle=yes])
 
-HANDLE_X_PATH_ARG(with_gle, --with-gle, GLE)
+#HANDLE_X_PATH_ARG(with_gle, --with-gle, GLE)
 
-GLE_LIBS=""
+#GLE_LIBS=""
 
-if test "$have_gl" = no ; then
- true
-elif test "$with_gle" = yes; then
+#if test "$have_gl" = no ; then
+# true
+#elif test "$with_gle" = yes; then
 
-  AC_CHECK_X_HEADER(GL/gle.h, have_gle3=yes, have_gle3=no,
-                    [#include <GL/gl.h>])
-  if test "$have_gle3" = yes ; then
-    have_gle=yes;
-  else
-    AC_CHECK_X_HEADER(GL/gutil.h, have_gle=yes, have_gle=no,
-                    [#include <GL/gl.h>])
-    if test "$have_gle" = yes ; then
-      AC_CHECK_X_HEADER(GL/tube.h, have_gle=yes, have_gle=no,
-                        [#include <GL/gl.h>])
-    fi
-  fi
+#  AC_CHECK_X_HEADER(GL/gle.h, have_gle3=yes, have_gle3=no,
+#                    [#include <GL/gl.h>])
+#  if test "$have_gle3" = yes ; then
+#    have_gle=yes;
+#  else
+#    AC_CHECK_X_HEADER(GL/gutil.h, have_gle=yes, have_gle=no,
+#                    [#include <GL/gl.h>])
+#    if test "$have_gle" = yes ; then
+#      AC_CHECK_X_HEADER(GL/tube.h, have_gle=yes, have_gle=no,
+#                        [#include <GL/gl.h>])
+#    fi
+#  fi
 
-  if test "$have_gle" = yes ; then
-    have_gle=no
-    gle_halfassed=yes
-    AC_CHECK_X_LIB(gle, gleCreateGC, 
-                   [have_gle=yes; gle_halfassed=no; GLE_LIBS="-lgle"],
-                   [], $GL_LIBS -lX11 -lXext -lm)
-  fi
-  if test "$have_gle" = yes ; then
-    have_gle=no
-    gle_halfassed=yes
+#  if test "$have_gle" = yes ; then
+#    have_gle=no
+#    gle_halfassed=yes
+#    AC_CHECK_X_LIB(gle, gleCreateGC, 
+#                   [have_gle=yes; gle_halfassed=no; GLE_LIBS="-lgle"],
+#                   [], $GL_LIBS -lX11 -lXext -lm)
+#  fi
+#  if test "$have_gle" = yes ; then
+#    have_gle=no
+#    gle_halfassed=yes
 
+# ---------------------------
     # sometimes the libmatrix stuff is included in libgle.  look there first.
 #
 # I don't get it.  For some reason, this test passes on SGI, as if
@@ -1297,32 +1310,33 @@ elif test "$with_gle" = yes; then
 
     # As of GLE 3 this is in libgle, and has changed name to uview_direction!
     # *sigh*
-    if test "$have_gle3" = yes ; then
-      AC_CHECK_X_LIB(gle, uview_direction, 
-                     [have_gle=yes; gle_halfassed=no],
-                    [], $GL_LIBS -lX11 -lXext -lm)
-    fi
-    # if it wasn't in libgle, then look in libmatrix.
-    if test "$have_gle" = no ; then
-      AC_CHECK_X_LIB(matrix, uview_direction_d, 
-                     [have_gle=yes; gle_halfassed=no;
-                      GLE_LIBS="$GLE_LIBS -lmatrix"],
-                    [], $GL_LIBS -lX11 -lXext -lm)
-    fi
-  fi
+# -------------------------------
+#    if test "$have_gle3" = yes ; then
+#      AC_CHECK_X_LIB(gle, uview_direction, 
+#                     [have_gle=yes; gle_halfassed=no],
+#                    [], $GL_LIBS -lX11 -lXext -lm)
+#    fi
+#    # if it wasn't in libgle, then look in libmatrix.
+#    if test "$have_gle" = no ; then
+#      AC_CHECK_X_LIB(matrix, uview_direction_d, 
+#                     [have_gle=yes; gle_halfassed=no;
+#                      GLE_LIBS="$GLE_LIBS -lmatrix"],
+#                    [], $GL_LIBS -lX11 -lXext -lm)
+#    fi
+#  fi
 
-  if test "$have_gle" = yes ; then
-    AC_DEFINE(HAVE_GLE)
-    if test "$have_gle3" = yes ; then
-      AC_DEFINE(HAVE_GLE3)
-    fi
-  fi
+#  if test "$have_gle" = yes ; then
+#    AC_DEFINE(HAVE_GLE)
+#    if test "$have_gle3" = yes ; then
+#      AC_DEFINE(HAVE_GLE3)
+#    fi
+#  fi
 
-elif test "$with_gle" != no; then
-  echo "error: must be yes or no: --with-gle=$with_gle"
-  exit 1
+#elif test "$with_gle" != no; then
+#  echo "error: must be yes or no: --with-gle=$with_gle"
+#  exit 1
 
-fi
+#fi
 
 
 ###############################################################################
@@ -1335,114 +1349,114 @@ fi
 #
 ###############################################################################
 
-have_gdk_pixbuf=no
-with_gdk_pixbuf_req=unspecified
-AC_ARG_WITH(pixbuf,
-[  --with-pixbuf           Include support for the GDK-Pixbuf library in some
-                          demos, which will make it possible for them to read
-                          GIF, JPEG, and PNG files as well.],
-  [with_gdk_pixbuf="$withval"; with_gdk_pixbuf_req="$withval"],
-  [with_gdk_pixbuf=yes])
+#have_gdk_pixbuf=no
+#with_gdk_pixbuf_req=unspecified
+#AC_ARG_WITH(pixbuf,
+#[  --with-pixbuf           Include support for the GDK-Pixbuf library in some
+#                          demos, which will make it possible for them to read
+#                          GIF, JPEG, and PNG files as well.],
+#  [with_gdk_pixbuf="$withval"; with_gdk_pixbuf_req="$withval"],
+#  [with_gdk_pixbuf=yes])
 
-# if --with-pixbuf=/directory/ was specified, remember that directory so that
-# we can also look for the `gdk-pixbuf-config' program in that directory.
-case "$with_gdk_pixbuf" in
-  /*)
-    gdk_pixbuf_dir="$with_gdk_pixbuf"
-    ;;
-  *)
-    gdk_pixbuf_dir=""
-    ;;
-esac
+## if --with-pixbuf=/directory/ was specified, remember that directory so that
+## we can also look for the `gdk-pixbuf-config' program in that directory.
+#case "$with_gdk_pixbuf" in
+#  /*)
+#    gdk_pixbuf_dir="$with_gdk_pixbuf"
+#    ;;
+#  *)
+#    gdk_pixbuf_dir=""
+#    ;;
+#esac
 
-HANDLE_X_PATH_ARG(with_gdk_pixbuf, --with-pixbuf, GDK_PIXBUF)
+#HANDLE_X_PATH_ARG(with_gdk_pixbuf, --with-pixbuf, GDK_PIXBUF)
 
-if test "$with_gdk_pixbuf" != yes -a "$with_gdk_pixbuf" != no ; then
-  echo "error: must be yes or no: --with-pixbuf=$with_gdk_pixbuf"
-  exit 1
-fi
+#if test "$with_gdk_pixbuf" != yes -a "$with_gdk_pixbuf" != no ; then
+#  echo "error: must be yes or no: --with-pixbuf=$with_gdk_pixbuf"
+#  exit 1
+#fi
 
-if test "$with_gdk_pixbuf" = yes; then
-  have_gdk_pixbuf=no
+#if test "$with_gdk_pixbuf" = yes; then
+#  have_gdk_pixbuf=no
 
-  pkgs=''
-  ok="yes"
+#  pkgs=''
+#  ok="yes"
 
-  pkg_check_version gdk-pixbuf-2.0      2.0.0
-  pkg_check_version gdk-pixbuf-xlib-2.0 2.0.0
-  have_gdk_pixbuf="$ok"
+#  pkg_check_version gdk-pixbuf-2.0      2.0.0
+#  pkg_check_version gdk-pixbuf-xlib-2.0 2.0.0
+#  have_gdk_pixbuf="$ok"
 
-  if test "$have_gdk_pixbuf" = yes; then
-    AC_CACHE_CHECK([for gdk-pixbuf includes], ac_cv_gdk_pixbuf_config_cflags,
-               [ac_cv_gdk_pixbuf_config_cflags=`$pkg_config --cflags $pkgs`])
-    AC_CACHE_CHECK([for gdk-pixbuf libs], ac_cv_gdk_pixbuf_config_libs,
-               [ac_cv_gdk_pixbuf_config_libs=`$pkg_config --libs $pkgs`])
-  fi
+#  if test "$have_gdk_pixbuf" = yes; then
+#    AC_CACHE_CHECK([for gdk-pixbuf includes], ac_cv_gdk_pixbuf_config_cflags,
+#               [ac_cv_gdk_pixbuf_config_cflags=`$pkg_config --cflags $pkgs`])
+#    AC_CACHE_CHECK([for gdk-pixbuf libs], ac_cv_gdk_pixbuf_config_libs,
+#               [ac_cv_gdk_pixbuf_config_libs=`$pkg_config --libs $pkgs`])
+#  fi
 
-  ac_gdk_pixbuf_config_cflags=$ac_cv_gdk_pixbuf_config_cflags
-  ac_gdk_pixbuf_config_libs=$ac_cv_gdk_pixbuf_config_libs
+#  ac_gdk_pixbuf_config_cflags=$ac_cv_gdk_pixbuf_config_cflags
+#  ac_gdk_pixbuf_config_libs=$ac_cv_gdk_pixbuf_config_libs
 
 
-  if test "$have_gdk_pixbuf" = yes; then
-    #
-    # we appear to have pixbuf; check for headers/libs to be sure.
-    #
-    ac_save_gdk_pixbuf_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS $ac_gdk_pixbuf_config_cflags"
+#  if test "$have_gdk_pixbuf" = yes; then
+#    #
+#    # we appear to have pixbuf; check for headers/libs to be sure.
+#    #
+#    ac_save_gdk_pixbuf_CPPFLAGS="$CPPFLAGS"
+#    CPPFLAGS="$CPPFLAGS $ac_gdk_pixbuf_config_cflags"
 
-    have_gdk_pixbuf=no
+#    have_gdk_pixbuf=no
 
-    # check for header A...
-    AC_CHECK_X_HEADER(gdk-pixbuf/gdk-pixbuf.h, [have_gdk_pixbuf=yes])
+#    # check for header A...
+#    AC_CHECK_X_HEADER(gdk-pixbuf/gdk-pixbuf.h, [have_gdk_pixbuf=yes])
 
-    # if that worked, check for header B...
-    if test "$have_gdk_pixbuf" = yes; then
-      have_gdk_pixbuf=no
-      gdk_pixbuf_halfassed=yes
-      AC_CHECK_X_HEADER(gdk-pixbuf/gdk-pixbuf-xlib.h,
-                        [have_gdk_pixbuf=yes
-                         gdk_pixbuf_halfassed=no])
+#    # if that worked, check for header B...
+#    if test "$have_gdk_pixbuf" = yes; then
+#      have_gdk_pixbuf=no
+#      gdk_pixbuf_halfassed=yes
+#      AC_CHECK_X_HEADER(gdk-pixbuf/gdk-pixbuf-xlib.h,
+#                        [have_gdk_pixbuf=yes
+#                         gdk_pixbuf_halfassed=no])
 
-      # yay, it has a new name in Gtk 2.x...
-      if test "$have_gdk_pixbuf" = no; then
-        have_gdk_pixbuf=no
-        gdk_pixbuf_halfassed=yes
-        AC_CHECK_X_HEADER(gdk-pixbuf-xlib/gdk-pixbuf-xlib.h,
-                          [have_gdk_pixbuf=yes
-                           gdk_pixbuf_halfassed=no])
-      fi
-    fi
-    CPPFLAGS="$ac_save_gdk_pixbuf_CPPFLAGS"
-  fi
+#      # yay, it has a new name in Gtk 2.x...
+#      if test "$have_gdk_pixbuf" = no; then
+#        have_gdk_pixbuf=no
+#        gdk_pixbuf_halfassed=yes
+#        AC_CHECK_X_HEADER(gdk-pixbuf-xlib/gdk-pixbuf-xlib.h,
+#                          [have_gdk_pixbuf=yes
+#                           gdk_pixbuf_halfassed=no])
+#      fi
+#    fi
+#    CPPFLAGS="$ac_save_gdk_pixbuf_CPPFLAGS"
+#  fi
 
-  if test "$have_gdk_pixbuf" = yes; then
-    # we have the headers, now check for the libraries
-    have_gdk_pixbuf=no
-    gdk_pixbuf_halfassed=yes
+#  if test "$have_gdk_pixbuf" = yes; then
+#    # we have the headers, now check for the libraries
+#    have_gdk_pixbuf=no
+#    gdk_pixbuf_halfassed=yes
 
-    AC_MSG_RESULT(checking for gdk_pixbuf usability...)
+#    AC_MSG_RESULT(checking for gdk_pixbuf usability...)
 
-    # library A...
-    AC_CHECK_X_LIB(c, gdk_pixbuf_new_from_file, [have_gdk_pixbuf=yes],,
-                   $ac_gdk_pixbuf_config_libs -lX11 -lXext -lm)
-    # library B...
-    if test "$have_gdk_pixbuf" = yes; then
-      have_gdk_pixbuf=no
-      AC_CHECK_X_LIB(c, gdk_pixbuf_xlib_init,
-                     [have_gdk_pixbuf=yes
-                      gdk_pixbuf_halfassed=no],,
-                     $ac_gdk_pixbuf_config_libs -lX11 -lXext -lm)
-    fi
-  fi
+#    # library A...
+#    AC_CHECK_X_LIB(c, gdk_pixbuf_new_from_file, [have_gdk_pixbuf=yes],,
+#                   $ac_gdk_pixbuf_config_libs -lX11 -lXext -lm)
+#    # library B...
+#    if test "$have_gdk_pixbuf" = yes; then
+#      have_gdk_pixbuf=no
+#      AC_CHECK_X_LIB(c, gdk_pixbuf_xlib_init,
+#                     [have_gdk_pixbuf=yes
+#                      gdk_pixbuf_halfassed=no],,
+#                     $ac_gdk_pixbuf_config_libs -lX11 -lXext -lm)
+#    fi
+#  fi
 
-  if test "$have_gdk_pixbuf" = yes; then
-    INCLUDES="$INCLUDES $ac_gdk_pixbuf_config_cflags"
-    XPM_LIBS="$ac_gdk_pixbuf_config_libs"
-    AC_DEFINE(HAVE_GDK_PIXBUF)
-  else
-    AC_MSG_RESULT(checking for gdk_pixbuf usability... no)
-  fi
-fi
+#  if test "$have_gdk_pixbuf" = yes; then
+#    INCLUDES="$INCLUDES $ac_gdk_pixbuf_config_cflags"
+#    XPM_LIBS="$ac_gdk_pixbuf_config_libs"
+#    AC_DEFINE(HAVE_GDK_PIXBUF)
+#  else
+#    AC_MSG_RESULT(checking for gdk_pixbuf usability... no)
+#  fi
+#fi
 
 
 ###############################################################################
@@ -1451,26 +1465,27 @@ fi
 #
 ###############################################################################
 
-have_xpm=no
-with_xpm_req=unspecified
-AC_ARG_WITH(xpm,
-[  --with-xpm              Include support for XPM files in some demos.
-                          (Not needed if Pixbuf is used.)],
-  [with_xpm="$withval"; with_xpm_req="$withval"],[with_xpm=yes])
+#have_xpm=no
+#with_xpm_req=unspecified
+#AC_ARG_WITH(xpm,
+#[  --with-xpm              Include support for XPM files in some demos.
+#                          (Not needed if Pixbuf is used.)],
+#  [with_xpm="$withval"; with_xpm_req="$withval"],[with_xpm=yes])
 
-HANDLE_X_PATH_ARG(with_xpm, --with-xpm, XPM)
+#HANDLE_X_PATH_ARG(with_xpm, --with-xpm, XPM)
 
-if test "$with_xpm" = yes; then
-  AC_CHECK_X_HEADER(X11/xpm.h,
-                   [have_xpm=yes
-                    AC_DEFINE(HAVE_XPM)
-                    XPM_LIBS="-lXpm $XPM_LIBS"],,
-                    [#include <X11/Xlib.h>])
-elif test "$with_xpm" != no; then
-  echo "error: must be yes or no: --with-xpm=$with_xpm"
-  exit 1
-fi
+#if test "$with_xpm" = yes; then
+#  AC_CHECK_X_HEADER(X11/xpm.h,
+#                   [have_xpm=yes
+#                    AC_DEFINE(HAVE_XPM)
+#                    XPM_LIBS="-lXpm $XPM_LIBS"],,
+#                    [#include <X11/Xlib.h>])
+#elif test "$with_xpm" != no; then
+#  echo "error: must be yes or no: --with-xpm=$with_xpm"
+#  exit 1
+#fi
 
+# -----------------------------------------------
 # See comment near $motif_requires_xpm, above.
 # Need to do this here, after both Motif and XPM have been checked for.
 #
@@ -1480,9 +1495,9 @@ fi
 #  fi
 #fi
 
-if test "$XPM_LIBS" = "" ; then
-  XPM_LIBS=$(MINIXPM)
-fi
+#if test "$XPM_LIBS" = "" ; then
+#  XPM_LIBS=$(MINIXPM)
+#fi
 
 
 ###############################################################################
@@ -1491,37 +1506,37 @@ fi
 #
 ###############################################################################
 
-have_jpeg=no
-with_jpeg_req=unspecified
-jpeg_halfassed=no
-AC_ARG_WITH(jpeg,
-[  --with-jpeg             Include support for the JPEG library.],
-  [with_jpeg="$withval"; with_jpeg_req="$withval"],
-  [with_jpeg=yes])
+#have_jpeg=no
+#with_jpeg_req=unspecified
+#jpeg_halfassed=no
+#AC_ARG_WITH(jpeg,
+#[  --with-jpeg             Include support for the JPEG library.],
+#  [with_jpeg="$withval"; with_jpeg_req="$withval"],
+#  [with_jpeg=yes])
 
-HANDLE_X_PATH_ARG(with_jpeg, --with-jpeg, JPEG)
+#HANDLE_X_PATH_ARG(with_jpeg, --with-jpeg, JPEG)
 
-if test "$with_jpeg" != yes -a "$with_jpeg" != no ; then
-  echo "error: must be yes or no: --with-jpeg=$with_jpeg"
-  exit 1
-fi
+#if test "$with_jpeg" != yes -a "$with_jpeg" != no ; then
+#  echo "error: must be yes or no: --with-jpeg=$with_jpeg"
+#  exit 1
+#fi
 
-if test "$with_jpeg" = yes; then
+#if test "$with_jpeg" = yes; then
 
-  have_jpeg=no
-  AC_CHECK_X_HEADER(jpeglib.h, [have_jpeg=yes])
+#  have_jpeg=no
+#  AC_CHECK_X_HEADER(jpeglib.h, [have_jpeg=yes])
 
-  if test "$have_jpeg" = yes; then
-    # we have the header, now check for the library
-    have_jpeg=no
-    jpeg_halfassed=yes
-    AC_CHECK_X_LIB(jpeg, jpeg_start_compress,
-                   [have_jpeg=yes
-                    jpeg_halfassed=no
-                    JPEG_LIBS="-ljpeg"
-                    AC_DEFINE(HAVE_JPEGLIB)])
-  fi
-fi
+#  if test "$have_jpeg" = yes; then
+#    # we have the header, now check for the library
+#    have_jpeg=no
+#    jpeg_halfassed=yes
+#    AC_CHECK_X_LIB(jpeg, jpeg_start_compress,
+#                   [have_jpeg=yes
+#                    jpeg_halfassed=no
+#                    JPEG_LIBS="-ljpeg"
+#                    AC_DEFINE(HAVE_JPEGLIB)])
+#  fi
+#fi
 
 ###############################################################################
 #
@@ -1660,16 +1675,16 @@ else
   GL_KLUDGE="-${tab}  "
 fi
 
-if test "$have_gle" = yes; then
-  GLE_EXES='$(GLE_EXES)'
-  GLE_KLUDGE="${tab}   "
-else
-  GLE_KLUDGE="-${tab}   "
-fi
+#if test "$have_gle" = yes; then
+#  GLE_EXES='$(GLE_EXES)'
+#  GLE_KLUDGE="${tab}   "
+#else
+#  GLE_KLUDGE="-${tab}   "
+#fi
 
-if test "$have_jpeg" = yes -a "$have_gdk_pixbuf" = yes; then
- JPEG_EXES='$(JPEG_EXES)'
-fi
+#if test "$have_jpeg" = yes -a "$have_gdk_pixbuf" = yes; then
+# JPEG_EXES='$(JPEG_EXES)'
+#fi
 
 
 
@@ -1697,11 +1712,11 @@ INCLUDES=`echo "$INCLUDES" | sed 's@ -I${prefix}/include@@g;'`
 AC_SUBST(INCLUDES)
 
 AC_SUBST(SAVER_LIBS)
-AC_SUBST(JPEG_LIBS)
+#AC_SUBST(JPEG_LIBS)
 AC_SUBST(HACK_LIBS)
-AC_SUBST(XPM_LIBS)
+#AC_SUBST(XPM_LIBS)
 AC_SUBST(GL_LIBS)
-AC_SUBST(GLE_LIBS)
+#AC_SUBST(GLE_LIBS)
 AC_SUBST(INSTALL_DIRS)
 
 AC_SUBST(OBJCC)
@@ -1715,13 +1730,13 @@ AC_SUBST(XMU_LIBS)
 AC_SUBST(SAVER_GL_SRCS)
 AC_SUBST(SAVER_GL_OBJS)
 AC_SUBST(SAVER_GL_LIBS)
-AC_SUBST(JPEG_EXES)
+#AC_SUBST(JPEG_EXES)
 AC_SUBST(GL_EXES)
 AC_SUBST(GL_UTIL_EXES)
 AC_SUBST(GL_MEN)
 AC_SUBST(GL_KLUDGE)
-AC_SUBST(GLE_EXES)
-AC_SUBST(GLE_KLUDGE)
+#AC_SUBST(GLE_EXES)
+#AC_SUBST(GLE_KLUDGE)
 AC_SUBST(HACKDIR)
 AC_SUBST(HACKDIR_FULL)
 AC_SUBST(HACK_CONF_DIR)
@@ -1819,79 +1834,79 @@ fi
 
 
 
-if test "$with_xpm_req" = yes -a "$have_xpm" = no; then
-  warnL 'Use of XPM was requested, but it was not found.'
-fi
+#if test "$with_xpm_req" = yes -a "$have_xpm" = no; then
+#  warnL 'Use of XPM was requested, but it was not found.'
+#fi
 
-if test "$with_gdk_pixbuf_req" = yes  -a "$have_gdk_pixbuf" = no; then
-  warnL 'Use of GDK-Pixbuf was requested, but it was not found.'
-fi
+#if test "$with_gdk_pixbuf_req" = yes  -a "$have_gdk_pixbuf" = no; then
+#  warnL 'Use of GDK-Pixbuf was requested, but it was not found.'
+#fi
 
-if test "$have_gdk_pixbuf" = no -o "$gdk_pixbuf_halfassed" = yes || \
-   test "$have_gdk_pixbuf" = no -a "$have_xpm" = no ; then
+#if test "$have_gdk_pixbuf" = no -o "$gdk_pixbuf_halfassed" = yes || \
+#   test "$have_gdk_pixbuf" = no -a "$have_xpm" = no ; then
 
-  if test "$with_gdk_pixbuf_req" = yes ; then
-    true
-  elif test "$with_gdk_pixbuf_req" = no ; then
-    warnL 'The GDK-Pixbuf library is not being used.'
-  else
-    warnL 'The GDK-Pixbuf library was not found.'
-  fi
+#  if test "$with_gdk_pixbuf_req" = yes ; then
+#    true
+#  elif test "$with_gdk_pixbuf_req" = no ; then
+#    warnL 'The GDK-Pixbuf library is not being used.'
+#  else
+#    warnL 'The GDK-Pixbuf library was not found.'
+#  fi
 
-  if test "$with_xpm_req" = yes -o "$have_xpm" = yes ; then
-    true
-  elif test "$with_xpm_req" = no ; then
-    warnL 'The XPM library is not being used.'
-  else
-    warnL 'The XPM library was not found.'
-  fi
+#  if test "$with_xpm_req" = yes -o "$have_xpm" = yes ; then
+#    true
+#  elif test "$with_xpm_req" = no ; then
+#    warnL 'The XPM library is not being used.'
+#  else
+#    warnL 'The XPM library was not found.'
+#  fi
 
-  if test "$have_gdk_pixbuf" = no -a "$have_xpm" = yes ; then
-    warn2 'The XPM library is being used instead.'
-  fi
+#  if test "$have_gdk_pixbuf" = no -a "$have_xpm" = yes ; then
+#    warn2 'The XPM library is being used instead.'
+#  fi
 
-  if test "$gdk_pixbuf_halfassed" = yes ; then
-    echo ''
-    warn2 'More specifically, we found the headers, but not the'
-    warn2 'libraries; so either GDK-Pixbuf is half-installed on this'
-    warn2 "system, or something else went wrong.  The \`config.log'"
-    warn2 'file might contain some clues.'
-  fi
+#  if test "$gdk_pixbuf_halfassed" = yes ; then
+#    echo ''
+#    warn2 'More specifically, we found the headers, but not the'
+#    warn2 'libraries; so either GDK-Pixbuf is half-installed on this'
+#    warn2 "system, or something else went wrong.  The \`config.log'"
+#    warn2 'file might contain some clues.'
+#  fi
 
-  echo ''
-  warn2 'Some of the demos will not use images as much as they could.'
-  warn2 'You should consider installing GDK-Pixbuf and re-running'
-  warn2 'configure.  (GDK-Pixbuf is recommended over XPM, as it'
-  warn2 'provides support for more image formats.)'
-fi
+#  echo ''
+#  warn2 'Some of the demos will not use images as much as they could.'
+#  warn2 'You should consider installing GDK-Pixbuf and re-running'
+#  warn2 'configure.  (GDK-Pixbuf is recommended over XPM, as it'
+#  warn2 'provides support for more image formats.)'
+#fi
 
 
-if test "$have_jpeg" = no ; then
-  if test "$with_jpeg_req" = yes ; then
-    warnL 'Use of libjpeg was requested, but it was not found.'
-  elif test "$with_jpeg_req" = no ; then
-    noteL 'The JPEG library is not being used.'
-  else
-    noteL 'The JPEG library was not found.'
-  fi
+#if test "$have_jpeg" = no ; then
+#  if test "$with_jpeg_req" = yes ; then
+#    warnL 'Use of libjpeg was requested, but it was not found.'
+#  elif test "$with_jpeg_req" = no ; then
+#    noteL 'The JPEG library is not being used.'
+#  else
+#    noteL 'The JPEG library was not found.'
+#  fi
 
-  if test "$jpeg_halfassed" = yes ; then
-    echo ''
-    warn2 'More specifically, we found the headers, but not the'
-    warn2 'library; so either JPEG is half-installed on this'
-    warn2 "system, or something else went wrong.  The \`config.log'"
-    warn2 'file might contain some clues.'
-    echo ''
-  fi
+#  if test "$jpeg_halfassed" = yes ; then
+#    echo ''
+#    warn2 'More specifically, we found the headers, but not the'
+#    warn2 'library; so either JPEG is half-installed on this'
+#    warn2 "system, or something else went wrong.  The \`config.log'"
+#    warn2 'file might contain some clues.'
+#    echo ''
+#  fi
 
-  if test "$have_gdk_pixbuf" = no ; then
-    warn2 "This means that it won't be possible for the image-manipulating"
-    warn2 "display modes to load files from disk; and it also means that"
-    warn2 "the \`webcollage' program will be much slower."
-  else
-    warn2 "This means the \`webcollage' program will be much slower."
-  fi
-fi
+#  if test "$have_gdk_pixbuf" = no ; then
+#    warn2 "This means that it won't be possible for the image-manipulating"
+#    warn2 "display modes to load files from disk; and it also means that"
+#    warn2 "the \`webcollage' program will be much slower."
+#  else
+#    warn2 "This means the \`webcollage' program will be much slower."
+#  fi
+#fi
 
 
 if test "$have_gl" = yes -a "$ac_have_mesa_gl" = yes ; then
@@ -1943,41 +1958,41 @@ if test "$have_gl" = no ; then
 fi
 
 
-if test "$have_gl" = yes -a "$have_gle" = no ; then
+#if test "$have_gl" = yes -a "$have_gle" = no ; then
 
- # nobody cares about this; don't print the warning unless it was
- # requested and not found, or halfway-found.
- if test "$with_gle_req" = yes -o "$gle_halfassed" = yes ; then
+# # nobody cares about this; don't print the warning unless it was
+# # requested and not found, or halfway-found.
+# if test "$with_gle_req" = yes -o "$gle_halfassed" = yes ; then
 
-  if test "$with_gle_req" = yes ; then
-    noteL 'Use of the GLE (GL Extrusion) library was requested, but'
-    warn2 'it was not found (though the OpenGL library was found, and'
-    warn2 'is being used.)'
-  elif test "$with_gle_req" = no ; then
-    noteL 'The OpenGL Library is being used, but the GLE (GL Extrusion)'
-    warn2 'library is not.'
-  else
-    noteL 'The OpenGL Library was found, but the GLE (GL Extrusion)'
-    warn2 'was not.'
-  fi
+#  if test "$with_gle_req" = yes ; then
+#    noteL 'Use of the GLE (GL Extrusion) library was requested, but'
+#    warn2 'it was not found (though the OpenGL library was found, and'
+#    warn2 'is being used.)'
+#  elif test "$with_gle_req" = no ; then
+#    noteL 'The OpenGL Library is being used, but the GLE (GL Extrusion)'
+#    warn2 'library is not.'
+#  else
+#    noteL 'The OpenGL Library was found, but the GLE (GL Extrusion)'
+#    warn2 'was not.'
+#  fi
 
-  if test "$gle_halfassed" = yes ; then
-    echo ''
-    warn2 'More specifically, we found the headers, but not the'
-    warn2 'libraries; so either GLE is half-installed on this'
-    warn2 "system, or something else went wrong.  The \`config.log'"
-    warn2 'file might contain some clues.'
-  fi
+#  if test "$gle_halfassed" = yes ; then
+#    echo ''
+#    warn2 'More specifically, we found the headers, but not the'
+#    warn2 'libraries; so either GLE is half-installed on this'
+#    warn2 "system, or something else went wrong.  The \`config.log'"
+#    warn2 'file might contain some clues.'
+#  fi
 
-  echo ''
-  warn2 'Some of the OpenGL (3D) demos (those that depend on GLE)'
-  warn2 'will not be built or installed.  You might want to consider'
-  warn2 'installing GLE and re-running configure.  You can find the'
-  warn2 'GLE library at <http://www.linas.org/gle/>.  For general'
-  warn2 'OpenGL info, see <http://www.opengl.org/>.'
+#  echo ''
+#  warn2 'Some of the OpenGL (3D) demos (those that depend on GLE)'
+#  warn2 'will not be built or installed.  You might want to consider'
+#  warn2 'installing GLE and re-running configure.  You can find the'
+#  warn2 'GLE library at <http://www.linas.org/gle/>.  For general'
+#  warn2 'OpenGL info, see <http://www.opengl.org/>.'
 
- fi
-fi
+# fi
+#fi
 
 
 # You are in a twisty maze of namespaces and syntaxes, all alike.
@@ -2007,44 +2022,6 @@ done
 
 do_dir_warning=no
 
-# Now let's warn if there's a previous RPM version already installed.
-# But don't bother with this test if we are currently *building* an RPM.
-
-if test -z "$RPM_PACKAGE_VERSION" ; then
-
-  rpmnames="xscreensaver xscreensaver-base xscreensaver-extras"
-
-  # M4 sucks!!
-  changequote(X,Y)
-  rpmv=`(rpm -qv $rpmnames) 2>/dev/null | \
-        sed -n 's/^[-a-z]*-\([0-9][0-9]*[.][0-9][0-9a-z]*\)-.*$/\1/p' | \
-        head -1`
-  changequote([,])
-
-  if test \! -z "$rpmv" ; then
-    rpmbdir=`rpm -ql $rpmnames | sed -n 's@^\(.*\)/xscreensaver-demo$@\1@p'`
-    rpmhdir=`rpm -ql $rpmnames | sed -n 's@^\(.*\)/attraction$@\1@p'`
-
-    warning=no
-    warnL "There is already an installed RPM of xscreensaver $rpmv"
-    warn2 'on this system.  You might want to remove it ("rpm -ve")'
-    warn2 'before running "make install" in this directory.'
-    echo ""
-    warn2 "Alternately, you could build this version of xscreensaver"
-    warn2 'as an RPM, and then install that.  An "xscreensaver.spec"'
-    warn2 'file is included.  Try "rpmbuild -v -ba xscreensaver.spec".'
-    warn2 "See the RPM documentation for more info."
-    echo ""
-
-    if test "$rpmbdir" = "$rpmhdir" ; then
-      warn2 "The RPM version was installed in $rpmbdir/."
-      do_dir_warning=yes
-    else
-      warn2 "The RPM version was installed in $rpmbdir/,"
-      warn2 "with demos in $rpmhdir/."
-    fi
-  fi
-fi
 
 if test "${bindir}" = "${HACKDIR}" ; then
   do_dir_warning=yes
@@ -2076,5 +2053,3 @@ if test "$do_dir_warning" = no; then
   echo ''
 fi
 
-# not using, but left in for possible future use:
-# gdk-pixbuf (for xpm-ximage), jpeglib, gle, rpm stuff

@@ -140,7 +140,7 @@ errorCallback (GLenum errorCode)
 }
 
 
-GLuint
+static GLuint
 make_starfield (double distance)
 {
   GLfloat xpos, ypos;

@@ -146,7 +146,7 @@ static void handleGLerrors(char *guiltyfunction)
 }
 
 
-void makedlists(GLuint * dlists)
+static void makedlists(GLuint * dlists)
 {
   dlists[1] = glGenLists(1);
   glNewList(dlists[1], GL_COMPILE);
