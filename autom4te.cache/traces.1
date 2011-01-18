@@ -1,0 +1,700 @@
+m4trace:configure.ac:23: -1- m4_pattern_forbid([^_?A[CHUM]_])
+m4trace:configure.ac:23: -1- m4_pattern_forbid([_AC_])
+m4trace:configure.ac:23: -1- m4_pattern_forbid([^LIBOBJS$], [do not use LIBOBJS directly, use AC_LIBOBJ (see section `AC_LIBOBJ vs LIBOBJS'])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^AS_FLAGS$])
+m4trace:configure.ac:23: -1- m4_pattern_forbid([^_?m4_])
+m4trace:configure.ac:23: -1- m4_pattern_forbid([^dnl$])
+m4trace:configure.ac:23: -1- m4_pattern_forbid([^_?AS_])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^SHELL$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PATH_SEPARATOR$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_NAME$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_TARNAME$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_VERSION$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_STRING$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_BUGREPORT$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_URL$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^exec_prefix$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^prefix$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^program_transform_name$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^bindir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^sbindir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^libexecdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^datarootdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^datadir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^sysconfdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^sharedstatedir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^localstatedir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^includedir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^oldincludedir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^docdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^infodir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^htmldir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^dvidir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^pdfdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^psdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^libdir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^localedir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^mandir$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_NAME$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_TARNAME$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_VERSION$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_STRING$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_BUGREPORT$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^PACKAGE_URL$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^DEFS$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^ECHO_C$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^ECHO_N$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^ECHO_T$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^LIBS$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^build_alias$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^host_alias$])
+m4trace:configure.ac:23: -1- m4_pattern_allow([^target_alias$])
+m4trace:configure.ac:123: -1- AC_DEFUN([AC_PROG_CC_ANSI], [AC_REQUIRE([AC_PROG_CC])
+
+#  echo "Hostname is: $host"
+#  echo "ac prog cc results in $GCC"
+  if test -z "$GCC"; then
+    # not using GCC
+    AC_MSG_CHECKING(how to request ANSI compilation)
+    case "$host" in
+      *-hpux* )
+        AC_MSG_RESULT(HPUX: adding -Ae)
+        CC="$CC -Ae"
+      ;;
+      *-aix* )
+        AC_MSG_RESULT(AIX: adding -qlanglvl=ansi -qhalt=e)
+        CC="$CC -qlanglvl=ansi -qhalt=e"
+      ;;
+      *-dec-* )
+        AC_MSG_RESULT(DEC: adding -std1 -ieee)
+        CC="$CC -std1"
+      ;;
+      *)
+        AC_MSG_RESULT(no idea)
+      ;;
+    esac
+  else
+    # using GCC
+    case "$host" in
+      *-solaris*)
+        AC_MSG_RESULT(Solaris: adding -D__EXTENSIONS__)
+        CC="$CC -D__EXTENSIONS__"
+      ;;
+    esac
+  fi
+
+  OBJCC="$CC"
+
+  AC_MSG_CHECKING([whether the compiler works on ANSI C])
+  AC_RUN_IFELSE(AC_LANG_SOURCE([ main(int ac, char **av) { return 0; } ]),
+     [AC_MSG_RESULT(yes)],
+# AC_MSG_FAILURE is supposed to be better for this
+     [AC_MSG_RESULT(no)
+     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.)],
+     [AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.)])
+
+  if test -n "$GCC"; then
+    AC_MSG_RESULT(Turning on gcc compiler warnings.)
+    CC="$CC -pedantic -Wall -Wstrict-prototypes -Wnested-externs -Wmissing-prototypes"
+    OBJCC="$OBJCC -Wall"
+    # supposedly gcc 3.4 will have "-Wdeclaration-after-statement"
+    # and then perhaps we can do without -pedantic?
+  else
+    case "$host" in
+      *-irix5* |*-irix6.[0-3]* )
+        AC_MSG_RESULT(Turning on SGI compiler warnings.)
+        CC="$CC -fullwarn -use_readonly_const -rdata_shared -g3"
+      ;;
+#     *-dec-osf* )
+#       if test -z "$GCC"; then
+#         AC_MSG_RESULT(Turning on DEC C compiler warnings.)
+#         CC="$CC -migrate -w0 -verbose -warnprotos"
+#       fi
+#     ;;
+    esac
+  fi
+])
+m4trace:configure.ac:212: -1- AC_DEFUN([AC_GCC_ACCEPTS_STD], [if test -n "$GCC"; then
+   AC_CACHE_CHECK([whether gcc accepts -std],
+     ac_cv_gcc_accepts_std,
+    [if ( ( gcc -E -std=c89 - </dev/null >/dev/null ) 2>&1 | \
+          grep unrecognized >/dev/null ); then
+       ac_cv_gcc_accepts_std=no
+     else
+       ac_cv_gcc_accepts_std=yes
+     fi])
+   ac_gcc_accepts_std="$ac_cv_gcc_accepts_std"
+  fi
+])
+m4trace:configure.ac:226: -1- AC_DEFUN([AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE], [if test -n "$GCC"; then
+   AC_GCC_ACCEPTS_STD
+   AC_MSG_RESULT(Disabling C++ comments in ANSI C code.)
+   #
+   # The reason that // comments are banned from xscreensaver is that gcc is
+   # basically the only compiler in the world that supports them in C code.
+   # All other vendors support them only in their C++ compilers, not in their
+   # ANSI C compilers.  This means that it's a portability problem: every time
+   # these comments have snuck into the xscreensaver source code, I've gotten
+   # complaints about it the next day.  So we turn off support for them in gcc
+   # as well to prevent them from accidentially slipping in.
+   #
+   if test "$ac_gcc_accepts_std" = yes ; then
+     #
+     # -std=c89 defines __STRICT_ANSI__, which we don't want.
+     # (That appears to be the only additional preprocessor symbol
+     # it defines, in addition to the syntax changes it makes.)
+     #
+     # -std=gnu89 is no good, because // comments were a GNU extension
+     # before they were in the ANSI C 99 spec...  (gcc 2.96 permits //
+     # with -std=gnu89 but not with -std=c89.)
+     #
+     CC="$CC -std=c89 -U__STRICT_ANSI__"
+   else
+     # The old way:
+     CC="$CC -Wp,-lang-c89"
+   fi
+  fi
+])
+m4trace:configure.ac:265: -1- AC_DEFUN([AC_GCC_ACCEPTS_NO_CPP_PRECOMP], [if test -n "$GCC"; then
+   AC_CACHE_CHECK([whether gcc accepts -no-cpp-precomp],
+     ac_cv_gcc_accepts_no_cpp_precomp,
+    [if ( ( gcc -E -no-cpp-precomp - </dev/null >/dev/null ) 2>&1 | \
+          grep unrecognized >/dev/null ); then
+       ac_cv_gcc_accepts_no_cpp_precomp=no
+     else
+       ac_cv_gcc_accepts_no_cpp_precomp=yes
+     fi])
+   ac_gcc_accepts_no_cpp_precomp="$ac_cv_gcc_accepts_no_cpp_precomp"
+  fi
+])
+m4trace:configure.ac:279: -1- AC_DEFUN([AC_NO_OBJECTIVE_C], [if test -n "$GCC"; then
+   AC_GCC_ACCEPTS_NO_CPP_PRECOMP
+   if test "$ac_gcc_accepts_no_cpp_precomp" = yes ; then
+     AC_MSG_RESULT(Disabling Objective C extensions in ANSI C code.)
+     CC="$CC -no-cpp-precomp"
+   fi
+  fi
+])
+m4trace:configure.ac:296: -1- AC_DEFUN([AC_PROG_INSTALL_DIRS], [AC_CACHE_CHECK([whether "\${INSTALL} -d" creates intermediate directories],
+    ac_cv_install_d_creates_dirs,
+    [ac_cv_install_d_creates_dirs=no
+     rm -rf conftestdir
+     if mkdir conftestdir; then
+       cd conftestdir 2>/dev/null
+       ${INSTALL} -d `pwd`/dir1/dir2 >/dev/null 2>&1
+       if test -d dir1/dir2/. ; then
+         ac_cv_install_d_creates_dirs=yes
+       fi
+       cd .. 2>/dev/null
+       rm -rf conftestdir
+     fi
+    ])
+
+  if test "$ac_cv_install_d_creates_dirs" = no ; then
+    AC_CACHE_CHECK([whether "mkdir -p" creates intermediate directories],
+      ac_cv_mkdir_p_creates_dirs,
+      [ac_cv_mkdir_p_creates_dirs=no
+       rm -rf conftestdir
+       if mkdir conftestdir; then
+         cd conftestdir 2>/dev/null
+         mkdir -p dir1/dir2 >/dev/null 2>&1
+         if test -d dir1/dir2/. ; then
+           ac_cv_mkdir_p_creates_dirs=yes
+         fi
+         cd .. 2>/dev/null
+         rm -rf conftestdir
+       fi
+      ])
+  fi
+
+  if test "$ac_cv_install_d_creates_dirs" = yes ; then
+    INSTALL_DIRS='${INSTALL} -d'
+  elif test "$ac_cv_mkdir_p_creates_dirs" = yes ; then
+    INSTALL_DIRS='mkdir -p'
+  else
+    # any other ideas?
+    INSTALL_DIRS='${INSTALL} -d'
+  fi
+])
+m4trace:configure.ac:347: -1- AC_DEFUN([AC_GETTIMEOFDAY_ARGS], [AC_MSG_CHECKING(how to call gettimeofday)
+  AC_CACHE_VAL(ac_cv_gettimeofday_args,
+   [AC_TRY_COMPILE([#include <stdlib.h>
+                    #include <sys/time.h>],
+                   [struct timeval tv; struct timezone tzp;
+                    gettimeofday(&tv, &tzp);],
+                   [ac_gettimeofday_args=2],
+                   [AC_TRY_COMPILE([#include <stdlib.h>
+                                    #include <sys/time.h>],
+                                   [struct timeval tv; gettimeofday(&tv);],
+                                   [ac_gettimeofday_args=1],
+                                   [ac_gettimeofday_args=0])])
+    ac_cv_gettimeofday_args=$ac_gettimeofday_args])
+  ac_gettimeofday_args=$ac_cv_gettimeofday_args
+  if test "$ac_gettimeofday_args" = 1 ; then
+    AC_DEFINE(HAVE_GETTIMEOFDAY)
+    AC_MSG_RESULT(one argument)
+  elif test "$ac_gettimeofday_args" = 2 ; then
+    AC_DEFINE(HAVE_GETTIMEOFDAY)
+    AC_DEFINE(GETTIMEOFDAY_TWO_ARGS)
+    AC_MSG_RESULT(two arguments)
+  else
+    AC_MSG_RESULT(unknown)
+  fi
+])
+m4trace:configure.ac:406: -1- AC_DEFUN([AC_PATH_X_APP_DEFAULTS_XMKMF], [
+  rm -fr conftestdir
+  if mkdir conftestdir; then
+    cd conftestdir 2>/dev/null
+    # Make sure to not put "make" in the Imakefile rules, since we grep it out.
+    cat > Imakefile <<'EOF'
+acfindx:
+	@echo 'ac_x_app_defaults="${XAPPLOADDIR}"'
+EOF
+    if (xmkmf) >/dev/null 2>&1 && test -f Makefile; then
+      # GNU make sometimes prints "make[1]: Entering...", which'd confuse us.
+      eval `${MAKE-make} acfindx 2>/dev/null | grep -v make`
+    fi
+    cd .. 2>/dev/null
+    rm -fr conftestdir
+  fi])
+m4trace:configure.ac:434: -1- AC_DEFUN([AC_PATH_X_APP_DEFAULTS_DIRECT], [
+  # Look for the directory under a standard set of common directories.
+  # Check X11 before X11Rn because it's often a symlink to the current release.
+  for ac_dir in                                 \
+    /usr/X11/lib/app-defaults                   \
+    /usr/X11R6/lib/app-defaults                 \
+    /usr/X11R6/lib/X11/app-defaults             \
+    /usr/X11R5/lib/app-defaults                 \
+    /usr/X11R5/lib/X11/app-defaults             \
+    /usr/X11R4/lib/app-defaults                 \
+    /usr/X11R4/lib/X11/app-defaults             \
+                                                \
+    /usr/lib/X11/app-defaults                   \
+    /usr/lib/X11R6/app-defaults                 \
+    /usr/lib/X11R5/app-defaults                 \
+    /usr/lib/X11R4/app-defaults                 \
+                                                \
+    /usr/local/X11/lib/app-defaults             \
+    /usr/local/X11R6/lib/app-defaults           \
+    /usr/local/X11R5/lib/app-defaults           \
+    /usr/local/X11R4/lib/app-defaults           \
+                                                \
+    /usr/local/lib/X11/app-defaults             \
+    /usr/local/lib/X11R6/app-defaults           \
+    /usr/local/lib/X11R6/X11/app-defaults       \
+    /usr/local/lib/X11R5/app-defaults           \
+    /usr/local/lib/X11R5/X11/app-defaults       \
+    /usr/local/lib/X11R4/app-defaults           \
+    /usr/local/lib/X11R4/X11/app-defaults       \
+                                                \
+    /usr/X386/lib/X11/app-defaults              \
+    /usr/x386/lib/X11/app-defaults              \
+    /usr/XFree86/lib/X11/app-defaults           \
+                                                \
+    /usr/lib/X11/app-defaults                   \
+    /usr/local/lib/X11/app-defaults             \
+    /usr/unsupported/lib/X11/app-defaults       \
+    /usr/athena/lib/X11/app-defaults            \
+    /usr/local/x11r5/lib/X11/app-defaults       \
+    /usr/lpp/Xamples/lib/X11/app-defaults       \
+    /lib/usr/lib/X11/app-defaults               \
+                                                \
+    /usr/openwin/lib/app-defaults               \
+    /usr/openwin/lib/X11/app-defaults           \
+    /usr/openwin/share/lib/app-defaults         \
+    /usr/openwin/share/lib/X11/app-defaults     \
+                                                \
+    /X11R6/lib/app-defaults                     \
+    /X11R5/lib/app-defaults                     \
+    /X11R4/lib/app-defaults                     \
+    ; \
+  do
+    if test -d "$ac_dir"; then
+      ac_x_app_defaults=$ac_dir
+      break
+    fi
+  done
+])
+m4trace:configure.ac:493: -1- AC_DEFUN([AC_PATH_X_APP_DEFAULTS], [AC_REQUIRE_CPP()
+    AC_CACHE_CHECK([for X app-defaults directory], ac_cv_x_app_defaults,
+     [AC_PATH_X_APP_DEFAULTS_XMKMF
+      if test x"$ac_x_app_defaults" = x; then
+        AC_PATH_X_APP_DEFAULTS_DIRECT
+      fi
+      if test x"$ac_x_app_defaults" = x; then
+        ac_cv_x_app_defaults="/usr/lib/X11/app-defaults"
+      else
+        # Record where we found app-defaults for the cache.
+        ac_cv_x_app_defaults="$ac_x_app_defaults"
+      fi])
+    eval ac_x_app_defaults="$ac_cv_x_app_defaults"])
+m4trace:configure.ac:513: -1- AC_DEFUN([AC_X_RANDOM_PATHS], [case "$host" in
+    *-hpux*)
+
+      # The following arcana was gleaned from conversations with
+      # Eric Schwartz <erics@col.hp.com>:
+      #
+      # On HPUX 10.x, the parts of X that HP considers "standard" live in
+      # /usr/{include,lib}/X11R6/.  The parts that HP doesn't consider
+      # "standard", notably, Xaw and Xmu, live in /usr/contrib/X11R6/.
+      # Yet /usr/contrib/X11R6/ comes preinstalled on all HPUX systems.
+      # Also, there are symlinks from /usr/include/ and /usr/lib/ into
+      # /usr/{include,lib}/X11R6/, so that (if you don't use Xmu at all)
+      # you don't need any -I or -L arguments.
+      #
+      # On HPUX 9.x, /usr/{include,lib}/X11R5/ and /usr/contrib/X11R5/
+      # are the same division as 10.x.  However, there are no symlinks to
+      # the X stuff from /usr/include/ and /usr/lib/, so -I and -L
+      # arguments are always necessary.
+      #
+      # However, X11R6 was available on HPUX 9.x as a patch: if that
+      # patch was installed, then all of X11R6 went in to
+      # /usr/contrib/X11R6/ (there was no /usr/{include,lib}/X11R6/.)
+      #
+      # HPUX 8.x was the same as 9.x, but was X11R4 instead (I don't know
+      # whether R5 was available as a patch; R6 undoubtedly was not.)
+      #
+      # So.  We try and use the highest numbered pair of
+      # /usr/{include,lib}/X11R?/ and /usr/contrib/X11R?/{include,lib}/
+      # that are available.  We do not mix and match different versions
+      # of X.
+      #
+      # Question I still don't know the answer to: (do you?)
+      #
+      #   * On HPUX 9.x, where /usr/include/X11R5/ was standard, and
+      #     /usr/contrib/X11R6/ could be installed as a patch, what was in
+      #     that contrib directory?  Did it contain so-called "standard"
+      #     X11R6, or did it include Xaw and Xmu as well?  If the former,
+      #     where did one find Xaw and Xmu on 9.x R6 systems?  Would this
+      #     be a situation where one had to reach into the R5 headers and
+      #     libs to find Xmu?  That is, must both R6 and R5 directories
+      #     be on the -I and -L lists in that case?
+      #
+      for version in X11R6 X11R5 X11R4 ; do
+        # if either pair of directories exists...
+        if test -d /usr/include/$version || test -d /usr/contrib/$version/include
+        then
+           # if contrib exists, use it...
+           if test -d /usr/contrib/$version/include ; then
+             X_CFLAGS="$X_CFLAGS -I/usr/contrib/$version/include"
+             X_LIBS="$X_LIBS -L/usr/contrib/$version/lib"
+           fi
+           # if the "standard" one exists, use it.
+           if test -d /usr/include/$version ; then
+             X_CFLAGS="$X_CFLAGS -I/usr/include/$version"
+             X_LIBS="$X_LIBS -L/usr/lib/$version"
+           fi
+           # since at least one of the pair exists, go no farther.
+           break
+        fi
+      done
+
+
+      # Now let's check for the pseudo-standard locations for OpenGL and XPM.
+      #
+      if test -d /opt/graphics/OpenGL/include ; then
+        # HP-UX 10.20 puts it here
+        X_CFLAGS="-I/opt/graphics/OpenGL/include $X_CFLAGS"
+        X_LIBS="-L/opt/graphics/OpenGL/lib $X_LIBS"
+      elif test -d /opt/Mesa/lib ; then
+        X_CFLAGS="-I/opt/Mesa/include $X_CFLAGS"
+        X_LIBS="-L/opt/Mesa/lib $X_LIBS"
+      fi
+
+
+#      if test -d /opt/xpm/lib/X11 ; then
+#        X_CFLAGS="-I/opt/xpm/include $X_CFLAGS"
+#        X_LIBS="-L/opt/xpm/lib/X11 $X_LIBS"
+#      fi
+
+      # On HPUX, default to installing in /opt/xscreensaver/ instead of
+      # in /usr/local/, unless there is already an xscreensaver in
+      # /usr/local/bin/.  This can be overridden with the --prefix arg
+      # to configure.  I'm not sure this is the right thing to do, but
+      # Richard Lloyd says so...
+      #
+      if test \! -x /usr/local/bin/xscreensaver ; then
+        ac_default_prefix=/opt/xscreensaver
+      fi
+
+    ;;
+    *-solaris*)
+
+      # Thanks for not making xmkmf find this by default, pinheads.
+      # And thanks for moving things around again, too.  Is this
+      # really the standard location now?  What happened to the
+      # joke that this kind of thing went in /opt?
+      # cthomp says "answer: CDE (Common Disorganized Environment)"
+      #
+      if test -f /usr/dt/include/Xm/Xm.h ; then
+        X_CFLAGS="$X_CFLAGS -I/usr/dt/include"
+      fi
+
+    ;;
+    *-darwin*)
+
+      # On MacOS X (10.x with "fink"), many things are under /sw/.
+      #
+      if test -d /sw/include ; then
+        X_CFLAGS="-I/sw/include $X_CFLAGS"
+        X_LIBS="-L/sw/lib $X_LIBS"
+      fi
+    ;;
+  esac])
+m4trace:configure.ac:638: -1- AC_DEFUN([AC_CHECK_X_HEADER], [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+  CPPFLAGS=`eval eval eval eval eval eval eval eval eval echo $CPPFLAGS`
+  AC_CHECK_HEADER([$1],[$2],[$3],[$4])
+  CPPFLAGS="$ac_save_CPPFLAGS"])
+m4trace:configure.ac:650: -1- AC_DEFUN([AC_EGREP_X_HEADER], [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+  CPPFLAGS=`eval eval eval eval eval eval eval eval eval echo $CPPFLAGS`
+  AC_EGREP_HEADER([$1], [$2], [$3], [$4])
+  CPPFLAGS="$ac_save_CPPFLAGS"])
+m4trace:configure.ac:662: -1- AC_DEFUN([AC_TRY_X_COMPILE], [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+  CPPFLAGS=`eval eval eval eval eval eval eval eval eval echo $CPPFLAGS`
+  AC_TRY_COMPILE([$1], [$2], [$3], [$4])
+  CPPFLAGS="$ac_save_CPPFLAGS"])
+m4trace:configure.ac:676: -1- AC_DEFUN([AC_CHECK_X_LIB], [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  ac_save_LDFLAGS="$LDFLAGS"
+#  ac_save_LIBS="$LIBS"
+
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  # note: $X_CFLAGS includes $x_includes
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+
+  if test \! -z "$libdir" ; then
+    LDFLAGS="$LDFLAGS -L$libdir"
+  fi
+  # note: $X_LIBS includes $x_libraries
+  LDFLAGS="$LDFLAGS $X_LIBS $X_EXTRA_LIBS"
+
+  CPPFLAGS=`eval eval eval eval eval eval eval eval eval echo $CPPFLAGS`
+  LDFLAGS=`eval eval eval eval eval eval eval eval eval echo $LDFLAGS`
+  AC_CHECK_LIB([$1], [$2], [$3], [$4], [$5])
+  CPPFLAGS="$ac_save_CPPFLAGS"
+  LDFLAGS="$ac_save_LDFLAGS"
+#  LIBS="$ac_save_LIBS"
+  ])
+m4trace:configure.ac:704: -1- AC_DEFUN([AC_TRY_X_RUN], [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+  CPPFLAGS=`eval eval eval eval eval eval eval eval eval echo $CPPFLAGS`
+  AC_TRY_RUN([$1], [$2], [$3], [$4])
+  CPPFLAGS="$ac_save_CPPFLAGS"])
+m4trace:configure.ac:731: -1- AC_DEFUN([HANDLE_X_PATH_ARG], [
+   case "$[$1]" in
+    yes) ;;
+    no)  ;;
+
+    /*)
+     AC_MSG_CHECKING([for [$3] headers])
+     d=$[$1]/include
+     if test -d $d; then
+       X_CFLAGS="-I$d $X_CFLAGS"
+       AC_MSG_RESULT($d)
+     else
+       AC_MSG_RESULT(not found ($d: no such directory))
+     fi
+
+     AC_MSG_CHECKING([for [$3] libs])
+     d=$[$1]/lib
+     if test -d $d; then
+       X_LIBS="-L$d $X_LIBS"
+       AC_MSG_RESULT($d)
+     else
+       AC_MSG_RESULT(not found ($d: no such directory))
+     fi
+
+     # replace the directory string with "yes".
+     [$1]_req="yes"
+     [$1]=$[$1]_req
+     ;;
+
+    *)
+     echo ""
+     echo "error: argument to [$2] must be \"yes\", \"no\", or a directory."
+     echo "       If it is a directory, then \`DIR/include' will be added to"
+     echo "       the -I list, and \`DIR/lib' will be added to the -L list."
+     exit 1
+     ;;
+   esac
+  ])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^build$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^build_cpu$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^build_vendor$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^build_os$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^host$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^host_cpu$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^host_vendor$])
+m4trace:configure.ac:786: -1- m4_pattern_allow([^host_os$])
+m4trace:configure.ac:787: -1- AC_PROG_CC_ANSI
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CFLAGS$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^LDFLAGS$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^LIBS$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CPPFLAGS$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^ac_ct_CC$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^EXEEXT$])
+m4trace:configure.ac:787: -1- m4_pattern_allow([^OBJEXT$])
+m4trace:configure.ac:788: -1- AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE
+m4trace:configure.ac:788: -1- AC_GCC_ACCEPTS_STD
+m4trace:configure.ac:789: -1- AC_NO_OBJECTIVE_C
+m4trace:configure.ac:789: -1- AC_GCC_ACCEPTS_NO_CPP_PRECOMP
+m4trace:configure.ac:790: -1- m4_pattern_allow([^CPP$])
+m4trace:configure.ac:790: -1- m4_pattern_allow([^CPPFLAGS$])
+m4trace:configure.ac:790: -1- m4_pattern_allow([^CPP$])
+m4trace:configure.ac:791: -1- m4_pattern_allow([^const$])
+m4trace:configure.ac:797: -1- m4_pattern_allow([^INSTALL_PROGRAM$])
+m4trace:configure.ac:797: -1- m4_pattern_allow([^INSTALL_SCRIPT$])
+m4trace:configure.ac:797: -1- m4_pattern_allow([^INSTALL_DATA$])
+m4trace:configure.ac:798: -1- AC_PROG_INSTALL_DIRS
+m4trace:configure.ac:799: -1- m4_pattern_allow([^SET_MAKE$])
+m4trace:configure.ac:809: -1- m4_pattern_allow([^GREP$])
+m4trace:configure.ac:809: -1- m4_pattern_allow([^EGREP$])
+m4trace:configure.ac:809: -1- m4_pattern_allow([^STDC_HEADERS$])
+m4trace:configure.ac:810: -1- AC_DEFUN([_AC_Header_sys_time_h], [m4_divert_text([INIT_PREPARE], [AS_VAR_APPEND([ac_header_list], [" sys/time.h"])])
+_AC_HEADERS_EXPANSION])
+m4trace:configure.ac:810: -1- AC_DEFUN([_AC_Header_unistd_h], [m4_divert_text([INIT_PREPARE], [AS_VAR_APPEND([ac_header_list], [" unistd.h"])])
+_AC_HEADERS_EXPANSION])
+m4trace:configure.ac:810: -1- AC_DEFUN([_AC_Header_values_h], [m4_divert_text([INIT_PREPARE], [AS_VAR_APPEND([ac_header_list], [" values.h"])])
+_AC_HEADERS_EXPANSION])
+m4trace:configure.ac:811: -1- m4_pattern_allow([^mode_t$])
+m4trace:configure.ac:812: -1- m4_pattern_allow([^pid_t$])
+m4trace:configure.ac:813: -1- m4_pattern_allow([^size_t$])
+m4trace:configure.ac:814: -1- _m4_warn([obsolete], [The macro `AC_TYPE_SIGNAL' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/types.m4:738: AC_TYPE_SIGNAL is expanded from...
+configure.ac:814: the top level])
+m4trace:configure.ac:814: -1- m4_pattern_allow([^RETSIGTYPE$])
+m4trace:configure.ac:820: -1- AC_GETTIMEOFDAY_ARGS
+m4trace:configure.ac:820: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2602: AC_TRY_COMPILE is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
+configure.ac:347: AC_GETTIMEOFDAY_ARGS is expanded from...
+configure.ac:820: the top level])
+m4trace:configure.ac:820: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2602: AC_TRY_COMPILE is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2578: _AC_COMPILE_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2594: AC_COMPILE_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2602: AC_TRY_COMPILE is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
+configure.ac:347: AC_GETTIMEOFDAY_ARGS is expanded from...
+configure.ac:820: the top level])
+m4trace:configure.ac:820: -1- m4_pattern_allow([^HAVE_GETTIMEOFDAY$])
+m4trace:configure.ac:820: -1- m4_pattern_allow([^HAVE_GETTIMEOFDAY$])
+m4trace:configure.ac:820: -1- m4_pattern_allow([^GETTIMEOFDAY_TWO_ARGS$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^XMKMF$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^X_DISPLAY_MISSING$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^X_CFLAGS$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^X_PRE_LIBS$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^X_LIBS$])
+m4trace:configure.ac:823: -1- m4_pattern_allow([^X_EXTRA_LIBS$])
+m4trace:configure.ac:829: -1- AC_PATH_X_APP_DEFAULTS
+m4trace:configure.ac:829: -1- AC_PATH_X_APP_DEFAULTS_XMKMF
+m4trace:configure.ac:829: -1- AC_PATH_X_APP_DEFAULTS_DIRECT
+m4trace:configure.ac:830: -1- AC_X_RANDOM_PATHS
+m4trace:configure.ac:852: -1- AC_CHECK_X_HEADER([X11/Xmu/Error.h], [have_xmu=yes], [], [#include <stdlib.h>
+                   #include <stdio.h>
+                   #include <X11/Intrinsic.h>])
+m4trace:configure.ac:864: -1- m4_pattern_allow([^HAVE_XMU$])
+m4trace:configure.ac:879: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
+configure.ac:879: the top level])
+m4trace:configure.ac:894: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:2675: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
+configure.ac:894: the top level])
+m4trace:configure.ac:1029: -1- m4_pattern_allow([^pkg_config$])
+m4trace:configure.ac:1084: -1- HANDLE_X_PATH_ARG([with_gl], [--with-gl], [GL])
+m4trace:configure.ac:1090: -1- AC_CHECK_X_HEADER([GL/gl.h], [have_gl=yes], [have_gl=no])
+m4trace:configure.ac:1092: -1- AC_CHECK_X_HEADER([GL/glx.h], [have_gl=yes], [have_gl=no], [#include <GL/gl.h>])
+m4trace:configure.ac:1103: -1- AC_EGREP_X_HEADER([Mesa|MESA], [GL/glx.h], [ac_cv_have_mesa_gl=yes])
+m4trace:configure.ac:1152: -1- AC_CHECK_X_LIB([MesaGL], [glXCreateContext], [gl_lib_1="MesaGL"
+                      GL_LIBS="-lMesaGL -lMesaGLU $VIDMODE_LIBS $GL_LIBS"], [], [-lMesaGLU $GL_LIBS -lX11 -lXext $VIDMODE_LIBS -lm])
+m4trace:configure.ac:1159: -1- AC_CHECK_X_LIB([GL], [glXCreateContext], [gl_lib_1="GL"
+                      GL_LIBS="-lGL -lGLU $VIDMODE_LIBS $GL_LIBS"], [], [-lGLU $GL_LIBS -lX11 -lXext $VIDMODE_LIBS -lm])
+m4trace:configure.ac:1172: -1- m4_pattern_allow([^HAVE_GL$])
+m4trace:configure.ac:1174: -1- m4_pattern_allow([^HAVE_MESA_GL$])
+m4trace:configure.ac:1189: -1- _m4_warn([obsolete], [The macro `AC_FD_CC' is obsolete.
+You should run autoupdate.], [../../lib/autoconf/general.m4:385: AC_FD_CC is expanded from...
+../../lib/m4sugar/m4sh.m4:598: AS_IF is expanded from...
+../../lib/autoconf/general.m4:2019: AC_CACHE_VAL is expanded from...
+../../lib/autoconf/general.m4:2040: AC_CACHE_CHECK is expanded from...
+configure.ac:1189: the top level])
+m4trace:configure.ac:1267: -1- AC_CHECK_X_LIB([$gl_lib_1], [glBindTexture], [AC_DEFINE(HAVE_GLBINDTEXTURE)], [true], [$GL_LIBS -lX11 -lXext -lm])
+m4trace:configure.ac:1267: -1- m4_pattern_allow([^HAVE_GLBINDTEXTURE$])
+m4trace:configure.ac:1576: -1- HANDLE_X_PATH_ARG([with_xshm], [--with-xshm-ext], [XSHM])
+m4trace:configure.ac:1581: -1- AC_CHECK_X_HEADER([X11/extensions/XShm.h], [have_xshm=yes], [], [#include <X11/Xlib.h>])
+m4trace:configure.ac:1587: -1- AC_CHECK_X_HEADER([sys/ipc.h], [have_xshm=yes])
+m4trace:configure.ac:1593: -1- AC_CHECK_X_HEADER([sys/shm.h], [have_xshm=yes])
+m4trace:configure.ac:1606: -1- AC_CHECK_X_LIB([XextSam], [XShmQueryExtension], [have_xshm=yes; X_EXTRA_LIBS="$X_EXTRA_LIBS -lXextSam"], [true], [-lX11 -lXext -lm])
+m4trace:configure.ac:1615: -1- m4_pattern_allow([^HAVE_XSHM_EXTENSION$])
+m4trace:configure.ac:1636: -1- HANDLE_X_PATH_ARG([with_xdbe], [--with-xdbe-ext], [DOUBLE-BUFFER])
+m4trace:configure.ac:1640: -1- AC_CHECK_X_HEADER([X11/extensions/Xdbe.h], [have_xdbe=yes], [], [#include <X11/Xlib.h>])
+m4trace:configure.ac:1643: -1- m4_pattern_allow([^HAVE_DOUBLE_BUFFER_EXTENSION$])
+m4trace:configure.ac:1735: -1- m4_pattern_allow([^INCLUDES$])
+m4trace:configure.ac:1737: -1- m4_pattern_allow([^SAVER_LIBS$])
+m4trace:configure.ac:1739: -1- m4_pattern_allow([^HACK_LIBS$])
+m4trace:configure.ac:1741: -1- m4_pattern_allow([^GL_LIBS$])
+m4trace:configure.ac:1743: -1- m4_pattern_allow([^INSTALL_DIRS$])
+m4trace:configure.ac:1745: -1- m4_pattern_allow([^OBJCC$])
+m4trace:configure.ac:1746: -1- m4_pattern_allow([^EXES_OSX$])
+m4trace:configure.ac:1747: -1- m4_pattern_allow([^SCRIPTS_OSX$])
+m4trace:configure.ac:1748: -1- m4_pattern_allow([^MEN_OSX$])
+m4trace:configure.ac:1750: -1- m4_pattern_allow([^XMU_SRCS$])
+m4trace:configure.ac:1751: -1- m4_pattern_allow([^XMU_OBJS$])
+m4trace:configure.ac:1752: -1- m4_pattern_allow([^XMU_LIBS$])
+m4trace:configure.ac:1753: -1- m4_pattern_allow([^SAVER_GL_SRCS$])
+m4trace:configure.ac:1754: -1- m4_pattern_allow([^SAVER_GL_OBJS$])
+m4trace:configure.ac:1755: -1- m4_pattern_allow([^SAVER_GL_LIBS$])
+m4trace:configure.ac:1757: -1- m4_pattern_allow([^GL_EXES$])
+m4trace:configure.ac:1758: -1- m4_pattern_allow([^GL_UTIL_EXES$])
+m4trace:configure.ac:1759: -1- m4_pattern_allow([^GL_MEN$])
+m4trace:configure.ac:1760: -1- m4_pattern_allow([^GL_KLUDGE$])
+m4trace:configure.ac:1763: -1- m4_pattern_allow([^HACKDIR$])
+m4trace:configure.ac:1764: -1- m4_pattern_allow([^HACKDIR_FULL$])
+m4trace:configure.ac:1765: -1- m4_pattern_allow([^HACK_CONF_DIR$])
+m4trace:configure.ac:1766: -1- m4_pattern_allow([^IMAGE_DIR$])
+m4trace:configure.ac:1769: -1- m4_pattern_allow([^APPDEFAULTS$])
+m4trace:configure.ac:1771: -1- m4_pattern_allow([^DEPEND$])
+m4trace:configure.ac:1772: -1- m4_pattern_allow([^DEPEND_FLAGS$])
+m4trace:configure.ac:1773: -1- m4_pattern_allow([^DEPEND_DEFINES$])
+m4trace:configure.ac:1775: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+You should run autoupdate.], [])
+m4trace:configure.ac:1775: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:1775: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:2041: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: \"--with-hackdir=${bindir}/${bad_choice}\" won't work.
+                   There will be an executable installed with that name, so
+                   that can't be the name of a directory as well.  Please
+                   re-configure with a different directory name.], [])

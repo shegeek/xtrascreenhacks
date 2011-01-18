@@ -1,0 +1,304 @@
+hacks/daisy.c:#include "erase.h"
+hacks/daisy.c:#include <math.h>
+hacks/daisy.c:#include "screenhack.h"
+hacks/daisy.c:# include "xdbe.h"
+hacks/glx/bclockconnector.h:/* #include <GL/gl.h> */
+hacks/glx/bclockhousing.c:#include "bclockconnector.h"
+hacks/glx/bclockhousing.c:#include "bclockhousing.h"
+hacks/glx/bclockhousing.c:#include "bclocklightbank.h"
+hacks/glx/bclockhousing.c:#include <GL/glut.h>
+hacks/glx/bclockhousing.c:#include <stdio.h>
+hacks/glx/bclockhousing.c:#include <stdlib.h>
+hacks/glx/bclocklamps.c:#include "bclocklamps.h"
+hacks/glx/bclocklamps.c:#include <GL/gl.h>
+hacks/glx/bclocklamps.c:#include <GL/glu.h>
+hacks/glx/bclocklamps.c:#include <stdio.h>
+hacks/glx/bclocklamps.c:#include <stdlib.h>
+hacks/glx/bclocklamps.h:/* #include "screenhackI.h" */
+hacks/glx/bclocklamps.h:#include <X11/Xdefs.h>
+hacks/glx/berlinuhr.c:#include "bclockhousing.h"
+hacks/glx/berlinuhr.c:#include "bclocklamps.h"
+hacks/glx/berlinuhr.c:#include <math.h>
+hacks/glx/berlinuhr.c:#include "xlockmore.h"
+hacks/glx/bevelcube.c:#include "bevelcube.h"
+hacks/glx/bevelcube.c:#include <GL/gl.h>
+hacks/glx/bevelcube.c:#include <math.h>
+hacks/glx/bevelcube.c:#include <stdio.h>
+hacks/glx/bevelcube.c:#include <stdlib.h>
+hacks/glx/crater4.c:#include "crater4.h"
+hacks/glx/crater4.h:#include <GL/gl.h>
+hacks/glx/craters.c:#include "crater4.h"
+hacks/glx/craters.c:#include "ejecta.h"
+hacks/glx/craters.c:#include "erase.h"
+hacks/glx/craters.c:#include <math.h>
+hacks/glx/craters.c:#include <stdbool.h>
+hacks/glx/craters.c:#include "xlockmore.h"
+hacks/glx/ejecta.c:#include "ejecta.h"
+hacks/glx/ejecta.c:#include <math.h>
+hacks/glx/ejecta.c:#include <stdio.h>
+hacks/glx/ejecta.c:#include <stdlib.h>
+hacks/glx/ejecta.c:#include "yarandom.h"
+hacks/glx/ejecta.h:#include <GL/gl.h> 
+hacks/glx/ejecta.h:#include <GL/glu.h> 
+hacks/glx/ejecta.h:#include <stdbool.h>
+hacks/glx/figuretest.c:#include "bevelcube.h"
+hacks/glx/figuretest.c:#include <GL/glut.h>
+hacks/glx/figuretest.c:#include <math.h>  /* for M_SQRT2 */
+hacks/glx/figuretest.c: *  includes display lists to draw the seven pieces
+hacks/glx/figuretest.c:#include "somafigures.h"
+hacks/glx/figuretest.c:#include <stdio.h>
+hacks/glx/figuretest.c:#include <stdlib.h>
+hacks/glx/flyer.c:#include <ctype.h>
+hacks/glx/flyer.c:#include "../images/xlogo64"
+hacks/glx/flyer.c:#include <math.h>
+hacks/glx/flyer.c:#include "xbmread.h"
+hacks/glx/flyer.c:#include "xlockmore.h"
+hacks/glx/fps.c:# include <AGL/agl.h>
+hacks/glx/fps.c:# include "config.h"
+hacks/glx/fps.c:# include <GL/gl.h>
+hacks/glx/fps.c:# include <GL/glu.h>
+hacks/glx/fps.c:# include <GL/glx.h>
+hacks/glx/fps.c:# include <OpenGL/gl.h>
+hacks/glx/fps.c:# include <OpenGL/glu.h>
+hacks/glx/fps.c:#include "xlockmoreI.h"
+hacks/glx/skylark.c:#include "boomerangs.h"
+hacks/glx/skylark.c:#include <ctype.h>
+hacks/glx/skylark.c:#include <math.h>
+hacks/glx/skylark.c:#include "xlockmore.h"
+hacks/glx/solutionparser.c:#include <ctype.h>  
+hacks/glx/solutionparser.c:#include <stdbool.h>
+hacks/glx/solutionparser.c:#include <stdio.h>   
+hacks/glx/solutionparser.c:#include <stdlib.h> 
+hacks/glx/solutionparser.c:#include <string.h> 
+hacks/glx/soma.c:#include "bevelcube.h"
+hacks/glx/soma.c:#include <ctype.h>
+hacks/glx/soma.c:#include "flipguide.h"
+hacks/glx/soma.c:#include <math.h>
+hacks/glx/soma.c:#include "somafigures.h"
+hacks/glx/soma.c:#include "xlockmore.h"
+hacks/glx/xbmread.c:#include "xbmread.h"
+hacks/glx/xbmread.c: * spin off a version to work on an #included xbm
+hacks/glx/xbmread.h:#include <GL/gl.h>
+hacks/glx/xbmread.h:#include <stdio.h>
+hacks/glx/xbmread.h:#include <stdlib.h>
+hacks/glx/xbmread.h:#include <string.h>
+hacks/glx/xlock-gl-utils.c:#include <GL/gl.h>
+hacks/glx/xlock-gl-utils.c:#include <GL/glu.h>
+hacks/glx/xlock-gl-utils.c:#include <GL/glx.h>
+hacks/glx/xlock-gl-utils.c:#include <stdio.h>
+hacks/glx/xlock-gl-utils.c:#include "xlockmoreI.h"
+hacks/glx/xpm-ximage.c:# include "config.h"
+hacks/glx/xpm-ximage.c:# include <gdk-pixbuf/gdk-pixbuf.h>
+hacks/glx/xpm-ximage.c:#  include <gdk-pixbuf/gdk-pixbuf-xlib.h>
+hacks/glx/xpm-ximage.c:#  include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+hacks/glx/xpm-ximage.c:# include "jwxyz.h"
+hacks/glx/xpm-ximage.c:#include "minixpm.h"
+hacks/glx/xpm-ximage.c:#include <stdio.h>
+hacks/glx/xpm-ximage.c:#include <stdlib.h>
+hacks/glx/xpm-ximage.c:#include <X11/Intrinsic.h>
+hacks/glx/xpm-ximage.c:# include <X11/Xlib.h>
+hacks/glx/xpm-ximage.c:#include <X11/xpm.h>
+hacks/glx/xpm-ximage.c:#include <X11/Xutil.h>
+hacks/glx/xpm-ximage.c:#include "xpm-ximage.h"
+hacks/screenhack.c:      fprintf (stderr, "Options include: ");
+hacks/screenhack.c:#include "screenhackI.h"
+hacks/screenhack.c:#include <stdio.h>
+hacks/screenhack.c:#include "version.h"
+hacks/screenhack.c:#include "vroot.h"
+hacks/screenhack.c:#include <X11/CoreP.h>
+hacks/screenhack.c:#include <X11/Intrinsic.h>
+hacks/screenhack.c:#include <X11/IntrinsicP.h>
+hacks/screenhack.c:#include <X11/keysym.h>
+hacks/screenhack.c:# include <X11/SGIScheme.h>	/* for SgiUseSchemes() */
+hacks/screenhack.c:#include <X11/Shell.h>
+hacks/screenhack.c:#include <X11/StringDefs.h>
+hacks/screenhack.c:#  include <X11/Xmu/Error.h>
+hacks/screenhack.c:#  include <Xmu/Error.h>
+hacks/screenhack.c:# include "xmu.h"
+hacks/screenhack.h:#include "screenhackI.h"
+hacks/screenhackI.h:#include "colors.h"
+hacks/screenhackI.h:# include "config.h"
+hacks/screenhackI.h:#include "grabscreen.h"
+hacks/screenhackI.h:#include "hsv.h"
+hacks/screenhackI.h:# include "jwxyz.h"
+hacks/screenhackI.h:#include <math.h>
+hacks/screenhackI.h:#include "resources.h"
+hacks/screenhackI.h:#include <stdio.h>
+hacks/screenhackI.h:#include <stdlib.h>
+hacks/screenhackI.h:#include "usleep.h"
+hacks/screenhackI.h:# include <values.h>
+hacks/screenhackI.h:#include "visual.h"
+hacks/screenhackI.h:# include <X11/Xlib.h>
+hacks/screenhackI.h:# include <X11/Xos.h>
+hacks/screenhackI.h:# include <X11/Xresource.h>
+hacks/screenhackI.h:# include <X11/Xutil.h>
+hacks/screenhackI.h:#include "yarandom.h"
+hacks/twinkle.c:#include <math.h>
+hacks/twinkle.c:#include "screenhack.h"
+hacks/twinkle.c:# include "xdbe.h"
+hacks/xlockmore.c:#include "screenhack.h"
+hacks/xlockmore.c:# include <X11/Intrinsic.h>
+hacks/xlockmore.c:#include "xlockmoreI.h"
+hacks/xlockmore.h:# include "config.h"
+hacks/xlockmore.h:#  include <GL/glu.h>
+hacks/xlockmore.h:#  include <GL/glx.h>
+hacks/xlockmore.h:#  include <OpenGL/gl.h>
+hacks/xlockmore.h:#  include <OpenGL/glu.h>
+hacks/xlockmore.h:#include "screenhackI.h"
+hacks/xlockmore.h:#include "xlockmoreI.h"
+hacks/xlockmoreI.h:#  include <GL/gl.h>
+hacks/xlockmoreI.h:#  include <GL/glx.h>
+hacks/xlockmoreI.h:#  include <OpenGL/gl.h>
+hacks/xlockmoreI.h:#include "screenhackI.h"
+hacks/xlockmoreI.h:#include <time.h>
+hacks/xlockmoreI.h:# include "xshm.h"
+hacks/xpm-pixmap.c:# include "config.h"
+hacks/xpm-pixmap.c:# include <gdk-pixbuf/gdk-pixbuf.h>
+hacks/xpm-pixmap.c:#  include <gdk-pixbuf/gdk-pixbuf-xlib.h>
+hacks/xpm-pixmap.c:#  include <gdk-pixbuf-xlib/gdk-pixbuf-xlib.h>
+hacks/xpm-pixmap.c:# include "jwxyz.h"
+hacks/xpm-pixmap.c:#include "minixpm.h"
+hacks/xpm-pixmap.c:#include <stdio.h>
+hacks/xpm-pixmap.c:#include <stdlib.h>
+hacks/xpm-pixmap.c:# include "visual.h"  /* for screen_number() */
+hacks/xpm-pixmap.c:#include <X11/Intrinsic.h>
+hacks/xpm-pixmap.c:# include <X11/Xlib.h>
+hacks/xpm-pixmap.c:#  include <X11/Xmu/Drawing.h>
+hacks/xpm-pixmap.c:#include <X11/xpm.h>
+hacks/xpm-pixmap.c:# include <X11/Xutil.h>
+hacks/xpm-pixmap.c:#  include <Xmu/Drawing.h>
+hacks/xpm-pixmap.c:#include "xpm-pixmap.h"
+utils/alpha.c:#include "alpha.h"
+utils/alpha.c:#include "hsv.h"
+utils/alpha.c:#include "resources.h"
+utils/alpha.c:#include "utils.h"
+utils/alpha.c:#include "visual.h"
+utils/alpha.c:#include <X11/Xutil.h>
+utils/alpha.c:#include "yarandom.h"
+utils/colors.c:#include "colors.h"
+utils/colors.c:#include "hsv.h"
+utils/colors.c:#include "utils.h"
+utils/colors.c:#include "visual.h"
+utils/colors.c:#include "yarandom.h"
+utils/erase.c:#include "erase.h"
+utils/erase.c:#include "resources.h"
+utils/erase.c:#include <sys/time.h> /* for gettimeofday() */
+utils/erase.c:#include "usleep.h"
+utils/erase.c:#include "utils.h"
+utils/erase.c:#include "yarandom.h"
+utils/fade.c:#include "fade.h"
+utils/fade.c:#include <sys/time.h> /* for gettimeofday() */
+utils/fade.c:#include "usleep.h"
+utils/fade.c:#include "utils.h"
+utils/fade.c:#include "visual.h"
+utils/fade.c:# include "vms-gtod.h"
+utils/fade.c:#include <X11/extensions/xf86vmode.h>
+utils/fade.c:# include <X11/extensions/XSGIvc.h>
+utils/grabclient.c:# include "colorbars.h"
+utils/grabclient.c:#include "grabscreen.h"
+utils/grabclient.c:# include "jwxyz.h"
+utils/grabclient.c:#include "resources.h"
+utils/grabclient.c:# include <sys/wait.h>		/* for waitpid() and associated macros */
+utils/grabclient.c:# include <unistd.h>
+utils/grabclient.c:#include "utils.h"
+utils/grabclient.c:# include "vroot.h"
+utils/grabclient.c:# include <X11/Intrinsic.h>   /* for XtInputId, etc */
+utils/grabclient.c:# include <X11/Xatom.h>
+utils/grabscreen.c:#include "colors.h"
+utils/grabscreen.c:#include "grabscreen.h"
+utils/grabscreen.c:#include "resources.h"
+utils/grabscreen.c:#include "usleep.h"
+utils/grabscreen.c:#include "utils.h"
+utils/grabscreen.c:#include "visual.h"
+utils/grabscreen.c:#include "vroot.h"
+utils/grabscreen.c:# include <X11/extensions/readdisplay.h>
+utils/grabscreen.c:#include <X11/Xatom.h>
+utils/grabscreen.c:#  include <X11/Xmu/WinUtil.h>
+utils/grabscreen.c:#include <X11/Xutil.h>
+utils/grabscreen.c:#  include <Xmu/WinUtil.h>
+utils/grabscreen.c:#include "yarandom.h"
+utils/hsv.c:#include "hsv.h"
+utils/hsv.c:#include "utils.h"
+utils/minixpm.c:# include "config.h"
+utils/minixpm.c:# include "jwxyz.h"
+utils/minixpm.c:#include "minixpm.h"
+utils/minixpm.c:#include <stdio.h>
+utils/minixpm.c:#include <stdlib.h>
+utils/minixpm.c:#include <string.h>
+utils/minixpm.c:# include <X11/Xlib.h>
+utils/minixpm.c:# include <X11/Xutil.h>
+utils/overlay.c:#include "utils.h"
+utils/overlay.c:#include "visual.h"
+utils/overlay.c:#include <X11/Xproto.h>
+utils/overlay.c:#include <X11/Xutil.h>
+utils/resources.c:#include "resources.h"
+utils/resources.c:#include "utils.h"
+utils/resources.c:#include <X11/Xresource.h>
+utils/spline.c:#include "spline.h"
+utils/spline.c:#include "utils.h"
+utils/usleep.c:ERROR, do not include that here
+utils/usleep.c:# include "config.h"
+utils/usleep.c:# include <descrip.h>
+utils/usleep.c:# include <lib$routines.h>
+utils/usleep.c:# include <stdio.h>
+utils/usleep.c:# include <stdlib.h>
+utils/usleep.c:# include <sys/time.h>		/* for struct timeval */
+utils/usleep.c:# include <unistd.h>
+utils/utils.h:# include "config.h"
+utils/utils.h:# include "jwxyz.h"
+utils/utils.h:#include <math.h>
+utils/utils.h:#include <stdio.h>
+utils/utils.h:#include <stdlib.h>
+utils/utils.h:#include <string.h>
+utils/utils.h:# include <X11/Xlib.h>
+utils/utils.h:# include <X11/Xos.h>
+utils/utils.h:# include <X11/Xutil.h>
+utils/visual.c:#include "resources.h"  /* for get_string_resource() */
+utils/visual.c:#include <string.h>
+utils/visual.c:#include "utils.h"
+utils/visual.c:#include "visual.h"
+utils/visual.c:#include <X11/Xutil.h>
+utils/visual-gl.c:# include <GL/gl.h>
+utils/visual-gl.c:# include <GL/glx.h>
+utils/visual-gl.c:#include "utils.h"
+utils/visual-gl.c:#include "visual.h"
+utils/vms-gtod.c:#include <signal.h>
+utils/vms-gtod.c:#include <stdio.h>
+utils/vms-gtod.c:#include <time.h>
+utils/vms-gtod.c:#include "vms-gtod.h"
+utils/vms-gtod.h:#include <time.h>
+utils/vms-strdup.c:#include <stdlib.h>
+utils/vms-strdup.c:#include <string.h>
+utils/vroot.h: * #include <X11/vroot.h>
+utils/vroot.h:#include <X11/Xatom.h>
+utils/vroot.h:#include <X11/X.h>
+utils/vroot.h:#include <X11/Xlib.h>
+utils/vroot.h: * - include X11/Xlib.h and support RootWindowOfScreen, too 9/17/91
+utils/vroot.h: * It does NOT work with xsetroot; get the xsetroot replacement included in
+utils/xdbe.c:#include "resources.h"		/* for get_string_resource() */
+utils/xdbe.c:#include "utils.h"
+utils/xdbe.c:# include <X11/Xmu/Error.h>
+utils/xdbe.c:#include "xdbe.h"
+utils/xdbe.h:# include <X11/extensions/Xdbe.h>
+utils/xmu.c:# include "config.h"
+utils/xmu.c:#include <X11/Intrinsic.h>	/* for XtSpecificationRelease */
+utils/xmu.c:# include <X11/Xlib.h>
+utils/xmu.c:# include <X11/Xlibint.h>	/* for _XExtension */
+utils/xmu.c:# include <X11/Xproto.h>	/* for xEvent (used by Xlibint.h) */
+utils/xmu.c:#include "xmu.h"
+utils/xmu.h:#include <stdio.h>
+utils/xmu.h:#include <X11/Xlib.h>
+utils/xshm.c:#include <errno.h>		/* for perror() */
+utils/xshm.c:#include "resources.h"		/* for get_string_resource() */
+utils/xshm.c:#include "utils.h"
+utils/xshm.c:# include <X11/Xmu/Error.h>
+utils/xshm.c:#include <X11/Xutil.h>		/* for XDestroyImage() */
+utils/xshm.c:#include "xshm.h"
+utils/xshm.h:# include <sys/ipc.h>
+utils/xshm.h:# include <sys/shm.h>
+utils/xshm.h:# include <X11/extensions/XShm.h>
+utils/yarandom.c:# include "config.h"
+utils/yarandom.c:#include <sys/time.h> /* for gettimeofday() */
+utils/yarandom.c:# include <unistd.h>  /* for getpid() */
+utils/yarandom.c:#include "yarandom.h"
+utils/yarandom.h:# include "vms-gtod.h"

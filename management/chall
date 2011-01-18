@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for each in utils hacks hacks/glx .
+ do
+ grep -n -i ${1} ${each}/*
+ done
