@@ -63,8 +63,11 @@ HACK_BIN	= ..
 UTILS_SRC	= $(HACK_SRC)/../utils
 UTILS_BIN	= $(HACK_BIN)/../utils
 
-# see corresponding line in ../Makefile.in 
-INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
+# see corresponding line with comment in ../Makefile.in 
+#INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
+INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I$(HACK_SRC) -I../..  \
+                   @INCLUDES@
+
 
 UTIL_SRCS	= $(UTILS_SRC)/colors.c $(UTILS_SRC)/hsv.c \
 		  $(UTILS_SRC)/resources.c $(UTILS_SRC)/usleep.c \
@@ -469,6 +472,6 @@ xlock-gl-utils.o: $(UTILS_SRC)/xshm.h
 xlock-gl-utils.o: $(UTILS_SRC)/yarandom.h
 xlock-gl-utils.o: $(HACK_SRC)/xlockmoreI.h
 xpm-ximage.o: ../../config.h
+xpm-ximage.o: $(UTILS_SRC)/minixpm.h
 xpm-ximage.o: $(srcdir)/xpm-ximage.h
-
 

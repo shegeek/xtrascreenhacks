@@ -10,7 +10,7 @@ SHELL		= /bin/sh
 SUBDIRS		= utils hacks hacks/glx
 SUBDIRS2	= $(SUBDIRS) OSX
 # make sure all these are copied over
-TARFILES	= README README.hacking README.VMS INSTALL \
+TARFILES	= README README.VMS INSTALL \
 		  configure configure.ac Makefile.in config.h.in \
 		  config.h-vms install-sh setup.com config.guess aclocal.m4 \
 		  config.sub makevms.com \
@@ -44,7 +44,7 @@ depend::
 	@$(MAKE_SUBDIR)
 distdepend::
 	@$(MAKE) update_spec_version
-	@$(MAKE_SUBDIR2)
+	@$(MAKE_SUBDIR)
 
 TAGS:: tags
 tags::
@@ -60,13 +60,10 @@ distclean:: clean
 
 dist:: tar
 
-#Everything below here is zawinski's project management stuff--
-# might be useful, except for www
-
-# 
 tar::
 	@								    \
-  sh config.status ;							    \
+#  sh config.status ;							    \
+  config.status ;							    \
   rm -f configure ;							    \
   $(MAKE) configure ;	                                                    \
   $(MAKE) version-date distdepend ;					    \
@@ -74,8 +71,10 @@ tar::
   NAME="xtrascreenhacks-$$VERS" ;				       	\
   rm -rf $$NAME ; ln -s . $$NAME ;					    \
   FILES= ;								    \
-  ADIR=archive/ ;							    \
-  for subdir in $(SUBDIRS2) ; do					    \
+#  ADIR=archive/ ;							    \
+  ADIR=./ ;							    \
+#  for subdir in $(SUBDIRS2) ; do					    \
+  for subdir in $(SUBDIRS) ; do					    \
     d=`pwd` ;								    \
     cd $$subdir ;							    \
     FILES="$$FILES `$(MAKE) echo_tarfiles				    \
@@ -86,10 +85,10 @@ tar::
   echo creating gzip file $$ADIR$$NAME.tar.gz... ;			    \
   GZIP="-9v" $(TAR) -vchzf $$ADIR$$NAME.tar.gz			            \
     `echo $(TARFILES) $$FILES | sed "s|^|$$NAME/|g; s| | $$NAME/|g" ` ;	    \
-  # add command to create bz2 \
   echo creating bzip2 file $$ADIR$$NAME.tar.bz2... ;			    \
-  GZIP="-9v" $(TAR) -vchjf $$ADIR$$NAME.tar.bz2			            \
-    `echo $(TARFILES) $$FILES | sed "s|^|$$NAME/|g; s| | $$NAME/|g" ` ;	    \  rm $$NAME
+  $(TAR) -vchjf $$ADIR$$NAME.tar.bz2			            \
+    `echo $(TARFILES) $$FILES | sed "s|^|$$NAME/|g; s| | $$NAME/|g" ` ;	 \
+   rm $$NAME; cp $$NAME* ../webpage/xtrascreenhacks
 
 
 configure::
@@ -149,6 +148,19 @@ version-date::
   fi ;									    \
   rm -f $$TMP
 
+count::
+	@ \
+  echo -n "Current hack count: " ; \
+  ( ( cd hacks;     make -s INSTALL=true install-program ) ; \
+    ( cd hacks/glx; make -s INSTALL=true install-program ) ) | \
+    grep true | \
+    grep -v helper | \
+    grep -v ljlatest | \
+    wc -l
+
+
+#Everything below here is zawinski's project management stuff--
+# might be useful, except for www
 
 update_spec_version::
 	@S=$(srcdir)/xtrascreenhacks.spec ;				    \
@@ -339,12 +351,4 @@ dmg::
 #	  fi ; \
 #	done
 
-count::
-	@ \
-  echo -n "Current hack count: " ; \
-  ( ( cd hacks;     make -s INSTALL=true install-program install-scripts ) ; \
-    ( cd hacks/glx; make -s INSTALL=true install-program ) ) | \
-    grep true | \
-    grep -v helper | \
-    grep -v ljlatest | \
-    wc -l
+

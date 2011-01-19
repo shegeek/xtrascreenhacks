@@ -12,6 +12,7 @@
 #
 # does not detect mesa version number correctly,
 # probably because "preferred_mesagl" is 3.4 but 7.9 is current
+# (does "version" refer to a mesa specific thing, or opengl spec?)
 #
 # what else in this file is moldy old?
 #
@@ -19,9 +20,11 @@
 #
 # what is the deal with bc?
 #
-# macro to check for gcc options was removed--should it be restored?\
-# does this have anything to do with the INCLUDES problem in 
-# hacks/Makefile.in?
+# don't think anything having to do with x app defaults is needed--
+# is only for the xscreensaver.ad file
+# (in case it is, help string was removed from with-configdir and placed
+# in AC_ARG_WITH(x-app-defaults), where for some reason,
+# it does not get printed with configure --help)
 
 AC_PREREQ(2.67)
 AC_INIT([XtraScreenHacks], [0.7], [shegeek-dev@comcast.net])
@@ -191,7 +194,6 @@ AC_DEFUN([AC_PROG_CC_ANSI],
   fi
 ])
 
-# macro to check for gcc options went here...restore?
 
 ###############################################################################
 #
@@ -430,7 +432,10 @@ EOF
 #
 ###############################################################################
 
-AC_ARG_WITH(x-app-defaults,[],
+AC_ARG_WITH([x-app-defaults],
+[  --with-x-app-defaults=DIR
+			   Where to install xscreensaver configuration file.
+],
 	[ac_cv_x_app_defaults="$withval"],
 	[eval ac_x_app_defaults="$withval"])
 
@@ -952,12 +957,10 @@ fi
 
 have_configdir=yes
 with_configdir_req=unspecified
-AC_ARG_WITH(configdir,
+AC_ARG_WITH([configdir],
 [  --with-configdir=DIR    Where to install the data files that describe each
                           of the display modes to the GUI.
                           Default: `PREFIX/share/xscreensaver/config/'
-  --with-x-app-defaults=DIR
-			   Where to install xscreensaver configuration file.
 ],
   [with_configdir="$withval"; with_configdir_req="$withval"],
   [with_configdir=yes])
@@ -983,17 +986,16 @@ fi
 #
 #       Handle the --with-imagedir option
 #       Help for --with-x-app-defaults option added..
+#       ...and removed, was the same as in configdir option above.
 #
 ###############################################################################
 
 have_imagedir=yes
 with_imagedir_req=unspecified
-AC_ARG_WITH(imagedir,
+AC_ARG_WITH([imagedir],
 [  --with-imagedir=DIR    Where to install the image files that may be
                           used with the various hacks.
                           Default: `PREFIX/share/xtrascreenhacks/images/'
-  --with-x-app-defaults=DIR
-			   Where to install xscreensaver configuration file.
 ],
   [with_imagedir="$withval"; with_imagedir_req="$withval"],
   [with_imagedir=yes])

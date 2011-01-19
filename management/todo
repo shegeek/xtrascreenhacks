@@ -5,7 +5,6 @@ Up next:  test make install  (leave make tar for next release)
 
 Make sure all the targets in the top level makefile.in work correctly
   -> vms files, dtd still in make tar;
-Clean unneeded tests out of configure.ac
 figure out a better way to get the entries in .xscreensaver
 make .desktop files for gnome-screensaver and figure out how they work
 see if there are any more daemons to be accomodated
@@ -81,12 +80,6 @@ utils/Makefile.in:
 configure.in:
 
 -remove references to unused dirs in inventory check
--figure out how to call AC_INIT (is presently called with driver/subprocs.c,
- a file not used here)
-
-
-config.h.in:
-
 
 
 
@@ -96,7 +89,6 @@ from 4autotools:
  and put hacks & config in the right place
  to consider: xscreensaver, gnome screensaver, kde's screensaver
               -> involves .ad file
-hacks/.gdbinit: what does it do? (taken out)
 might hacks/xml2man be useful?
 
 do I need xscreensaver-sgigl (makes the hacks run on weird sgi displays),
@@ -138,4 +130,7 @@ OK to get rid of both?
 
 doesn't look like xscreensaver-sgigl is referenced from anywhere in the code. It is another standalone executable.
 
+
+
+Come up with a better task organization system than this text file
 

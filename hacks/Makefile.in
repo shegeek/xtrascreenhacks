@@ -70,8 +70,10 @@ UTILS_BIN	= ../utils
 # makedepend should be finding this compiler directory on its own
 # should be using gccmakedep instead, which outputs differently
 # the processing in make distdepend would need to change
-# !!! users' compiler directories will not be the same!
-INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
+# Same situation exists in glx/Makefile.in
+# update: seems to be working ok now, left here just in case
+#INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I.. -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include @INCLUDES@
+INCLUDES	= -I. -I$(srcdir) -I$(UTILS_SRC) -I..  @INCLUDES@
 
 # ^^^ find out which of these I need, or--
 # better to just include them all, avoid changing the utils
@@ -129,22 +131,17 @@ HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h \
 MEN		= daisy.man  twinkle.man
 
 STAR		= *
-EXTRAS		= README Makefile.in # xml2man.pl \
-		  config/README \
-		  config/$(STAR).xml \
-#		  config/$(STAR).dtd \
-#		  config/$(STAR).xsd \
-		  images/$(STAR).xbm \
-                  images/flyer/$(STAR).xbm #\
-#		  images/$(STAR).xpm \
-#		  images/bubbles/$(STAR).pov \ -> shegeek will have images
 
-IMAGES = images/flyer/$(STAR).xbm
+EXTRAS		= README Makefile.in config/README \
+		  config/$(STAR).xml  config/$(STAR).xsd
+
+IMAGES = images/xlogo64 images/flyer/$(STAR).xbm
+
 
 VMSFILES	= compile_axp.com compile_decc.com link_axp.com link_decc.com \
 		  vms_axp.opt vms_axp_12.opt vms_decc.opt vms_decc_12.opt
 
-TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(VMSFILES)
+TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(IMAGES) $(VMSFILES)
 
 
 default: all
@@ -219,6 +216,7 @@ install-xml:
 	          $(INSTALL_DATA) $$src/$$file.xml $$dest/$$file.xml ;	\
 	   fi ;								\
 	done
+
 
 uninstall-program:
 	@for program in $(EXES) ; do				\
@@ -468,6 +466,7 @@ daisy.o: $(UTILS_SRC)/hsv.h
 daisy.o: $(UTILS_SRC)/resources.h
 daisy.o: $(UTILS_SRC)/usleep.h
 daisy.o: $(UTILS_SRC)/visual.h
+daisy.o: $(UTILS_SRC)/xdbe.h
 daisy.o: $(UTILS_SRC)/yarandom.h
 screenhack.o: ../config.h
 screenhack.o: $(srcdir)/screenhackI.h
@@ -490,6 +489,7 @@ twinkle.o: $(UTILS_SRC)/hsv.h
 twinkle.o: $(UTILS_SRC)/resources.h
 twinkle.o: $(UTILS_SRC)/usleep.h
 twinkle.o: $(UTILS_SRC)/visual.h
+twinkle.o: $(UTILS_SRC)/xdbe.h
 twinkle.o: $(UTILS_SRC)/yarandom.h
 xlockmore.o: ../config.h
 xlockmore.o: $(srcdir)/screenhack.h
@@ -504,6 +504,7 @@ xlockmore.o: $(UTILS_SRC)/xshm.h
 xlockmore.o: $(UTILS_SRC)/yarandom.h
 xlockmore.o: $(srcdir)/xlockmoreI.h
 xpm-pixmap.o: ../config.h
+xpm-pixmap.o: $(UTILS_SRC)/minixpm.h
 xpm-pixmap.o: $(UTILS_SRC)/visual.h
 xpm-pixmap.o: $(srcdir)/xpm-pixmap.h
 
