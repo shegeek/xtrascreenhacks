@@ -89,6 +89,7 @@ DEFS		= @DEFS@
 DEPEND		= @DEPEND@
 DEPEND_FLAGS	= @DEPEND_FLAGS@
 DEPEND_DEFINES	= @DEPEND_DEFINES@
+AWK     = @AWK@
 
 SHELL		= /bin/sh
 INSTALL		= @INSTALL@
@@ -160,7 +161,7 @@ distdepend::
 	$(SRCS) 2>/dev/null |						    \
 	sort -d |							    \
 	(								    \
-	  awk '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
+	  $(AWK) '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
 	  sed -e '/^#.*/d'						    \
 	      -e 's@ \./@ @g;s@ /[^ ]*@@g;/^.*:$$/d'			    \
 	      -e 's@ \([^$$]\)@ $$(srcdir)/\1@g'			    \

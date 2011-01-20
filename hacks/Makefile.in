@@ -2,10 +2,10 @@
 #  -> shegeek's version
 # the `../configure' script generates `hacks/Makefile' from this file.
 
-# WARNING! private directory of shegeek's included in INCLUDES--fix
-# (same issue exists in glx/Makefile.in)
 # check check_men and check_xml, there are references to scripts in there
-# install-images hasn't actually been written yet
+#
+# if the user specifies a series of nested directories for the images,
+# install-images leaves all but the innermost directory
 
 @SET_MAKE@
 .SUFFIXES:
@@ -40,6 +40,7 @@ LIBS		= @LIBS@
 DEPEND		= @DEPEND@
 DEPEND_FLAGS	= @DEPEND_FLAGS@
 DEPEND_DEFINES	= @DEPEND_DEFINES@
+AWK     = @AWK@
 
 SHELL		= /bin/sh
 INSTALL		= @INSTALL@
@@ -135,7 +136,7 @@ STAR		= *
 EXTRAS		= README Makefile.in config/README \
 		  config/$(STAR).xml  config/$(STAR).xsd
 
-IMAGES = images/xlogo64 images/flyer/$(STAR).xbm
+IMAGES = images/flyer/$(STAR) images/duds/$(STAR) images/xlogo64
 
 
 VMSFILES	= compile_axp.com compile_decc.com link_axp.com link_decc.com \
@@ -147,8 +148,8 @@ TARFILES	= $(SRCS) $(HDRS) $(MEN) $(EXTRAS) $(IMAGES) $(VMSFILES)
 default: all
 all: $(EXES)
 
-install:   install-program   install-xml install-man 
-uninstall: uninstall-program uninstall-xml uninstall-man
+install:   install-program   install-xml install-man install-images
+uninstall: uninstall-program uninstall-xml uninstall-man uninstall-images
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' \
@@ -218,6 +219,27 @@ install-xml:
 	done
 
 
+install-images:
+	@subdest=$(install_prefix)$(IMAGE_DIR) ;			\
+	 src=$(srcdir)/images ;						\
+	imagelist="$(IMAGES)" ;  \
+	 for file in $$imagelist ; do		\
+	   institem=`echo $$file |  sed 's/^images\///'`  ;  \
+	   instpath=`echo $$institem | sed 's/[^/]*$$//' | sed 's/\/$$//'` ;  \
+	   if [ -n "$$instpath" ] ; then           \
+	   dest=`echo $$subdest"/"$$instpath`  ;  \
+       else                                  \
+       dest=`echo $$subdest`  ;              \
+       fi   ;                                  \
+	   instfile=`echo $$institem | sed 's,.*/,,'`  ;  \
+	 if [ ! -d $$dest ]; then					\
+	   $(INSTALL_DIRS) $$dest ;					\
+	 fi ;								\
+	     echo $(INSTALL_DATA) $$src/$$institem $$dest/$$instfile ;	\
+	          $(INSTALL_DATA) $$src/$$institem $$dest/$$instfile ;	\
+	done
+
+
 uninstall-program:
 	@for program in $(EXES) ; do				\
 	  echo rm -f $(install_prefix)$(HACKDIR)/$$program ;		\
@@ -238,6 +260,35 @@ uninstall-xml:
 	     echo rm -f $$dest/$$file.xml ;				\
 	          rm -f $$dest/$$file.xml ;				\
 	done
+
+uninstall-images:
+	@subdest=$(install_prefix)$(IMAGE_DIR) ;			\
+	 src=$(srcdir)/images ;						\
+	imagelist="$(IMAGES)" ;  \
+	 for file in $$imagelist ; do		\
+	   institem=`echo $$file |  sed 's/^images\///'`  ;  \
+	   instpath=`echo $$institem | sed 's/[^/]*$$//' | sed 's/\/$$//'` ;  \
+	   if [ -n "$$instpath" ] ; then           \
+	   dest=`echo $$subdest"/"$$instpath`  ;  \
+       else                                  \
+       dest=`echo $$subdest`  ;              \
+       fi   ;                                  \
+	   instfile=`echo $$institem | sed 's,.*/,,'`  ;  \
+	     echo rm -rf $$dest/$$instfile ;	\
+	          rm -rf $$dest/$$instfile ;	\
+     isempty=`ls -A $$dest`  ;  \
+	 if [ -z "$$isempty" -a "$$dest" != "$$subdest" ] ; then	\
+	   echo rmdir $$dest ;					\
+            rmdir $$dest ;					\
+	 fi ;								\
+	done ;								\
+     isempty=`ls -A $$subdest`  ;  \
+	 if [ -z "$$isempty" ] ; then					\
+	   echo rmdir $$subdest ;					\
+            rmdir $$subdest ;					\
+	 else 										\
+	    echo "Images directory not empty, so not removing"  ;  \
+	 fi
 
 clean:
 	-rm -f *.o a.out core $(EXES)
@@ -265,7 +316,7 @@ distdepend::
 	$(SRCS) 2>/dev/null |						    \
 	sort -d |							    \
 	(								    \
-	  awk '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
+	  $(AWK) '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
 	  sed -e '/^#.*/d'						    \
 	      -e 's@ \./@ @g;s@ /[^ ]*@@g;/^.*:$$/d'			    \
 	      -e 's@\.\./utils@$$(UTILS_SRC)@g'				    \

@@ -17,6 +17,8 @@ TARFILES	= README README.VMS INSTALL \
 		  xtrascreenhacks.spec # \
  #                 xtrascreenhacks.xcodeproj/project.pbxproj
 
+LN_S = @LN_S@
+
 TAR		= tar
 
 MAKE_SUBDIR  = for dir in $(SUBDIRS); do (cd $$dir; $(MAKE) $@) || exit 5; done
@@ -69,7 +71,7 @@ tar::
   $(MAKE) version-date distdepend ;					    \
   VERS=`sed -n 's/[^0-9]*\([0-9]\.[0-9][^. ]*\).*/\1/p' utils/version.h` ;  \
   NAME="xtrascreenhacks-$$VERS" ;				       	\
-  rm -rf $$NAME ; ln -s . $$NAME ;					    \
+  rm -rf $$NAME ; $(LN_S) . $$NAME ;					    \
   FILES= ;								    \
 #  ADIR=archive/ ;							    \
   ADIR=./ ;							    \

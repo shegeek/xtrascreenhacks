@@ -50,6 +50,5 @@ If make install worked for you, type
 
 $ make uninstall
 
-when you no longer want the new screen hacks.
-
+when you no longer want the new screen hacks. The deepest directory that held the images will be removed unless something else has been put in there, but any enclosing directories will be left. The directories that held the binaries, configuration files and man pages will not be removed, because it is assumed that they still hold files from XScreenSaver.
 

@@ -25,6 +25,12 @@
 # (in case it is, help string was removed from with-configdir and placed
 # in AC_ARG_WITH(x-app-defaults), where for some reason,
 # it does not get printed with configure --help)
+#
+# configure.scan suggests AC_PROG_CXX, but AFAIK there is no c++ in here
+# the OSX stuff wants AC_HEADER_STDBOOL, when that gets dealt with
+# utils/grabscreen.c wants AC_FUNC_FORK
+# generally wanted: AC_FUNC_MALLOC and AC_FUNC_REALLOC
+
 
 AC_PREREQ(2.67)
 AC_INIT([XtraScreenHacks], [0.7], [shegeek-dev@comcast.net])
@@ -805,7 +811,18 @@ AC_EXEEXT
 # stuff for Makefiles
 AC_PROG_INSTALL
 AC_PROG_INSTALL_DIRS
+AC_PROG_AWK
+AC_PROG_LN_S
 AC_PROG_MAKE_SET
+
+# are FG and Fd real libraries, or did autoscan pick them up from ls args?
+#AC_CHECK_LIB([FG], [main])
+#AC_CHECK_LIB([Fd], [main])
+AC_CHECK_LIB([X11], [XCreateGC])
+AC_CHECK_LIB([Xext], [XdbeSwapBuffers])
+AC_CHECK_LIB([Xt], [XtRealizeWidget])
+AC_CHECK_LIB([m], [sqrt])
+
 
 # By default, autoconf sets INSTALL_SCRIPT to '${INSTALL_PROGRAM}'.
 # That's wrong: it should be set to '${INSTALL}', so that one can
@@ -816,7 +833,7 @@ INSTALL_SCRIPT='${INSTALL}'
 
 # random libc stuff
 AC_HEADER_STDC
-AC_CHECK_HEADERS_ONCE([sys/time.h unistd.h values.h])
+AC_CHECK_HEADERS_ONCE([math.h sys/time.h unistd.h values.h])
 AC_TYPE_MODE_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
@@ -827,7 +844,9 @@ AC_TYPE_SIGNAL
 #AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
 AC_GETTIMEOFDAY_ARGS
-AC_CHECK_FUNCS(select uname putenv)
+AC_CHECK_FUNCS([select uname putenv])
+AC_CHECK_FUNCS([dup2 ftime memset sqrt strcasecmp strchr strdup ])
+AC_CHECK_FUNCS([strncasecmp strpbrk strrchr strstr])
 
 AC_PATH_XTRA
 
