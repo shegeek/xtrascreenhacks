@@ -100,17 +100,17 @@ UTIL_OBJS	= $(UTILS_BIN)/alpha.o $(UTILS_BIN)/colors.o \
 # does shegeek want sgigl, etc? If so, modify install to check for jwz's
 SRCS		= screenhack.c \
 		  xpm-pixmap.c xlockmore.c \
-		  daisy.c \
+		  daisy.c psychedelic.c \
 		  twinkle.c #\ xscreensaver-sgigl.c \
 
 
 OBJS		= screenhack.o  xlockmore.o \
 #		  xscreensaver-sgigl.o \
                   xpm-pixmap.o \
-	daisy.o \
+	daisy.o psychedelic.o \
 	twinkle.o
 
-NEXES		= daisy \
+NEXES		= daisy psychedelic \
                   twinkle
 		  #@JPEG_EXES@
 
@@ -129,7 +129,7 @@ XDBE_OBJS	= $(UTILS_BIN)/xdbe.o
 HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h \
 		   xpm-pixmap.h
 
-MEN		= daisy.man  twinkle.man
+MEN		= daisy.man  twinkle.man psychedelic.man
 
 STAR		= *
 
@@ -485,6 +485,10 @@ daisy:          daisy.o         $(HACK_OBJS) $(COL) $(DBE) $(ERASE)
 	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(ERASE) \
                                 $(HACK_LIBS)
 
+psychedelic:    psychedelic.o   $(HACK_OBJS) $(COL) $(DBE)
+	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE)  \
+                                $(HACK_LIBS)
+
 twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
 	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(HACK_LIBS)
 
@@ -519,6 +523,17 @@ daisy.o: $(UTILS_SRC)/usleep.h
 daisy.o: $(UTILS_SRC)/visual.h
 daisy.o: $(UTILS_SRC)/xdbe.h
 daisy.o: $(UTILS_SRC)/yarandom.h
+psychedelic.o: ../config.h
+psychedelic.o: $(srcdir)/screenhack.h
+psychedelic.o: $(srcdir)/screenhackI.h
+psychedelic.o: $(UTILS_SRC)/colors.h
+psychedelic.o: $(UTILS_SRC)/grabscreen.h
+psychedelic.o: $(UTILS_SRC)/hsv.h
+psychedelic.o: $(UTILS_SRC)/resources.h
+psychedelic.o: $(UTILS_SRC)/usleep.h
+psychedelic.o: $(UTILS_SRC)/visual.h
+psychedelic.o: $(UTILS_SRC)/xdbe.h
+psychedelic.o: $(UTILS_SRC)/yarandom.h
 screenhack.o: ../config.h
 screenhack.o: $(srcdir)/screenhackI.h
 screenhack.o: $(UTILS_SRC)/colors.h
