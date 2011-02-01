@@ -49,13 +49,18 @@ struct state {
   int ncolors;
   XColor *colors;
   XImage * image;
+  Pixmap pixmap;
+  char * bits;
   int imagedepth;
   int duration;
   int uptime;
   Bool dbuf;
   enum displaymode mode;
+  Bool first;
+  int coloroffset;
 
   XWindowAttributes xgwa;
+  int width;
   GC maingc;
   GC erase_gc;
 
@@ -65,233 +70,48 @@ struct state {
   XdbeBackBuffer backb;
 # endif /* HAVE_DOUBLE_BUFFER_EXTENSION */
 
-
-/*   struct daisy **daisies; */
 };
 
 
-/* struct daisy */
-/* { */
-/*   XPoint outline[314]; */
-/*   double radii[314]; */
-/*   XPoint locus; */
-/*   GC dgc; */
-/*   unsigned int numturns; */
-/*   unsigned int radius; */
-/*   unsigned int numpetals; */
-/*   unsigned int petal_color; */
-/*   unsigned int center_color; */
-/*   unsigned int drop_increment; */
-/*   double spin_increment; */
-/*   XPoint roam_increment; */
-/* }; */
 
 
 
-/* "constructor" ----------------------------------------------*/
-
-/* static struct daisy * */
-/* new_daisy (struct state *st, Display * display, Drawable window, int mode, */
-/* 	   int width, int height) */
-/* { */
-/*   int i; */
-/*   struct daisy *newd; */
-/*   XGCValues gcv; */
-/*   unsigned long flags; */
-/*   float theta = 0.0; */
-
-/*   int nvals[] = { 2, 4, 6, 8, 10 }; */	/* controls number of petals */
-  /*even values of n > 10 have too many petals and look crammed */
-/*   int num_nvals = sizeof(nvals) / sizeof(int);; */
-
-/*   newd = (struct daisy *) malloc (sizeof (struct daisy)); */
-
-/*   newd->numturns = 0; */
-  /*radii range from 30 to 200 */
-/*   newd->radius = (random () % 170) + 30; */
-  /* actual number of petals is 2 * numpetals, of course */
-/*   newd->numpetals = nvals[random () % num_nvals]; */
-/*   newd->locus.x = random () % width; */
-  /* if drop code is active, daisies start off the top of the screen */
- /*  if (DROP == mode) */
-/*     { */
-/*       newd->locus.y = 0 - newd->radius; */
-/*     } */
-/*   else */
-/*     { */
-/*       newd->locus.y = random () % height; */
-/*     } */
-/*   if (ROAM == mode) */
-/*     { */
-/*       while (((short) (newd->locus.x + newd->radius) < 0) || */
-/* 	     ((short) (newd->locus.x - newd->radius) > width)) */
-/* 	{ */
-/* 	  newd->locus.x = random () % width; */
-/* 	} */
-/*       while (((short) (newd->locus.y + newd->radius) < 0) || */
-/* 	     ((short) (newd->locus.y - newd->radius) > height)) */
-/* 	{ */
-/* 	  newd->locus.y = random () % height; */
-/* 	} */
-/*     } */
-
-  /*set drop and spin increments */
-/*   newd->drop_increment = (random () % 5) + 2; */
-/*   newd->spin_increment = ((random () % 5) + 1) * .02; */
-/*   if ((random () % 2) == 0) */
-/*     newd->spin_increment *= -1; */
-/*   newd->roam_increment.x = (random () % 5) + 1; */
-/*   if ((random () % 2) == 0) */
-/*     newd->roam_increment.x *= -1; */
-/*   newd->roam_increment.y = (random () % 5) + 1; */
-/*   if ((random () % 2) == 0) */
-/*     newd->roam_increment.y *= -1; */
-
-/*        newd->petal_color = st->colors[random () % st->ncolors].pixel; */
-/*       newd->center_color = st->colors[random () % st->ncolors].pixel; */
-		  /* make sure centers stand out against petals */
-/*       while ((newd->petal_color == newd->center_color) && !(st->ncolors < 2)) */
-/* 	{ */
-/* 	  newd->center_color = st->colors[random () % st->ncolors].pixel; */
-/* 	} */
-
-
-/*   flags = GCForeground; */
-/*   gcv.foreground = newd->petal_color; */
-/*   newd->dgc = XCreateGC (display, window, flags, &gcv); */
-
-/*   for (i = 0; i < THETASTEPS; i++) */
-/*     { */
-/*       newd->radii[i] = newd->radius * cos (newd->numpetals * theta); */
-/*       theta += THETASTEP; */
-/*     }			 */
-
-/*   calculate_outline(newd); */
-
-/*   return newd; */
-/* } */
-
-
-static XImage *
+/* static XImage * */ static void
 simpleImage(struct state *st, Display * display, Drawable window, int width, int height)
 {
 	int	i, j;
-	XImage	*im;
-  char * bits = NULL;
-	bits = (char *) malloc(width * height);
-	if (bits == NULL)
+/* 	XImage	*im; */
+  char * stbits = NULL;
+  st->bits = (char *) malloc(width * height * sizeof(char));
+  stbits = (char *) malloc(width * height * sizeof(char));
+	if( (st->bits == NULL) || (stbits == NULL))
 	  {
 	    printf("Couldn't allocate memory for bits, exiting\n");
 	    exit(1);
 	  }
 	else printf("malloc'd successfully\n");
 
-	for (i = 0; i < height; i++)
-		for (j = 0; j< width; j++)
-			bits[i * width + j] = i % st->ncolors;
+	/* there is an xshm routine for this too, used in swirl */
+/* 	im = XCreateImage(display, st->xgwa.visual, st->xgwa.depth,  */
+/* 			ZPixmap, 0, st->bits, width, height, 8, width); */
+	st->image = XCreateImage(display, st->xgwa.visual, st->xgwa.depth, ZPixmap, 0,
+		       (char *)(calloc(width * height * sizeof(char), 1)), width, height, 8, 0);
+/* 	printf("Image created, is %p\n", st->image); */
 
-	im = XCreateImage(display, st->xgwa.visual, 
-			  st->xgwa.depth, 
-			ZPixmap, 0, bits, width, height, 0, width);
-	free(bits);
-	return im;
+	for (i = 0; i < height; i++) {
+	  for (j = 0; j< width; j++) {
+			st->bits[i * width + j] = i % st->ncolors;
+/* 			stbits[i * width + j] = i % st->ncolors; */
+/* 			printf("bit at %d, %d assigned number %d\n", i, j, i % st->ncolors); */
+	  }
+	}
+
+/* 	free(stbits); */
+/* 	return im; */
 }
 
 
-/* drawing utility function -----------------------------------*/
 
-/* static void */
-/* draw_one_daisy (Drawable win, Display * display, struct daisy *d) */
-/* { */
-
-/*   XSetForeground (display, d->dgc, d->petal_color); */
-/*   XFillPolygon (display, win, d->dgc, d->outline, 314, */
-/* 		Complex, CoordModeOrigin); */
-
-/*   XSetForeground (display, d->dgc, d->center_color); */
-/*   XFillArc (display, win, d->dgc, d->locus.x - (d->radius / 4), */
-/* 	    d->locus.y - (d->radius / 4), d->radius / 2, d->radius / 2, 0, */
-/* 	    360 * 64); */
-/* }		 */		/* draw_one_daisy() */
-
-
-/* static Bool */
-/* is_screenchangetime (struct state *teststate) */
-/* { */
-/*   if (teststate->mode != POP) return 0; */
-/*   teststate->uptime++; */
-/*   return (teststate->uptime == teststate->duration); */
-
-/*     } */
-
-/* static void */
-/* clear_daisy_array (void *closure) */
-/* { */
-/*    struct state *st = (struct state *) closure; */
-/*   int i; */
-/*   for (i = 0; i < st->count; i++) */
-/*     { */
-/*       free (st->daisies[i]); */
-/* 	  } */
-/* } */
-
-/* static void */
-/* fill_daisy_array (struct state *newstate) */
-/* { */
-/*   int i; */
-/*   for (i = 0; i < newstate->count; i++) */
-/*     { */
-/*     newstate->daisies[i] =  */
-/* 		    new_daisy (newstate, newstate->dpy, newstate->window,  */
-/* 		  newstate->mode, newstate->xgwa.width, newstate->xgwa.height); */
-/* 	  } */
-/* } */
-
-/* animator --------------------------------------------------*/
-/* static int */
-/* animate (Drawable window, Display * display, int mode, int width, int height, */
-/* 	 struct daisy *d) */
-/* { */
-
-/*   int returncode = 0; */
-
-  /*has daisy dropped off bottom of screen? */
-/*   if ((((short) (height + d->radius) - d->locus.y) < 0) && (DROP == mode)) */
-/*     { */
-/*       free (d); */
-/*       returncode = -1; */
-/*     } */
-/*   else */
-/*     { */
-/*       if (DROP == mode) */
-/* 	{ */
-/* 	  d->locus.y += d->drop_increment; */
-/* 	} */
-/*       if (ROAM == mode) */
-/* 	{ */
-/* 	  if (((short) (d->locus.x + d->radius) < 0) || */
-/* 	      ((short) (d->locus.x - d->radius) > width)) */
-/* 	    { */
-/* 	      d->roam_increment.x *= -1; */
-/* 	    } */
-/* 	  if (((short) (d->locus.y + d->radius) < 0) || */
-/* 	      ((short) (d->locus.y - d->radius) > height)) */
-/* 	    { */
-/* 	      d->roam_increment.y *= -1; */
-/* 	    } */
-/* 	  d->locus.x += d->roam_increment.x; */
-/* 	  d->locus.y += d->roam_increment.y; */
-/* 	} */
-
-/*       calculate_outline (d); */
-/*       if (++(d->numturns) >= 628) */
-/* 	d->numturns -= 628; */
-
-
-/*       draw_one_daisy (window, display, d); */
-/*     } */
-/*   return returncode; */
-/* } */
 
 static struct state *
 fetch_resources (struct state *inputstate)
@@ -302,7 +122,7 @@ fetch_resources (struct state *inputstate)
   istate->count = get_integer_resource (istate->dpy, "count", "Integer");
     if (istate->count < 1 || 1000 < istate->count ) istate->count = 25;
   istate->delay = get_integer_resource (istate->dpy, "delay", "Integer");
-     if (istate->delay < 0 || 1000000 < istate->delay ) istate->delay = 30000;
+     if (istate->delay < 0 || 100000000 < istate->delay ) istate->delay = 30000;
  istate->duration = get_integer_resource (istate->dpy, "duration", "Integer");
     if (istate->duration < 0 || 1000 < istate->duration ) istate->duration = 20;
   istate->ncolors = get_integer_resource (istate->dpy, "ncolors", "Integer");
@@ -342,21 +162,22 @@ psychedelic_init (Display * dpy, Window window)
   struct state *st = (struct state *) calloc (1, sizeof(*st));
   XGCValues gcv;
 
+  Bool writable = True;
+
   st->dpy = dpy;
   st->window = window;
 
   st = fetch_resources (st);
 
   st->uptime = 0;
-
-  st->image = simpleImage(st, st->dpy, st->window, st->xgwa.width, st->xgwa.height);
-
-/*   st->daisies = (struct daisy **) calloc (st->count, sizeof (struct daisy *)); */
+  st->first = True;
+  st->width = st->xgwa.width;
+  st->coloroffset = 0;
 
  /* set up colors */
-   gcv.background = get_pixel_resource ( st->dpy, st->xgwa.colormap,
+   gcv.foreground = get_pixel_resource ( st->dpy, st->xgwa.colormap,
 					"background", "Background");
-  gcv.foreground = get_pixel_resource ( st->dpy, st->xgwa.colormap,
+  gcv.background = get_pixel_resource ( st->dpy, st->xgwa.colormap,
 					"foreground", "Foreground");
  st->colors = (XColor *) calloc ( sizeof (*st->colors), st->ncolors);
   if (get_boolean_resource (st->dpy, "mono", "Boolean"))
@@ -373,7 +194,10 @@ psychedelic_init (Display * dpy, Window window)
   else
     {
       make_random_colormap (st->dpy, st->xgwa.visual, st->xgwa.colormap,
-			    st->colors, &st->ncolors, True, True, 0, True);
+			    st->colors, &st->ncolors, True, True, &writable, True);
+/*       if (writable != True) */
+/* 	{ printf("Non-writable colors, exiting\n"); exit(1); } */
+
   /* add bg color to last slot */
 /*       st->colors[st->ncolors+1].pixel = get_pixel_resource (st->dpy, st->xgwa.colormap, */
 /* 					    "background", "Background"); */
@@ -417,15 +241,27 @@ psychedelic_init (Display * dpy, Window window)
    printf("st->b init'd successfully in no dbuf\n");
    }
 
-  st->maingc = XCreateGC (st->dpy, st->b, GCForeground, &gcv);
+/*   st->image = NULL; */
+/*   st->image =  *//* simpleImage(st, st->dpy, st->window, st->xgwa.width, st->xgwa.height); */
+/*   printf("back from simpleImage, image is %p, bits is %p\n", (void *)st->image, (void *)st->bits); */
+	st->image = XCreateImage(st->dpy, st->xgwa.visual, st->xgwa.depth, ZPixmap, 0,
+				 calloc(st->xgwa.width * sizeof(int), 1) , st->xgwa.width, 1, 8, 0);
+
+/* 	st->image->data = calloc(st->xgwa.width, 1); */
+	if (st->image->data == NULL) {
+	  printf("malloc failed, exiting\n");
+	  exit(1);
+	}
 
   st->erase_gc = XCreateGC (st->dpy, st->b, GCForeground, &gcv);
   printf("erase_gc init'd successfully\n");
 
+  st->maingc = XCreateGC (st->dpy, st->window, GCForeground, &gcv);
 
-/*   if (st->mode == POP) st->daisiesactive = 1; */
-/*   else st->daisiesactive = st->count; */
-/*   fill_daisy_array(st); */
+  st->pixmap = XCreatePixmap(st->dpy, st->window, st->xgwa.width, st->xgwa.height, st->xgwa.depth);
+/*   printf("pixmap created successfully\n"); */
+
+/*     XDestroyImage(st->image); */
 
   printf("init'd successfully\n");    
 
@@ -439,75 +275,72 @@ psychedelic_draw (Display * dpy, Window window, void *closure)
 {
 struct state *st = (struct state *) closure;
 
- /*  int i; */
-
+ int i, j;
+long index1, index2;
+   unsigned long pointcolor;
  
-/* 	  if (is_screenchangetime(st)) */
-/* 	    { */
-/*                   st->uptime = 0; */
-	      /* clear screen and daisy array for the next pass */
-/* 	      if (st->daisiesactive == st->count) */
-/* 		{ */
-/*                   clear_daisy_array(st); */
-/*                   fill_daisy_array(st); */
-/* 		  st->daisiesactive = 1; */
-/*  		  st->eraser = erase_window (st->dpy, st->window, st->eraser); */
-/*                   return (st->erasedelay); */
-/* 		} */		/* if time to clear screen in pop */
-/* 	      else */
-/* 		{ */
-		  /* add a new daisy to the group */
-/* 		  st->daisiesactive++; */
-/* 		} */
-/* 	    } */
-
   
 #ifdef HAVE_DOUBLE_BUFFER_EXTENSION
   if (!st->dbeclear_p || !st->backb)
 #endif 
-      XFillRectangle (st->dpy, st->b, st->erase_gc, 0, 0, st->xgwa.width, st ->xgwa.height);
+/*       XFillRectangle (st->dpy, st->b, st->erase_gc, 0, 0, st->xgwa.width, st ->xgwa.height); */
 
 
 /* rotate colormap -- most important part of display loop */
-    printf("rotating colors\n");
+/*     printf("rotating colors\n"); */
 /*     rotate_colors(st->dpy,  st->xgwa.colormap, st->colors,  st->ncolors, 1); */
 
-/* goes in init, or in draw?  @@@ currently segfaults */
-  XPutImage (st->dpy, st->b, st->maingc, st->image, 0, 0, 0, 0, st->xgwa.width, st->xgwa.height );
-    printf("image put'd successfully\n");
+#define PIXSIZE 1
+    for (i = 0; i < st->xgwa.height; i++)
+      {
+	for (j = 0; j < st->width; j++)
+	  {
+	    index1=( i * st->xgwa.width) + j;
+/* 	    index2 = (int)(st->bits[index1]); */
+	    index2 = (i + st->coloroffset )% st->ncolors;
+  
+  if(st->first == True)
+/*   if(True) */
+    {
+	    printf("coordinates are %4d, %4d, index is %8ld, color is %3ld\n", j, i, index1, index2);
+    }
+/* 	    printf("blah blah blah"); printf ("boo bar bazs"); printf("fdjlfjoei fjlsdrjfoeijdff fd"); */
+/* 	    printf("fldkfjldkfjl lfjdlfj;lfjf");printf("ldfjeoriueo ldjl fjld");printf("a;oidrjeljldfj"); */
+/* 	    pointcolor = st->colors[index2].pixel;  */
+	    XSetForeground(st->dpy, st->maingc, st->colors[index2].pixel );
+	    XDrawPoint (st->dpy, st->pixmap, st->maingc, j, i);
+/* 	    XPutPixel(st->image, j, 0, st->colors[index2].pixel); */
+	    /*     XFillRectangle(st->dpy, st->window, st->maingc, j*PIXSIZE, i*PIXSIZE, PIXSIZE, PIXSIZE);*/;
+ 	  }
+/*    XPutImage (st->dpy, st->pixmap, st->maingc, st->image, 0, 0, 0, i, st->width, 1 ); */
+/*     printf("image put'd successfully\n"); */
+      }
+/*     if (st->first == True) st->first = False; */
+/*     printf("image pixels filled successfully\n"); */
+	  XCopyArea (st->dpy, st->pixmap, st->window, st->maingc, 0, 0,
+		     st->xgwa.width, st->xgwa.height, 0, 0);
 
 
-/*   XSetForeground (display, d->dgc, d->center_color); */
-/*   XFillArc (display, win, d->dgc, d->locus.x - (d->radius / 4), */
-/* 	    d->locus.y - (d->radius / 4), d->radius / 2, d->radius / 2, 0, */
-/* 	    360 * 64); */
+	  if (st->coloroffset++ > 1000) st->coloroffset -= 1000;
 
- /*      for (i = 0; i < st->daisiesactive; i++) */
-/* 	{ */
-/* 	  if (animate (st->b, st->dpy, st->mode, st->xgwa.width, st->xgwa.height, st->daisies[i]) < 0) */
-/* 	    { */
-/* 	      st->daisies[i] = new_daisy (st, st->dpy, st->b, st->mode, st->xgwa.width, st->xgwa.height); */
-/* 	    } */
-/* 	} */
-
-    XFlush(st->dpy);
+/*      XFlush(st->dpy); */
 
 #ifdef HAVE_DOUBLE_BUFFER_EXTENSION
       if (st->backb)
 	{
-	  XdbeSwapInfo info[1];
-	  info[0].swap_window = st->window;
-	  info[0].swap_action = (st->dbeclear_p ? XdbeBackground : XdbeUndefined);
-	  XdbeSwapBuffers (st->dpy, info, 1);
+/* 	  XdbeSwapInfo info[1]; */
+/* 	  info[0].swap_window = st->window; */
+/* 	  info[0].swap_action = (st->dbeclear_p ? XdbeBackground : XdbeUndefined); */
+/* 	  XdbeSwapBuffers (st->dpy, info, 1); */
 	}
       else
 #endif
 	/* HAVE_DOUBLE_BUFFER_EXTENSION */
        if (st->dbuf)
 	{
-	  XCopyArea (st->dpy, st->b, st->window, st->erase_gc, 0, 0,
-		     st->xgwa.width, st->xgwa.height, 0, 0);
-	  st->b = (st->b == st->ba ? st->bb : st->ba);
+/* 	  XCopyArea (st->dpy, st->b, st->window, st->erase_gc, 0, 0, */
+/* 		     st->xgwa.width, st->xgwa.height, 0, 0); */
+/* 	  st->b = (st->b == st->ba ? st->bb : st->ba); */
 	}
 
   return st->delay;
@@ -549,7 +382,7 @@ static const char *psychedelic_defaults[] = {
   "*delay:              30000",
   "*duration:           50",
   "*count:	        25",
-  "*ncolors:		64",
+  "*ncolors:		16",
   "*doubleBuffer:	True",
 /*   "*drop:               False", */
 /*   "*roam:               False", */
@@ -574,4 +407,11 @@ static XrmOptionDescRec psychedelic_options[] = {
 };
 
 XSCREENSAVER_MODULE ("Psychedelic", psychedelic)
+
+/* technically working with simple image, but the code is a total mess.
+   * flickers once or twice on startup.
+   * Must be called with -no-db or else there is just a black screen,
+   * even with db code commented out. 
+   * also, don't forget to redirect output because it will spew a bunch of debug statements.
+*/
 
