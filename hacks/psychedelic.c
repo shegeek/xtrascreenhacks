@@ -14,40 +14,14 @@
  * implied warranty.
  */
 
-/*-------------------------------------------------------------*/
-
 #include <math.h>
 #include "screenhack.h"
+#include "clovermap.h"
 
 #ifdef HAVE_DOUBLE_BUFFER_EXTENSION
 # include "xdbe.h"
 #endif /* HAVE_DOUBLE_BUFFER_EXTENSION */
 
-#define THETASTEP 0.02
-#define THETASTEPS 314
-
-/* from the original Clover =======================*/
-#define	NCOLORS	16
-#define	R	5432
-#define S	4321
-
-#define	MIN(x, y)	((x) < (y))?(x):(y)
-#define	MAX(x, y)	((x) > (y))?(x):(y)
-#define	CEIL(a, b)	((a)+(b)-1)/(b)
-#define	FLOOR(a, b)	CEIL((a)-(b), (b))
-
-#define getPixel(x, y)          bits[(y)*width+(x)]
-#define putPixel(x, y, v)       bits[(y)*width+(x)] = (v)%nColors;
-#define putRawPixel(x, y, v)    bits[(y)*width+(x)] = (v);
-
-/* change these to reflect names used in line(), clipline(), and/or cloverImage as needed */
-/* #define getPixel(x, y)          st->pixgrid[(y)*st->gridwidth+(x)] */
-/* #define putPixel(x, y, v)       st->pixgrid[(y)*st->gridwidth+(x)] = (v)%st->ncolors; */
-/* #define putRawPixel(x, y, v)    st->pixgrid[(y)*st->gridwidth+(x)] = (v); */
-
-#define plot(x, y)      putPixel((x), (y), getPixel((x), (y))+1)
-
-/* =====================================*/
 
 enum displaymode {CLOVER, SIMPLE, SIMPLE2};
 
@@ -63,7 +37,6 @@ struct state {
 /*   Bool dbuf; */
   enum displaymode mode;
   int pixsize;
-  Bool first;
   int coloroffset;
 
   XWindowAttributes xgwa;
@@ -121,225 +94,7 @@ simple2Image(int * bits, int width, int height, int numcolors)
 }
 
 
-/* todo:
- *
- * make sure vars that are global in the original are passed down, 
- * esp. the pixgrid, dimensions, and numcolors =>done
- * => what's basepixel? => assumed good for nothing, commented out
- *
- * make sure pointers/references to the above agree, see esp. line 148
- *
- * make sure prototypes are done correctly
- *
- * final check
- *
- *
- * Determine the correct radius to use when screen width > RADIUS * 2
- *
- * background is filled in assuming the last color in the colors array is the background color
- */
-
-/* functions from the original Clover =================================== */
-static void 
-clipLine(int * bits, int nColors, int width, int height,  int x0, int y0, int xn, int yn, int xe, int ye, int xf, int yf);
-static void
-line(int * bits, int nColors, int width, int height,  int fun, int x0, int y0, int dx, int dy, int xe, int ye, int xf, int yf);
-/*
- * Basically the algorithm is to draw a series of Bresenham lines from the
- * center.  The "interference pattern" is built by incrementing the pixel value
- * of (x,y) every time it's touched; the resulting pattern is a product of the
- * vagaries of integer arithmetic.
- */
-
-static void
-cloverImage(int * bits, int nColors, int width, int height, int r)
-{
-        int     maxX, maxY, midX, midY, x, f, y;
-        int     val, yy, x1, y1;
-        int     i, o;
-        int    *b;
-
-        maxX = width - 1;
-        maxY = height - 1;
-        midX = maxX / 2;
-        midY = maxY / 2;
-
-        for (y = 0; y < height; y++) {
-                b = &bits[y*width];
-                for (x = 0; x < width; x++)
-                        *b++ = nColors;         /* fill in background */
-        }
-
-
-        /*
-         * Fill in the first semi-quadrant.
-         */
-
-        x = r;
-        f = 0;
-        for (y = 0; y < x; y++) {
-                if (f > x) {
-                        x--;
-                        f = f-x - (x-1);
-                }
-                clipLine(bits, nColors, width, height,  midX, midY, x+midX, y+midY, 0, 0, maxX, maxY);
-                f = f+y + y+1;
-        }
-
-        /*
-         * Copy to the other seven, adjusting the horizontal and diagonal.
-         */
-
-      /*
-         * Copy to the other seven, adjusting the horizontal and diagonal.
-         */
-
-        for (x = midX; x < maxX; x++) {
-/*              putPixel(x, midY, (getPixel(x, midY) << 1) - 1);*/
-                if (x - midX + midY <= maxY)
-                        putPixel(x, x-midX+midY, 
-                                (getPixel(x, x-midX+midY) << 1) - 1);
-                yy = MIN(maxY, x + midY - midX);
-                for (y = midY; y <= yy; y++) {
-                        val = getPixel(x, y);
-                        x1 = x;
-                        y1 = y;
-                        for (i = 0; i < 4; i++) {
-                                if ((y1 < maxY) && (y1 > 0)) {
-                                        putPixel(midX + midX - x1, y1, val);
-                                        putPixel(x1, y1, val);
-                                }
-                                o = x1;
-                                x1 = midX + midY - y1;
-                                y1 = midY + o - midX;
-                        }
-                }
-        }
-
-/*         if (basePixel != 0)  */    /* bias by the first pixel value */
-/*                 for (y = 0; y < maxY; y++) */
-/*                         for (x = 0; x < maxX; x++) */
-/*                                 putRawPixel(x, y, getPixel(x, y) + basePixel); */
-                                
-}
-
-/*
- * (xe, ye) and (xf, yf) are the corners of a rectangle to clip a line to.
- * (x0, y0) and (xn, yn) are the endpoints of the line to clip.
- * The function argument that's being computed is the semi-quadrant;
- *  dx and dy are used to determine whether we're above or below the diagonal,
- *  since (x0, y0) is always the midpoint of the pattern.
- * (The LispM has the origin at lower left, instead of upper left, so
- * the numbers don't correspond to the normal Cartesian plane quadrants.)
- *
- * This routine is very general, but the calling code only builds lines in the
- * first semi-quadrant and then copies them everywhere else.
- */
-static void 
-clipLine(int * bits, int nColors, int width, int height,  int x0, int y0, int xn, int yn, int xe, int ye, int xf, int yf)
-{
-        int     dx, dy;
-
-        dx = abs(xn - x0);
-        dy = abs(yn - y0);
-
-        if (xn > x0) {                          /* moving right */
-                if (yn >= y0) {                 /* moving up */
-                        if (dx > dy)            /* below diagonal */
-			  line(bits, nColors, width, height, 0, x0, y0, dx, dy, xe, ye, xf, yf);
-                        else
-                                line(bits, nColors, width, height,  1, y0, x0, dy, dx, ye, xe, yf, xf);
-                } else {
-                        if (dx > dy)
-                                line(bits, nColors, width, height,  7, x0, -y0, dx, dy, xe, -yf, xf, -ye);
-                        else
-                                line(bits, nColors, width, height,  6, -y0, x0, dy, dx, -yf, xe, -ye, xf);
-                }
-        } else {
-                if (yn >= y0) {
-                        if (dx > dy)
-                                line(bits, nColors, width, height,  3, -x0, y0, dx, dy, -xf, ye, -xe, yf);
-                        else
-                                line(bits, nColors, width, height,  2, y0, -x0, dy, dx, ye, -xf, yf, -xe);
-                } else {
-                        if (dx > dy)
-                                line(bits, nColors, width, height,  4, -x0, -y0, dx, dy, -xf, -yf, -xe, -ye);
-                        else
-                                line(bits, nColors, width, height,  5, -y0, -x0, dy, dx, -yf, -xf, -ye, -xe);
-                }
-        }
-}
-
-
-/*
- * Clip symmetric segment (x0, y0) thru (xn, yn) to the rectangle 
- * (xe, ye) < (xf, yf).
- *
- * The original says:
- *
- * "This routine incorrectly assumes that the subsegment starts prior to the
- * midpoint of the supersegment.  The 'divide for nearest integer' (i.e.,
- * divide for remainder of minimum magnitude), which is simulated by the FLOOR
- * and CEIL of num and (dx <<1), always rounds up on the half integer case, but
- * should round down (for symmetry) if startup is in 2nd half. It would be
- * nice to have these other flavors of divide.'
- */
-static void
-line(int * bits, int nColors, int width, int height,  int fun, int x0, int y0, int dx, int dy, int xe, int ye, int xf, int yf)
-{
-        int     x, num, lx;
-        int     xx, y, x00, f;
-        int     x11;
-
-        x = MAX(x0,  MAX(xe, 
-                        (dy == 0)? xe :
-                                   x0 + CEIL(dx * (((ye - y0)<<1) - 1), 
-                                                (dy << 1))));
-        num = dx + 2*dy*(x - x0);
-        lx = MIN(xf, (dy == 0) ? xf :
-                                x0 + CEIL(dx * (((yf - y0)<<1) - 1), 
-                                                (dy << 1)));
-        xx = MIN(lx, x0 + (dx>>1));
-        y = y0 + FLOOR(num, (dx<<1));
-        f = (FLOOR(num, (dx<<1)) - dx) >> 1;
-
-        for (x00 = x; x00 < xx; x00++,f+=dy) {
-                if (f+f > dx) {
-                        f -= dx;
-                        y++;
-                }
-                switch(fun) {
-                case 0: plot(x00, y);   break;
-                case 1: plot(y, x00);   break;
-                case 2: plot(-y, x00);  break;
-                case 3: plot(-x00, y);  break;
-                case 4: plot(-x00, -y); break;
-                case 5: plot(-y, -x00); break;
-                case 6: plot(y, -x00);  break;
-                case 7: plot(x00, -y);  break;
-                }
-        }
-
-        for (x11 = x00; x11 < lx; x11++, f+=dy) {
-                if (f + f > dx) {
-                        f -= dx;
-                        y++;
-                }
-                switch(fun) {
-                case 0: plot(x11, y);   break;
-                case 1: plot(y, x11);   break;
-                case 2: plot(-y, x11);  break;
-                case 3: plot(-x11, y);  break;
-                case 4: plot(-x11, -y); break;
-                case 5: plot(-y, -x11); break;
-                case 6: plot(y, -x11);  break;
-                case 7: plot(x11, -y);  break;
-                }
-        }
-}
-
-
-/* end functions from the original Clover ================================ */
+/* end maps =================================== */
 
 
 static struct state *
@@ -399,11 +154,9 @@ psychedelic_init (Display * dpy, Window window)
 
   st = fetch_resources (st);
 
-  st->first = True;
   st->gridwidth = st->xgwa.width / st->pixsize;
   st->gridheight = st->xgwa.height / st->pixsize;
   st->coloroffset = 0;
-
  
  /* set up colors */
    gcv.foreground = get_pixel_resource ( st->dpy, st->xgwa.colormap,
@@ -429,7 +182,6 @@ psychedelic_init (Display * dpy, Window window)
  
   /* add bg color to last slot, overwriting the assigned color */
       st->colors[st->ncolors-1].pixel = gcv.background;
-/*          XQueryColor( MI_DISPLAY(mi), MI_COLORMAP(mi), &st->colors[st->ncolors+1]); */
       XQueryColor(st->dpy, st->xgwa.colormap, &st->colors[st->ncolors-1]);
    }
 
@@ -509,29 +261,21 @@ static unsigned long
 psychedelic_draw (Display * dpy, Window window, void *closure)
 {
 struct state *st = (struct state *) closure;
-
  int i, j;
 long index1, index;
-
   
 /* #ifdef HAVE_DOUBLE_BUFFER_EXTENSION */
 /*   if (!st->dbeclear_p || !st->backb) */
 /* #endif  */
 /*       XFillRectangle (st->dpy, st->b, st->erase_gc, 0, 0, st->xgwa.width, st ->xgwa.height); */
 
-
      for (i = 0; i < st->gridheight; i++)
       {
 	for (j = 0; j < st->gridwidth; j++)
 	  {
 	    index1=( i * st->gridwidth) + j;
-	    index =((int)(st->pixgrid[ i * st->gridwidth + j ]) + st->coloroffset) % st->ncolors;;
-  
-  if(st->first == True)
-/*   if(True) */
-    {
-/* 	    printf("coordinates are %4d, %4d, index is %8ld, color is %3ld\n", j, i, index1, index); */
-    }
+	    index =((int)(st->pixgrid[ i * st->gridwidth + j ]) + st->coloroffset) % st->ncolors;
+
 	    XSetForeground(st->dpy, st->maingc, st->colors[index].pixel );
 	    if (st->pixsize > 1){
 	    XFillRectangle(st->dpy, st->pixmap, st->maingc, j*st->pixsize, i*st->pixsize, 
@@ -543,10 +287,8 @@ long index1, index;
 	      }
  	  }
       }
-/*     if (st->first == True) st->first = False; */
 	  XCopyArea (st->dpy, st->pixmap, st->window, st->maingc, 0, 0,
 		     st->xgwa.width, st->xgwa.height, 0, 0);
-
 
 	  if (st->coloroffset++ >= st->ncolors) st->coloroffset -= st->ncolors;
 
@@ -610,7 +352,7 @@ psychedelic_free (Display *dpy, Window window, void *closure)
 static const char *psychedelic_defaults[] = {
   ".background:		black",
   ".foreground:		white",
-  "*delay:              10000",
+  "*delay:              30000",
   "*ncolors:		16",
   "*big:                      False",
   "*huge:                      False",
@@ -641,16 +383,17 @@ XSCREENSAVER_MODULE ("Psychedelic", psychedelic)
 
 /* ============================================== */
 
-/* add background color (supposed to be black) to the color array */
+/* add header, notes, etc to clovermap.c/h */
+
 /*  fix reshape, and make use of new screen dimensions */
 
 /* remove double buffering completely, free other pixmaps if they're left when finished
    -> is presently commented out, make sure we wouldn't be better off with some form of it */
+
 /* either assign and use screen variables (width, depth, etc) to struct members and
  * use consistently, or remove completely */
-/* struct members are passed around and returned flakily, do it right */
 
-/* original clover allowed the user to adjust speed (with +/- keys) -- implement? */
+/* struct members are passed around and returned flakily, do it right */
 
 /* ouch this thing is slow. Is there any way to speed it up at all? */
 

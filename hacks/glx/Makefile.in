@@ -80,16 +80,18 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		  $(UTILS_SRC)/visual.o $(UTILS_SRC)/visual-gl.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o $(UTILS_SRC)/erase.o
 
-SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c xbmread.c flyer.c \ 		  			berlinuhr.c bclockhousing.c bclocklamps.c soma.c \ 					bevelcube.c skylark.c crater4.c ejecta.c craters.c
+SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c xbmread.c flyer.c \ 		  			berlinuhr.c bclockhousing.c bclocklamps.c soma.c \ 					bevelcube.c skylark.c crater4.c ejecta.c craters.c \
+	$(HACK_SRC)/clovermap.c psychedelicgl.c
 
 
 
 OBJS		= xlock-gl-utils.o fps.o xpm-ximage.o xbmread.o flyer.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
-		   bevelcube.o skylark.o crater4.o ejecta.o craters.o 
+		   bevelcube.o skylark.o crater4.o ejecta.o craters.o \
+		  $(HACK_BIN)/clovermap.o psychedelicgl.o
 
 
-GL_EXES		=  flyer berlinuhr soma skylark craters
+GL_EXES		=  flyer berlinuhr soma skylark craters psychedelicgl
 #GLE_EXES	= extrusion
 #GL_UTIL_EXES	= xscreensaver-gl-helper
 HACK_EXES	= @GL_EXES@ # @GLE_EXES@
@@ -106,7 +108,8 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 		  $(UTILS_BIN)/colors.o xbmread.o $(UTILS_BIN)/erase.o
 
 
-HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h \ 					bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h \ 					somafigures.h boomerangs.h crater4.h ejecta.h
+HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h \ 					bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h \ 					somafigures.h boomerangs.h crater4.h ejecta.h  \
+			 $(HACK_SRC)/clovermap.h
 
 GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man
 MEN		= @GL_MEN@
@@ -318,6 +321,11 @@ $(UTIL_OBJS):
 $(HACK_BIN)/xlockmore.o: $(HACK_SRC)/xlockmore.c
 	cd $(HACK_BIN)  ; $(MAKE) $(@F) CC="$(CC)" CFLAGS="$(CFLAGS)"
 
+# the pixel map creators are used by both the x windows and gl versions of psychedelic 
+$(HACK_BIN)/clovermap.o: $(HACK_SRC)/clovermap.c
+	cd $(HACK_BIN)  ; $(MAKE) $(@F) CC="$(CC)" CFLAGS="$(CFLAGS)"
+
+
 
 # How we build object files in this directory.
 .c.o:
@@ -362,6 +370,9 @@ skylark: skylark.o $(HACK_OBJS)
 craters: craters.o crater4.o ejecta.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o crater4.o ejecta.o $(HACK_OBJS) $(XPM_LIBS)
 
+psychedelicgl: psychedelicgl.o  $(HACK_BIN)/clovermap.o  $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o $(HACK_BIN)/clovermap.o  $(HACK_OBJS) $(XPM_LIBS)
+
 
 
 
@@ -389,6 +400,7 @@ berlinuhr.o: $(UTILS_SRC)/yarandom.h
 berlinuhr.o: $(HACK_SRC)/xlockmore.h
 berlinuhr.o: $(HACK_SRC)/xlockmoreI.h
 bevelcube.o: $(srcdir)/bevelcube.h
+./../clovermap.o: $(HACK_SRC)/clovermap.h
 crater4.o: $(srcdir)/crater4.h
 craters.o: ../../config.h
 craters.o: $(srcdir)/crater4.h
@@ -432,6 +444,19 @@ fps.o: $(UTILS_SRC)/visual.h
 fps.o: $(UTILS_SRC)/xshm.h
 fps.o: $(UTILS_SRC)/yarandom.h
 fps.o: $(HACK_SRC)/xlockmoreI.h
+psychedelicgl.o: $(HACK_SRC)/clovermap.h
+psychedelicgl.o: ../../config.h
+psychedelicgl.o: $(HACK_SRC)/screenhackI.h
+psychedelicgl.o: $(UTILS_SRC)/colors.h
+psychedelicgl.o: $(UTILS_SRC)/grabscreen.h
+psychedelicgl.o: $(UTILS_SRC)/hsv.h
+psychedelicgl.o: $(UTILS_SRC)/resources.h
+psychedelicgl.o: $(UTILS_SRC)/usleep.h
+psychedelicgl.o: $(UTILS_SRC)/visual.h
+psychedelicgl.o: $(UTILS_SRC)/xshm.h
+psychedelicgl.o: $(UTILS_SRC)/yarandom.h
+psychedelicgl.o: $(HACK_SRC)/xlockmore.h
+psychedelicgl.o: $(HACK_SRC)/xlockmoreI.h
 skylark.o: $(srcdir)/boomerangs.h
 skylark.o: ../../config.h
 skylark.o: $(HACK_SRC)/screenhackI.h

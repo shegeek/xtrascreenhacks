@@ -100,14 +100,14 @@ UTIL_OBJS	= $(UTILS_BIN)/alpha.o $(UTILS_BIN)/colors.o \
 # does shegeek want sgigl, etc? If so, modify install to check for jwz's
 SRCS		= screenhack.c \
 		  xpm-pixmap.c xlockmore.c \
-		  daisy.c psychedelic.c \
+		  daisy.c  clovermap.c  psychedelic.c \
 		  twinkle.c #\ xscreensaver-sgigl.c \
 
 
 OBJS		= screenhack.o  xlockmore.o \
 #		  xscreensaver-sgigl.o \
                   xpm-pixmap.o \
-	daisy.o psychedelic.o \
+	daisy.o clovermap.o psychedelic.o  \
 	twinkle.o
 
 NEXES		= daisy psychedelic \
@@ -126,7 +126,7 @@ GRAB_OBJS	= $(UTILS_BIN)/grabclient.o
 XSHM_OBJS	= $(UTILS_BIN)/xshm.o
 XDBE_OBJS	= $(UTILS_BIN)/xdbe.o
 
-HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h \
+HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h clovermap.h \
 		   xpm-pixmap.h
 
 MEN		= daisy.man  twinkle.man psychedelic.man
@@ -485,8 +485,8 @@ daisy:          daisy.o         $(HACK_OBJS) $(COL) $(DBE) $(ERASE)
 	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE) $(ERASE) \
                                 $(HACK_LIBS)
 
-psychedelic:    psychedelic.o   $(HACK_OBJS) $(COL) $(DBE)
-	$(CC_HACK) -o $@ $@.o   $(HACK_OBJS) $(COL) $(DBE)  \
+psychedelic:    psychedelic.o   clovermap.o $(HACK_OBJS) $(COL) $(DBE)
+	$(CC_HACK) -o $@ $@.o  clovermap.o  $(HACK_OBJS) $(COL) $(DBE)  \
                                 $(HACK_LIBS)
 
 twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
@@ -511,6 +511,7 @@ twinkle:        twinkle.o       $(HACK_OBJS) $(COL) $(DBE)
 #
 # DO NOT DELETE: updated by make distdepend
 
+clovermap.o: $(srcdir)/clovermap.h
 daisy.o: ../config.h
 daisy.o: $(srcdir)/screenhack.h
 daisy.o: $(srcdir)/screenhackI.h
@@ -523,6 +524,7 @@ daisy.o: $(UTILS_SRC)/usleep.h
 daisy.o: $(UTILS_SRC)/visual.h
 daisy.o: $(UTILS_SRC)/xdbe.h
 daisy.o: $(UTILS_SRC)/yarandom.h
+psychedelic.o: $(srcdir)/clovermap.h
 psychedelic.o: ../config.h
 psychedelic.o: $(srcdir)/screenhack.h
 psychedelic.o: $(srcdir)/screenhackI.h
