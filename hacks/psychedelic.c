@@ -177,8 +177,8 @@ psychedelic_init (Display * dpy, Window window)
        * use some form of GL desktop now, and the best visual for GL is TrueColor;
        * hence, we are not likely to get writable cells, so re-design the hack as if we don't..
        */
-      make_random_colormap (st->dpy, st->xgwa.visual, st->xgwa.colormap,
-			    st->colors, &st->ncolors, True, True, False, True);
+      make_smooth_colormap (st->dpy, st->xgwa.visual, st->xgwa.colormap,
+			    st->colors, &st->ncolors, True, False, False);
  
   /* add bg color to last slot, overwriting the assigned color */
       st->colors[st->ncolors-1].pixel = gcv.background;
@@ -353,7 +353,7 @@ static const char *psychedelic_defaults[] = {
   ".background:		black",
   ".foreground:		white",
   "*delay:              30000",
-  "*ncolors:		16",
+  "*ncolors:		128",
   "*big:                      False",
   "*huge:                      False",
 /*   "*doubleBuffer:	False", */

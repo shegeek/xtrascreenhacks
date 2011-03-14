@@ -317,21 +317,20 @@ static void reset_color (soma_configuration *lp, figure *fl)
   lp->colorindices[itor]++;
   if (lp->colorindices[itor] >= lp->numcolors )
     {
-      lp->colorindices[itor] -= (lp->numcolors );
+      lp->colorindices[itor] = 0;
     }
   tempcolor = (lp->colors[lp->colorindices[itor]]);
   lp->piececolors[itor][0] = tempcolor.red / 65536.0;
   lp->piececolors[itor][1] = tempcolor.green / 65536.0;
   lp->piececolors[itor][2] = tempcolor.blue / 65536.0;
     }
-
 }
 
 static void advance (soma_configuration *lp, figure *fl)
 {
   int itor;
    lp->ftimer--;
-	if (lp->numcolors > 1) lp->ctimer--;
+	if (lp->numcolors > 1)  lp->ctimer--;
         if( lp->ftimer <= 0 ) reset_figure(lp, fl);
         if ( lp->ctimer <= 0) reset_color(lp, fl);
 
@@ -353,12 +352,10 @@ static void advance (soma_configuration *lp, figure *fl)
 
 ENTRYPOINT void reshape_soma (ModeInfo *mi, int width, int height)
 {
-/*     GLfloat h = (GLfloat) height / (GLfloat) width; */
   GLfloat aspect = (GLfloat) width / (GLfloat) height;
     glViewport(0, 0, (GLint) width, (GLint) height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-/*    glFrustum(-1.0, 1.0, -1.0 * h, 1.0 * h, 1.0, 50.0); */
    gluPerspective(45.0, aspect, 1.0, 50.0);
     glMatrixMode(GL_MODELVIEW);
     handleGLerrors("reshape");
@@ -410,11 +407,13 @@ ENTRYPOINT void init_soma (ModeInfo *mi)
 
     if (MI_IS_MONO(mi))
       {
+/* 	GLfloat white[] = {1., 1., 1., 1.}; */
 	lp->numcolors = 1;
         lp->colors = calloc (1, sizeof (*lp->colors));
         lp->colors[0].pixel = MI_WHITE_PIXEL(mi);
         XQueryColor( MI_DISPLAY(mi), MI_COLORMAP(mi), &lp->colors[0]);
-      } 
+/*          glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white); */
+     } 
     else
       {
 	lp->numcolors = ((ncolors > 0 && ncolors < 2049) ? 
@@ -423,12 +422,11 @@ ENTRYPOINT void init_soma (ModeInfo *mi)
     make_smooth_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
                             lp->colors, &lp->numcolors, False, 0, True);
      }
-
-    
+    printf("Number of colors allocated: %d\n", lp->numcolors);
     colorincrement = (int)lp->numcolors / 7;
     for (loop = 1; loop < 8; loop++)
       {
-	if (do_multicolors)
+	if (do_multicolors && lp->numcolors > 6)
 	  {
 	    lp->colorindices[loop] = colorincrement * loop;
           }
@@ -438,6 +436,7 @@ ENTRYPOINT void init_soma (ModeInfo *mi)
           }
       }
     lp->ftimer = lp->ctimer = 1;
+    if (lp->numcolors < 2) reset_color(lp, lp->currentfigure);
 
       glEnable(GL_FOG);
       glFogi(GL_FOG_MODE, GL_LINEAR);
@@ -521,6 +520,7 @@ draw_soma (ModeInfo *mi)
 
    for (loop = 1; loop < 8; loop++) {
         glPushMatrix();
+	if (lp->numcolors > 1)
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, lp->piececolors[loop]);
        glTranslatef(lp->currentfigure->refcubex[loop],
 		     lp->currentfigure->refcubey[loop],
@@ -559,3 +559,8 @@ XSCREENSAVER_MODULE ("Soma", soma)
 
      /* checkerboard coloring */
 /* two-set and partial set figures */
+
+/* sometimes the system doesn't allocate the number of colors requested.
+ * automatically make mono if not enough colors get allocated?
+ * => yes--break off mono handling, call if mono or if allocation fails
+ */

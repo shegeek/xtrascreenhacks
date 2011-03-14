@@ -15,14 +15,17 @@ Determine what package dependencies should be listed
 Make more xbms for flyer
 Implement multiple xbm option in flyer
 Add motion trails to flyer
-Improve soma database parser
+Improve soma database parser -- possibly re-implement in perl or something
 Let soma database file be parsed & somafigures.h be created at compile time
+fix bug in soma that causes black on black figures in mono
 make skeleton files for future hacks, configurators and man pages
 decide whether to incorporate 2d berlinuhr
 
 There is makefile weirdness: for instance, why are all the x libraries,
 gl, etc pulled into the gl hacks with XPM_LIBS? that's misleading.
 
+get everything error-free as possible with valgrind and, potentially,
+jemalloc
 
 for freshmeat:
 Determine and list dependencies

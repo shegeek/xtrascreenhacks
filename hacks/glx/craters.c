@@ -171,7 +171,8 @@ new_crater (crater_configuration * lp)
   crater *newcrater;
   float r, theta;
 
-  newcrater = malloc (sizeof (newcrater));
+/*   newcrater = malloc (sizeof (newcrater)); */  /* valgrind reports invalid reads and writes here */
+  newcrater = malloc (sizeof (crater));
   if (NULL == newcrater)
     return NULL;
 
@@ -233,7 +234,7 @@ init_craters (ModeInfo * mi)
     }
 
   lp = &lps[MI_SCREEN (mi)];
-  lp->glx_context = init_GL (mi);
+  lp->glx_context = init_GL (mi);  /* valgrind reports leak here */
 
   lp->groundRadius = 50.0;
   lp->groundlevel = -6.;
@@ -376,7 +377,7 @@ draw_craters (ModeInfo * mi)
 
 	  glPushMatrix ();
 	  glRotatef (90., -1., 0., 0.);
-	  glTranslatef (ccrater->position[0], ccrater->position[1],
+	  glTranslatef (ccrater->position[0], ccrater->position[1],  /* valgrind reports invalid read here */
 			ccrater->position[2]);
    	  glScalef (ccrater->sizefactor, ccrater->sizefactor,
 		    ccrater->sizefactor);

@@ -10,14 +10,14 @@
           convert="invert"/>
 
   <number id="count" type="slider" arg="-count %"
-          _label="Number of flyers" _low-label="Few" _high-label="Many"
-          low="1" high="1000" default="20"/>
+          _label="Maximum number of craters" _low-label="Few" _high-label="Many"
+          low="1" high="100" default="20"/>
 
   <number id="step" type="slider" arg="-step %"
           _label="Ejecta movement per frame" _low-label="Little" _high-label="Much"
           low="1" high="20" default="10"/>
 
-  <number id="waittime" type="slider" arg="-ncolors %"
+  <number id="waittime" type="slider" arg="-waittime %"
           _label="Time between impacts" _low-label="Little" _high-label="Much"
           low="1" high="200" default="10"/>
 

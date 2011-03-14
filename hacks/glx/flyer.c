@@ -322,7 +322,7 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
     }
 
     lp = &lps[MI_SCREEN(mi)];
-    lp->glx_context = init_GL(mi);
+    lp->glx_context = init_GL(mi);  /* valgrind reports leak here--same as in all the hacks */
 
     /*  these will have to be tuned */
 /*     lp->zoom = 30.0; */
@@ -368,7 +368,7 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
      */
     if (!dots)
       {
-    lp->userxbm = get_string_resource (MI_DISPLAY(mi), "bitmap", "Bitmap");
+    lp->userxbm = get_string_resource (MI_DISPLAY(mi), "bitmap", "Bitmap");    /* leak here */
     lp->numtextures = 0;
     if (! LoadGLTextures (lp->userxbm, &lp->texturelist[0]))
       {

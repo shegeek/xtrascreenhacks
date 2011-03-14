@@ -38,7 +38,7 @@
 
 
 #define DEF_BITMAP      DEFAULTXBM
-#define DEF_NCOLORS     "16"
+#define DEF_NCOLORS     "256"
 #define DEF_SIZE        "100"
 #define DEF_STEP        "200"
 #define DEF_DOTS        "False"
@@ -107,7 +107,7 @@ ENTRYPOINT ModeSpecOpt psychedelicgl_opts = {countof(opts), opts, countof(vars),
 ModStruct flyer_description =
     {"psychedelicgl", "init_psychedelicgl", "draw_psychedelicgl", "release_psychedelicgl",
      "draw_psychedelicgl", "init_psychedelicgl", (char *)NULL, &psychedelicgl_opts,
-     40000, 30, 1, 1, 64, 1.0, "",
+     30000, 30, 1, 1, 64, 1.0, "",
      "Various color cycling effects", 0, NULL};
 #endif /* USE_MODULES */
 
