@@ -1,0 +1,19 @@
+There is an x version of psychedelic, which is retired and stored here, and the glx version
+The glx version was originally called psychedelicgl
+
+
+from hacks/Makefile.in:
+(also add to exes, etc above)
+
+psychedelic:    psychedelic.o   clovermap.o $(HACK_OBJS) $(COL) $(DBE)
+	$(CC_HACK) -o $@ $@.o  clovermap.o  $(HACK_OBJS) $(COL) $(DBE)  \
+                                $(HACK_LIBS)
+
+from hacks/glx/Makefile.in, just before "how we build object files in this directory":
+# the pixel map creators are used by both the x windows and gl versions of psychedelic 
+$(HACK_BIN)/clovermap.o: $(HACK_SRC)/clovermap.c
+	cd $(HACK_BIN)  ; $(MAKE) $(@F) CC="$(CC)" CFLAGS="$(CFLAGS)"
+
+Rule used to look like this:
+psychedelic: psychedelic.o  $(HACK_BIN)/clovermap.o  $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o $(HACK_BIN)/clovermap.o  $(HACK_OBJS) $(XPM_LIBS)

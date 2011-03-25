@@ -1,0 +1,76 @@
+.TH "XtraScreenHacks" "1" "" "X Version 11" ""
+.SH "NAME"
+psychedelic \- old school color table animation
+.SH "SYNOPSIS"
+.B psychedelic
+[\-display \fIhost:display.screen\fP]
+[\-visual \fIvisual\fP]
+[\-window]
+[\-root]
+[\-delay \fInumber\fP]
+[\-ncolors \fInumber\fP]
+[\-smooth]
+[\-mono]
+[\-clover]
+[\-simple]
+[\-simple2]
+[\-fps]
+.SH "DESCRIPTION"
+Old school color table animation, featuring the classic Smoking Clover hack by Bill Gospers.
+.SH "OPTIONS"
+.TP 8
+.B \-visual \fIvisual\fP
+Specify which visual to use.  Legal values are the name of a visual class,
+or the id number (decimal or hex) of a specific visual.
+.TP 8
+.B \-window
+Draw on a newly\-created window.  This is the default.
+.TP 8
+.B \-root
+Draw on the root window.
+.TP 8
+.B \-delay \fInumber\fP
+Per\-frame delay, in microseconds.  Default: 30000 (0.03 seconds.).
+.TP 8
+.B \-ncolors \fInumber\fP
+How many different colors should be used. Legal values are from 2 to 256.  The original Smoking Clover hack used 16. Default: 64. 
+.TP 8
+.B \-smooth
+Use smooth color transitioning, i.e. animation cycles along a color gradient rather than through discrete bands of color. Doesn't show too well with a small number of colors.
+.TP 8
+.B \-mono
+Make animation run in black and white. Can be a real eyesore. Overrides \-ncolors.
+.TP 8
+.B \-clover
+Animate the Smoking Clover map. This is the default. Overrides other maps.
+.TP 8
+.B \-simple
+Animate the vertical stripes map.
+.TP 8
+.B \-simple2
+Animate the horizontal stripes map. Overrides -simple.
+.TP 8
+.B \-fps | \-no\-fps
+Whether to show a frames\-per\-second display at the bottom of the screen.
+.SH "ENVIRONMENT"
+.PP 
+.TP 8
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.SH "SEE ALSO"
+.BR X (1),
+.BR xscreensaver (1)
+.SH "COPYRIGHT"
+Copyright \(co 2011 by Kelley Nielsen.  Permission to use, copy, modify, 
+distribute, and sell this software and its documentation for any purpose is 
+hereby granted without fee, provided that the above copyright notice appear 
+in all copies and that both that copyright notice and this permission notice
+appear in supporting documentation.  No representations are made about the 
+suitability of this software for any purpose.  It is provided "as is" without
+express or implied warranty.
+.SH "AUTHOR"
+Kelley Nielsen <shegeek\-dev@comcast.net>
