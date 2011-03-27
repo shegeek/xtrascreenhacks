@@ -396,6 +396,7 @@ berlinuhr.o: $(UTILS_SRC)/yarandom.h
 berlinuhr.o: $(HACK_SRC)/xlockmore.h
 berlinuhr.o: $(HACK_SRC)/xlockmoreI.h
 bevelcube.o: $(srcdir)/bevelcube.h
+clovermap.o: $(srcdir)/clovermap.h
 crater4.o: $(srcdir)/crater4.h
 craters.o: ../../config.h
 craters.o: $(srcdir)/crater4.h

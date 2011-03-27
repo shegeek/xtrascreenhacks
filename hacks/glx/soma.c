@@ -24,7 +24,6 @@
 #define sign(x)  (x)/(fabs(x))
 
 #include "xlockmore.h"
-#include <ctype.h>
 #include <math.h>
 #include "bevelcube.h"
 #include "flipguide.h"
@@ -405,7 +404,15 @@ ENTRYPOINT void init_soma (ModeInfo *mi)
      makedlists(lp->piecedlists);
 
 
-    if (MI_IS_MONO(mi))
+     if(!MI_IS_MONO(mi))
+      {
+	lp->numcolors = ((ncolors > 0 && ncolors < 2049) ? 
+                          ncolors : 256);
+    lp->colors = calloc ( lp->numcolors,  sizeof (*lp->colors));
+    make_smooth_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
+                            lp->colors, &lp->numcolors, False, 0, True);
+     }
+     if( (MI_IS_MONO(mi)) || (lp->numcolors < 1))
       {
 /* 	GLfloat white[] = {1., 1., 1., 1.}; */
 	lp->numcolors = 1;
@@ -414,15 +421,6 @@ ENTRYPOINT void init_soma (ModeInfo *mi)
         XQueryColor( MI_DISPLAY(mi), MI_COLORMAP(mi), &lp->colors[0]);
 /*          glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white); */
      } 
-    else
-      {
-	lp->numcolors = ((ncolors > 0 && ncolors < 2049) ? 
-                          ncolors : 256);
-    lp->colors = calloc ( lp->numcolors,  sizeof (*lp->colors));
-    make_smooth_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
-                            lp->colors, &lp->numcolors, False, 0, True);
-     }
-    printf("Number of colors allocated: %d\n", lp->numcolors);
     colorincrement = (int)lp->numcolors / 7;
     for (loop = 1; loop < 8; loop++)
       {

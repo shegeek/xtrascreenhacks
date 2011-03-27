@@ -124,10 +124,10 @@ GRAB_OBJS	= $(UTILS_BIN)/grabclient.o
 XSHM_OBJS	= $(UTILS_BIN)/xshm.o
 XDBE_OBJS	= $(UTILS_BIN)/xdbe.o
 
-HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h clovermap.h \
+HDRS		= screenhack.h screenhackI.h xlockmore.h xlockmoreI.h  \
 		   xpm-pixmap.h
 
-MEN		= daisy.man  twinkle.man psychedelic.man
+MEN		= daisy.man  twinkle.man
 
 STAR		= *
 

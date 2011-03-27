@@ -104,7 +104,7 @@ static OptionStruct desc[] = {
 ENTRYPOINT ModeSpecOpt psychedelic_opts = {countof(opts), opts, countof(vars), vars, desc};
 
 #ifdef USE_MODULES
-ModStruct flyer_description =
+ModStruct psychedelic_description =
     {"psychedelic", "init_psychedelic", "draw_psychedelic", "release_psychedelic",
      "draw_psychedelic", "init_psychedelic", (char *)NULL, &psychedelic_opts,
      30000, 30, 1, 1, 64, 1.0, "",
@@ -314,8 +314,18 @@ draw_psychedelic (ModeInfo *mi)
 	       }
 	   }
 	 glRasterPos2i(0, 0);
+	 /* If this doesn't work for you--and it's bound to not work for somebody,
+	  * considering that I don't have the equipment to test it on--
+	  * please contact me at the email address at the top of the file,
+	  * and let me know what to do to make it portable. Thank you.
+	  */
+/* # ifdef HAVE_COCOA */
+/* 	 glDrawPixels (lp->gridwidth, lp->gridheight, GL_BGRA, */
+/* 		       GL_UNSIGNED_INT_8_8_8_8_REV, lp->piximage); */
+/* #else */
 	 glDrawPixels (lp->gridwidth, lp->gridheight, GL_RGBA,
 		       GL_UNSIGNED_INT_8_8_8_8, lp->piximage);
+/* #endif */
 
     if (++lp->coloroffset >= lp->numcolors) lp->coloroffset -= lp->numcolors;
     if (mi->fps_p) do_fps (mi);
@@ -330,7 +340,6 @@ XSCREENSAVER_MODULE ("Psychedelic", psychedelic)
  
 /* ========================= */
 /* deal with likely non-portability of packed pixels -- maybe MI_VISUAL(mi) will be useful */
-/* document clovermap.c/h, finish man, configurator & readme accordingly */
 
 /* make more maps, handle option for them better */
 /* make mono a ramp of greys, not just black and white */

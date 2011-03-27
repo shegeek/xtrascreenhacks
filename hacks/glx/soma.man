@@ -57,7 +57,7 @@ Make the figure rotate clockwise instead of counter\-clockwise.
 How many different colors should be used. Using less than the default value is not recommended because the color cycling steps will become noticeble. Legal values are from 1 to 2048.  Default: 256.
 .TP 8
 .B \-multicolors
-Draw each puzzle piece in a different color.
+Draw each puzzle piece in a different color. Ignored if less than seven colors are allocated.
 .TP 8
 .B \-colorchangerate \fInumber\fP
 How long the colors should take to cycle. Legal values are from 1 to 1000.  Default: 10.

@@ -18,8 +18,8 @@ Add motion trails to flyer
 Improve soma database parser -- possibly re-implement in perl or something
 Let soma database file be parsed & somafigures.h be created at compile time
 fix bug in soma that causes black on black figures in mono
+  => fixed, check other hacks for it
 make skeleton files for future hacks, configurators and man pages
-decide whether to incorporate 2d berlinuhr
 
 There is makefile weirdness: for instance, why are all the x libraries,
 gl, etc pulled into the gl hacks with XPM_LIBS? that's misleading.

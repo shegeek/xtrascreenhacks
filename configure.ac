@@ -27,9 +27,6 @@
 # it does not get printed with configure --help)
 #
 # configure.scan suggests AC_PROG_CXX, but AFAIK there is no c++ in here
-# the OSX stuff wants AC_HEADER_STDBOOL, when that gets dealt with
-# utils/grabscreen.c wants AC_FUNC_FORK
-# generally wanted: AC_FUNC_MALLOC and AC_FUNC_REALLOC
 
 
 AC_PREREQ(2.67)
@@ -843,7 +840,11 @@ AC_TYPE_SIGNAL
 #AC_HEADER_TIME
 #AC_HEADER_SYS_WAIT
 AC_HEADER_DIRENT
+AC_HEADER_STDBOOL
 AC_GETTIMEOFDAY_ARGS
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
 AC_CHECK_FUNCS([select uname putenv])
 AC_CHECK_FUNCS([dup2 ftime memset sqrt strcasecmp strchr strdup ])
 AC_CHECK_FUNCS([strncasecmp strpbrk strrchr strstr])

@@ -1,3 +1,27 @@
+/*clovermap.c, Copyright (c) 2011 Kelley Nielsen <shegeek-dev@comcast.net>
+ *
+ * The code in this file is taken from clover.c by Christopher A. Kent, who presumably
+ * got the code (perhaps second or third hand) from the originator of this hack, Bill Gospers.
+ * A copy of that file is available at http://www.mit.edu:8001/people/eichin/tk/clover/clover.c,
+ * it is also available at http://home.comcast.net/~shegeek/xtrascreenhacks/clover.c.
+ * The only changes made are translation to modern C, the addition of the .h file,
+ * and cloverImage() now fills in only an array of ints (no Ximage).
+ * 
+ * Also see Pace Willisson's GTK implementation at http://smokingclover.sourceforge.net/.
+ * Although I ended up using none of the code from that implementation,
+ * it was invaluable to me in terms of first learning about the hack,
+ * and in understanding how to get it to work on modern equipment.
+ *
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation.  No representations are made about the suitability of this
+ * software for any purpose.  It is provided "as is" without express or 
+ * implied warranty.
+ */
+
 
 
 #include <stdlib.h>
@@ -204,4 +228,39 @@ line(int * bits, int nColors, int width, int height,  int fun, int x0, int y0, i
                 }
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
