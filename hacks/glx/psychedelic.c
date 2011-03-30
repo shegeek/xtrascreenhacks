@@ -24,6 +24,7 @@
 
 #include "xlockmore.h"
 #include "clovermap.h"
+#include "plasmamap.h"
 #include <math.h>
 
 #define DEFAULTS        "*delay:	30000           \n" \
@@ -37,10 +38,10 @@
 /* #define DEF_STEP        "200" */
 #define DEF_SMOOTH "False"
 #define DEF_CLOVER "False"
-#define DEF_SIMPLE "False"
+#define DEF_PLASMA "False"
 #define DEF_SIMPLE2 "False"
 
-enum displaymap {CLOVER, SIMPLE, SIMPLE2};
+enum displaymap {CLOVER, PLASMA, SIMPLE2};
 /* #define NUMMAPS 3 */
 
 typedef struct {
@@ -61,7 +62,7 @@ static int ncolors;
 /* static int step; */
 static Bool smooth;
 static Bool clover;
-static Bool simple;
+static Bool plasma;
 static Bool simple2;
 
 static XrmOptionDescRec opts[] = {
@@ -73,8 +74,8 @@ static XrmOptionDescRec opts[] = {
     {"+smooth",      ".smooth",     XrmoptionNoArg, "False" },
     {"-clover",      ".clover",     XrmoptionNoArg, "True" },
     {"+clover",      ".clover",     XrmoptionNoArg, "False" },
-    {"-simple",      ".simple",     XrmoptionNoArg, "True" },
-    {"+simple",      ".simple",     XrmoptionNoArg, "False" },
+    {"-plasma",      ".plasma",     XrmoptionNoArg, "True" },
+    {"+plasma",      ".plasma",     XrmoptionNoArg, "False" },
     {"-simple2",      ".simple2",     XrmoptionNoArg, "True" },
     {"+simple2",      ".simple2",     XrmoptionNoArg, "False" },
 };
@@ -86,7 +87,7 @@ static argtype vars[] = {
 /*     {&step,     "step",      "Step",       DEF_STEP,      t_Int}, */
     {&smooth,     "smooth",      "Smooth",       DEF_SMOOTH,      t_Bool},
     {&clover,     "clover",      "Clover",       DEF_CLOVER,      t_Bool},
-    {&simple,     "simple",      "Simple",       DEF_SIMPLE,      t_Bool},
+    {&plasma,     "plasma",      "Plasma",       DEF_PLASMA,      t_Bool},
     {&simple2,     "simple2",      "Simple2",       DEF_SIMPLE2,      t_Bool},
 };
 
@@ -97,7 +98,7 @@ static OptionStruct desc[] = {
 /*     {"-step",  "how far the flyers should move forward in one frame"}, */
     {"-smooth", "whether to use smooth color transitions"},
     {"-clover", "whether to use the clover (default) colormap--overrides other maps"},
-  {"-simple", "whether to use the simple colormap"},
+  {"-plasma", "whether to use the plasma colormap"},
   {"-simple2", "whether to use the other simple colormap"},
 };
 
@@ -247,7 +248,7 @@ ENTRYPOINT void init_psychedelic (ModeInfo *mi)
 	  }
        memset(lp->pixgrid, 0, lp->gridheight * lp->gridwidth * sizeof(int));
        dmap = CLOVER;
-       if (simple) dmap = SIMPLE;
+       if (plasma) dmap = PLASMA;
        if (simple2) dmap = SIMPLE2;
        if (clover) dmap = CLOVER;
        switch(dmap)
@@ -255,8 +256,8 @@ ENTRYPOINT void init_psychedelic (ModeInfo *mi)
 	 case CLOVER:
       cloverImage(lp->pixgrid, lp->numcolors, lp->gridwidth, lp->gridheight, R);
       break;
-	 case SIMPLE:
-	   simpleImage(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );
+	 case PLASMA:
+	   plasmaImage(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );
 	   break;
 	 case SIMPLE2:
 	   simple2Image(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );

@@ -81,14 +81,14 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o $(UTILS_SRC)/erase.o
 
 SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c xbmread.c flyer.c \ 		  			berlinuhr.c bclockhousing.c bclocklamps.c soma.c \ 					bevelcube.c skylark.c crater4.c ejecta.c craters.c \
-	clovermap.c psychedelic.c
+	clovermap.c plasmamap.c psychedelic.c
 
 
 
 OBJS		= xlock-gl-utils.o fps.o xpm-ximage.o xbmread.o flyer.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
 		   bevelcube.o skylark.o crater4.o ejecta.o craters.o \
-		  clovermap.o psychedelic.o
+		  clovermap.o plasmamap.o psychedelic.o
 
 
 GL_EXES		=  flyer berlinuhr soma skylark craters psychedelic
@@ -109,9 +109,10 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 
 
 HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h \ 					bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h \ 					somafigures.h boomerangs.h crater4.h ejecta.h  \
-			 clovermap.h
+			 clovermap.h plasmamap.h
 
-GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man
+GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man \
+                                   psychedelic.man
 MEN		= @GL_MEN@
 EXTRAS		= README Makefile.in
 
@@ -366,8 +367,8 @@ skylark: skylark.o $(HACK_OBJS)
 craters: craters.o crater4.o ejecta.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o crater4.o ejecta.o $(HACK_OBJS) $(XPM_LIBS)
 
-psychedelic: psychedelic.o  clovermap.o  $(HACK_OBJS)
-	$(CC_HACK) -o $@ $@.o clovermap.o  $(HACK_OBJS) $(XPM_LIBS)
+psychedelic: psychedelic.o  clovermap.o  plasmamap.o $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o clovermap.o  plasmamap.o $(HACK_OBJS) $(XPM_LIBS)
 
 
 
@@ -442,6 +443,7 @@ fps.o: $(UTILS_SRC)/yarandom.h
 fps.o: $(HACK_SRC)/xlockmoreI.h
 psychedelic.o: $(srcdir)/clovermap.h
 psychedelic.o: ../../config.h
+psychedelic.o: $(srcdir)/plasmamap.h
 psychedelic.o: $(HACK_SRC)/screenhackI.h
 psychedelic.o: $(UTILS_SRC)/colors.h
 psychedelic.o: $(UTILS_SRC)/grabscreen.h
