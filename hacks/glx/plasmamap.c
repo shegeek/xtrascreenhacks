@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "plasmamap.h"
 
 #define MIN(x, y)       ((x) < (y))?(x):(y)
 #define MAX(x, y)       ((x) > (y))?(x):(y)
@@ -166,14 +167,12 @@ void plasmaImage(int * plasmamap, int plasmawidth, int plasmaheight, int ncolors
   fclose(logfile);
 #endif
   free(dsmap);
-/*   for (itor = 0; itor < 10; itor++) printf("%d\n", (int)RANDOMIZE(0.5)); */
 }
+/* check for successful malloc */
 
 /* comment */
-/* keep track of lowest value in map, 
- * subtract from all map values when loading into final array
- * so that color indices start at 0 and none are negative
- */
+/* update Makefile.in and xml */
+/* should  use utils/yarandom(), not system rand() */
 /* decide what to do about pixels being assigned twice */
 
 /* pare down variables and assignments to what's truly necessary while keeping things clear */

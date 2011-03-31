@@ -39,9 +39,9 @@
 #define DEF_SMOOTH "False"
 #define DEF_CLOVER "False"
 #define DEF_PLASMA "False"
-#define DEF_SIMPLE2 "False"
+#define DEF_SINES "False"
 
-enum displaymap {CLOVER, PLASMA, SIMPLE2};
+enum displaymap {CLOVER, PLASMA, SINES};
 /* #define NUMMAPS 3 */
 
 typedef struct {
@@ -63,7 +63,7 @@ static int ncolors;
 static Bool smooth;
 static Bool clover;
 static Bool plasma;
-static Bool simple2;
+static Bool sines;
 
 static XrmOptionDescRec opts[] = {
     { "-map",   ".map",   XrmoptionSepArg, 0 },
@@ -76,8 +76,8 @@ static XrmOptionDescRec opts[] = {
     {"+clover",      ".clover",     XrmoptionNoArg, "False" },
     {"-plasma",      ".plasma",     XrmoptionNoArg, "True" },
     {"+plasma",      ".plasma",     XrmoptionNoArg, "False" },
-    {"-simple2",      ".simple2",     XrmoptionNoArg, "True" },
-    {"+simple2",      ".simple2",     XrmoptionNoArg, "False" },
+    {"-sines",      ".sines",     XrmoptionNoArg, "True" },
+    {"+sines",      ".sines",     XrmoptionNoArg, "False" },
 };
 
 static argtype vars[] = {
@@ -88,7 +88,7 @@ static argtype vars[] = {
     {&smooth,     "smooth",      "Smooth",       DEF_SMOOTH,      t_Bool},
     {&clover,     "clover",      "Clover",       DEF_CLOVER,      t_Bool},
     {&plasma,     "plasma",      "Plasma",       DEF_PLASMA,      t_Bool},
-    {&simple2,     "simple2",      "Simple2",       DEF_SIMPLE2,      t_Bool},
+    {&sines,     "sines",      "Sines",       DEF_SINES,      t_Bool},
 };
 
 static OptionStruct desc[] = {
@@ -99,7 +99,7 @@ static OptionStruct desc[] = {
     {"-smooth", "whether to use smooth color transitions"},
     {"-clover", "whether to use the clover (default) colormap--overrides other maps"},
   {"-plasma", "whether to use the plasma colormap"},
-  {"-simple2", "whether to use the other simple colormap"},
+  {"-sines", "whether to use the other simple colormap"},
 };
 
 ENTRYPOINT ModeSpecOpt psychedelic_opts = {countof(opts), opts, countof(vars), vars, desc};
@@ -125,33 +125,51 @@ static void handleGLerrors(char *guiltyfunction)
       }
 }
 
-/* === some simple maps for testing */
-static void
-simpleImage(int * bits, int width, int height, int numcolors)
+/* === some simple maps that are too small to merit their own file */
+static void sineImage(int * bits, int width, int height, int numcolors)
 {
-        int     i, j;
-
-        for (i = 0; i < height; i++) {
-          for (j = 0; j< width / 2; j++) {
-            bits[ i * width + j ] = bits[i * width + width - j] = j % numcolors;
-          }
-        }
+  float  sinemap;
+  float xexpand, yexpand;
+  int itor, jtor;
+  xexpand = yexpand = 0.0;
+  while (xexpand == 0.0)   xexpand = (float)(random() % 100) / 1000.;
+  while (yexpand == 0.0)   yexpand = (float)(random() % 100) / 1000.;
+  for (itor = 0; itor < height; itor++)
+    {
+      for (jtor = 0; jtor < width; jtor++)
+	{
+	  /* factors between 0.1 and 0.01, assign both separately */
+	  sinemap = 0.25 * (sin(yexpand * itor) + sin(xexpand * jtor)) + 0.5;
+	  bits[itor * width + jtor] =  sinemap  * (numcolors - 1);
+	}
+    }
 }
 
-static void
-simple2Image(int * bits, int width, int height, int numcolors)
-{
-        int     i, j;
+/* static void */
+/* simpleImage(int * bits, int width, int height, int numcolors) */
+/* { */
+/*         int     i, j; */
 
-        for (i = 0; i < height/2; i++) {
-          for (j = 0; j< width; j++) {
-/*             bits[ i * width + j ] =(i > height/2 ? numcolors -(i % numcolors) - 1 : i % numcolors);; */
-            bits[ i * width + j ] = bits[(height - i) * width + j] = i % numcolors;
+/*         for (i = 0; i < height; i++) { */
+/*           for (j = 0; j< width / 2; j++) { */
+/*             bits[ i * width + j ] = bits[i * width + width - j] = j % numcolors; */
+/*           } */
+/*         } */
+/* } */
+
+/* static void */
+/* sinesImage(int * bits, int width, int height, int numcolors) */
+/* { */
+/*         int     i, j; */
+
+/*         for (i = 0; i < height/2; i++) { */
+/*           for (j = 0; j< width; j++) { */
+/*             bits[ i * width + j ] = bits[(height - i) * width + j] = i % numcolors; */
 
 
-          }
-        }
-}
+/*           } */
+/*         } */
+/* } */
 /* ===== end maps ============== */
 
 ENTRYPOINT void reshape_psychedelic (ModeInfo *mi, int width, int height)
@@ -210,12 +228,14 @@ ENTRYPOINT void init_psychedelic (ModeInfo *mi)
     make_smooth_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
                             lp->colors, &lp->numcolors, True, False, 0);
     else
+      {
     make_random_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
                             lp->colors, &lp->numcolors, True, False, 0, True);
       
    /* add bg color to last slot, overwriting the assigned color */
       lp->colors[lp->numcolors-1].pixel = MI_BLACK_PIXEL(mi);
       XQueryColor(MI_DISPLAY(mi), MI_COLORMAP(mi), &lp->colors[lp->numcolors - 1]);
+      }
    }
     lp->pixcolors = calloc(lp->numcolors, sizeof(GLuint));
     if (lp->pixcolors == NULL)
@@ -249,7 +269,7 @@ ENTRYPOINT void init_psychedelic (ModeInfo *mi)
        memset(lp->pixgrid, 0, lp->gridheight * lp->gridwidth * sizeof(int));
        dmap = CLOVER;
        if (plasma) dmap = PLASMA;
-       if (simple2) dmap = SIMPLE2;
+       if (sines) dmap = SINES;
        if (clover) dmap = CLOVER;
        switch(dmap)
 	 {
@@ -259,8 +279,8 @@ ENTRYPOINT void init_psychedelic (ModeInfo *mi)
 	 case PLASMA:
 	   plasmaImage(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );
 	   break;
-	 case SIMPLE2:
-	   simple2Image(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );
+	 case SINES:
+	   sineImage(lp->pixgrid, lp->gridwidth, lp->gridheight, lp->numcolors );
 	   break;
 	 default:
       cloverImage(lp->pixgrid, lp->numcolors, lp->gridwidth, lp->gridheight, R);
@@ -343,9 +363,12 @@ XSCREENSAVER_MODULE ("Psychedelic", psychedelic)
 /* deal with likely non-portability of packed pixels -- maybe MI_VISUAL(mi) will be useful */
 
 /* make more maps, handle option for them better */
+/* come up with a better name for "sines", I know I've seen this pattern before */
 /* make mono a ramp of greys, not just black and white */
+/* save moduloing each pixel by making color array twice the length of ncolors,
+ * and repeating the colors in the second half
+ */
 
-/* take black stripe out of smooth? */
 /* apparently there is a bug in clovermap that leaves
  * some indices == numcolors, not numcolors -1
  * this can cause an out of range error if not modulo'd again
