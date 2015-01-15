@@ -69,7 +69,7 @@ stored in the RESOURCE_MANAGER property.
 .BR xscreensaver (1),
 .BR bitmap (1)
 .SH "COPYRIGHT"
-Copyright \(co 2009 by Kelley Nielsen.  Permission to use, copy, modify, 
+Copyright \(co 2015 by Kelley Nielsen.  Permission to use, copy, modify, 
 distribute, and sell this software and its documentation for any purpose is 
 hereby granted without fee, provided that the above copyright notice appear 
 in all copies and that both that copyright notice and this permission notice
@@ -77,4 +77,4 @@ appear in supporting documentation.  No representations are made about the
 suitability of this software for any purpose.  It is provided "as is" without
 express or implied warranty.
 .SH "AUTHOR"
-Kelley Nielsen <shegeek\-dev@comcast.net>
+Kelley Nielsen <kelleynnn@gmail.com>

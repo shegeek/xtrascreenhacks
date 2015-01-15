@@ -35,13 +35,13 @@ Draw on the root window.
 Per\-frame delay, in microseconds.  Default: 30000 (0.03 seconds.).
 .TP 8
 .B \-bitmap \fIpath\fP
-Path to an X bitmap file that will be used as the flyer image. Maximum size: 1024x1024. Must be valid xbm, color xpms are disallowed. Power of two sized square bitmaps are best, although all bitmaps up to and including the maximum size are accepted. Non\-square bitmaps will appear distorted (to fix this, pad the bitmap to a square shape with background pixels). Larger bitmaps show less aliasing. See \-size if using a very small (for instance, 8x8) bitmap. Default: the X11 logo.
+Path to an X bitmap file that will be used as the flyer image. Maximum size: 1024x1024. Must be valid xbm, color xpms are disallowed. Power of two sized square bitmaps are best, although all bitmaps up to and including the maximum size are accepted. Non\-square bitmaps will appear distorted (to fix this, pad the bitmap to a square shape with background pixels). Larger bitmaps show less aliasing. See \-size if using a very small (for instance, 8x8) bitmap. The default install location for the provided set is /usr/share/xtrascreenhacks/images. Default: the X11 logo.
 .TP 8
 .B \-count \fInumber\fP
 How many flyers there should be on the screen at one time. Legal values are from 1 to 1000.  Default: 20.
 .TP 8
 .B \-ncolors \fInumber\fP
-How many different colors should be used. Legal values are from 1 to 256.  Default: 16.
+How many different colors should be used. Legal values are from 1 to 2048.  Default: 16.
 .TP 8
 .B \-mono
 Draw all flyers in white (or whatever your display uses for white). Nice for simple star\-like flyers with \-dot. Overrides \-ncolors.
@@ -53,7 +53,7 @@ How big the flyers should be. Small bitmaps look better at smaller sizes and vic
 How far the flyers should advance in one frame. For slow motion flyers, this gives a smoother appearance than slowing down the frame rate with \-delay. Legal values are from 1 to 1000.  Default: 200.
 .TP 8
 .B \-dots
-Make flyers be simple dots or points instead of pictures. Doesn't use texture mapping, so it may work better on slower machines. Overrides \-bitmap.
+Make flyers be simple dots or points instead of pictures. Doesn't use texture mapping, so it may work better on slower machines. Overrides \-bitmap. Using the dot256 bitmap in imagedir/flyer may yield better results.
 .TP 8
 .B \-fog
 Make flyers in the distance be darker.
@@ -74,7 +74,7 @@ stored in the RESOURCE_MANAGER property.
 .BR xscreensaver (1),
 .BR bitmap (1)
 .SH "COPYRIGHT"
-Copyright \(co 2009 by Kelley Nielsen.  Permission to use, copy, modify, 
+Copyright \(co 2015 by Kelley Nielsen.  Permission to use, copy, modify, 
 distribute, and sell this software and its documentation for any purpose is 
 hereby granted without fee, provided that the above copyright notice appear 
 in all copies and that both that copyright notice and this permission notice
@@ -82,4 +82,4 @@ appear in supporting documentation.  No representations are made about the
 suitability of this software for any purpose.  It is provided "as is" without
 express or implied warranty.
 .SH "AUTHOR"
-Kelley Nielsen <shegeek\-dev@comcast.net>
+Kelley Nielsen <kelleynnn@gmail.com>

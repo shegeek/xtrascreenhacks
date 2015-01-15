@@ -254,31 +254,6 @@ static void reset_flyer (flyer_configuration *lp, flyer *fl)
 }
 
 
-/* need:
- * texture list to assign a decal and poly dimensions (above);
- * color map, to assign a color (above);
- * cloud radii, to assign an xy position (above);
- *   start off with random z positions, or space evenly?
- */ 
-/* static flyer new_flyer(flyer_configuration *lp) */
-/* { */
-/*   flyer * newflyer; */
-
-/*   newflyer = malloc ((sizeof) newflyer); */
-/*   if (NULL == newflyer) return NULL; */
-
-/*   should this be called here, or directly after this call in the caller? */ 
-/*   randomize_flyer (lp, newflyer); */
-
-/*   return newflyer; */
-
-/*   } */
-
-
-
-
-
-
 /* ENTRYPOINT void reshape_flyer (ModeInfo *mi, int width, int height); */
 ENTRYPOINT void reshape_flyer (ModeInfo *mi, int width, int height)
 {
@@ -308,7 +283,6 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
     /* dots taking a curved path and veering away from the eye coordinate */
     GLfloat distparams[3];
     flyer_configuration *lp;
-
 
 
     if (!lps) {
@@ -355,7 +329,7 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
       } 
     else
       {
-	lp->numcolors = ((ncolors > 0 && ncolors < NUMCOLORS) ? 
+	lp->numcolors = ((ncolors > 0 && ncolors <= NUMCOLORS) ? 
                           ncolors : 16);
     lp->colors = calloc ( lp->numcolors,  sizeof (*lp->colors));
     make_random_colormap (MI_DISPLAY(mi),MI_VISUAL(mi), MI_COLORMAP(mi),
@@ -408,37 +382,34 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       distparams[0] = distparams[2] = 0.0;
       distparams[1] = lp->flyersize;
-      glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distparams);
-      glPointSize(6.0);
+      /* no longer supported - find a way to replace functionality */
+/*      glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distparams); */
+      glPointSize(2.0);
       glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     }
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClearDepth(1.0f);
+    glEnable(GL_MULTISAMPLE);
 
-
-    /* don't need lighting */
-/*     if (!do_texture) { */
-      /* If there is no texture, the boxes don't show up without a light.
-         Though I don't understand why all the blocks come out gray.
-       */
-/*       GLfloat pos[4] = {0.0, 1.0, 1.0, 0.0}; */
-/*       GLfloat amb[4] = {0.2, 0.2, 0.2, 1.0}; */
-/*       GLfloat dif[4] = {1.0, 1.0, 1.0, 1.0}; */
-/*       GLfloat spc[4] = {1.0, 1.0, 1.0, 1.0}; */
-/*       glLightfv(GL_LIGHT0, GL_POSITION, pos); */
-/*       glLightfv(GL_LIGHT0, GL_AMBIENT,  amb); */
-/*       glLightfv(GL_LIGHT0, GL_DIFFUSE,  dif); */
-/*       glLightfv(GL_LIGHT0, GL_SPECULAR, spc); */
-/*       glEnable(GL_LIGHTING); */
-/*       glEnable(GL_LIGHT0); */
+/*     { */
+/*       GLdouble  curcolor[4]; */
+/*      glGetDoublev(GL_COLOR_CLEAR_VALUE, curcolor); */
+/*       printf("Current clear color:: %f, %f, %f\n", curcolor[0], curcolor[1], curcolor[2]); */
 /*     } */
+
+/*     { */
+/*       GLint  redplanes[4]; */
+/*       glGetIntegerv(GL_AUX_BUFFERS, redplanes); */
+/*       printf("Red bitplanes in accumulation buffer: %d\n", redplanes[0]); */
+/*     } */
+
+
 
     handleGLerrors("init");
 
      zdistribution = lp->cloudDepth / lp->numflyers;
     for (loop = 0; loop < lp->numflyers; loop++)
     {
-/*       lp->flyers[loop] = new_flyer(lp); */
       lp->flyers[loop] = malloc (sizeof (flyer ));
       if (NULL == lp->flyers[loop]){
 	if (DEBUGMSG) printf("single flyer didn't get allocated\n");
@@ -449,10 +420,6 @@ ENTRYPOINT void init_flyer (ModeInfo *mi)
       lp->flyers[loop]->position[2] = loop * zdistribution;
     }
     reshape_flyer(mi, MI_WIDTH(mi), MI_HEIGHT(mi));
-
-    /* why is the buffer flushed here? 
-     *should i draw, or is there another reason?
-     */
     glFlush();
 }
 
@@ -461,14 +428,9 @@ ENTRYPOINT void release_flyer (ModeInfo *mi)
 {
   if (lps) {
     int screen, loop;
-    /* if there might be more than one screen, 
-     * do I need to manage multiple state structs throughout the program?
-     */
     for (screen = 0; screen < MI_NUM_SCREENS(mi); screen++) {
       flyer_configuration *lp = &lps[screen];
-      /* colors.h call gives bad access xlib error */
       free(lp->colors);
-/*       free_colors(MI_DISPLAY(mi), MI_COLORMAP(mi), lp->colors, lp->numcolors); */
       for (loop = 0; loop < lp->numflyers; loop++)
 	{
           free(lp->flyers[loop]);
@@ -481,8 +443,6 @@ ENTRYPOINT void release_flyer (ModeInfo *mi)
 
   FreeAllGL(mi);
 }
-
-
 
 
 ENTRYPOINT void

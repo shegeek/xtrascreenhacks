@@ -161,7 +161,7 @@ static void makeboomdlists(skylark_configuration *lp)
     boomnurb = gluNewNurbsRenderer();
     gluNurbsProperty(boomnurb, GLU_SAMPLING_TOLERANCE, 15.0f);
     gluNurbsProperty(boomnurb, GLU_DISPLAY_MODE, GLU_OUTLINE_POLYGON);
-    gluNurbsCallback(boomnurb, GLU_NURBS_ERROR, nurbsError );
+    gluNurbsCallback(boomnurb, GLU_NURBS_ERROR, (_GLUfuncptr)nurbsError );
   }
 
  

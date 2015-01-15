@@ -108,7 +108,7 @@ GLfloat elevenbankverts[20][3] = {
    GLfloat yellowoff_shininess = 0.7; 
  
   circlebank = gluNewQuadric();
-  gluQuadricCallback(circlebank, GLU_ERROR, errorCallback);
+  gluQuadricCallback(circlebank, GLU_ERROR, (_GLUfuncptr)errorCallback);
    gluQuadricDrawStyle(circlebank, GLU_FILL);
    gluQuadricNormals(circlebank, GLU_SMOOTH);
  

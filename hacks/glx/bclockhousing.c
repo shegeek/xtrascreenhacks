@@ -192,7 +192,7 @@ GLfloat steel_shininess = 0.4;
    secconnectlistindex = makesecconnectdlist();
 
    pole = gluNewQuadric();
-   gluQuadricCallback(pole, GLU_ERROR, errorCallback);
+   gluQuadricCallback(pole, GLU_ERROR, (_GLUfuncptr)errorCallback);
 
    gluQuadricDrawStyle(pole, GLU_FILL); 
    gluQuadricNormals(pole, GLU_SMOOTH);

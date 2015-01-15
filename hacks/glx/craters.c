@@ -255,7 +255,7 @@ init_craters (ModeInfo * mi)
   lp->impactframes = lp->impactframecount = 2;
 
   groundquad = gluNewQuadric ();
-  gluQuadricCallback (groundquad, GLU_ERROR, errorCallback);
+  gluQuadricCallback (groundquad, GLU_ERROR, (_GLUfuncptr)errorCallback);
   gluQuadricDrawStyle (groundquad, GLU_FILL);
   gluQuadricNormals (groundquad, GLU_SMOOTH);
   lp->craterdlist = glGenLists (1);
@@ -278,6 +278,10 @@ init_craters (ModeInfo * mi)
   glEnable (GL_DEPTH_TEST);
   pointdistparams[0] = pointdistparams[2] = 0.0;
   pointdistparams[1] = 0.3;
+  /* no longer supported, but still looks better when left in
+   * otherwise the ejecta are huge blobs
+   * (at least on my machine :-)
+   * */
   glPointParameterfv (GL_POINT_DISTANCE_ATTENUATION, pointdistparams);
 /*  glPointSize (10.0);*/
   glLineWidth(2.);

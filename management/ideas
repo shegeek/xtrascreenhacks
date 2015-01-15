@@ -1,20 +1,5 @@
-"formica": pattern like '50s kitchen table, with glitter specks,
-  twinkling stars and flying boomerangs
-  =>continuously color cycling background, maybe within a range either
-    user chosen and/or random (objects must match)
-
-soma cube similar to tangram and snake
- ->could also make a standalone soma puzzle app, the java one sucks
-
-3d version of berlinuhr
- -> could also be a desktop clock and/or gnome panel applet
-
-============================================================
-
 
 everblooming lotus
-
-lunar surface being cratered
 
 raindrops hitting pool and making wave patterns
   -> is already destop effect in compiz, maybe not good idea
@@ -45,9 +30,7 @@ balls bouncing in a volume and hitting a special ball, making it change
 
 snake slithering
 
-flying through a city -> found inside window rendering code, in bookmarks
-
- face generator (draw human faces with a nurbs given parameters)
+face generator (draw human faces with a nurbs given parameters)
 
 twistycurve: 3d curves (like for skylark, only more complex) that mutate and twist
 
@@ -67,4 +50,6 @@ dominoes falling
 streaks that look like traffic or freeways
 
 plasma ball and/or crackle tube
+
+use the rounded rectangle generating utility to extrude skyscrapers
 

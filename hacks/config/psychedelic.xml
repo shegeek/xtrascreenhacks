@@ -11,12 +11,15 @@
 
   <number id="ncolors" type="slider" arg="-ncolors %"
             _label="Number of Colors" _low-label="Two" _high-label="Many"
-            low="2" high="255" default="64"/>
+            low="2" high="2048" default="64"/>
 
   <select id="map">
-    <option id="clover"  _label="Clover"/>
-    <option id="simple" _label="Vertical Stripes" arg-set="-simple"/>
-    <option id="simple2" _label="Horizontal Stripes" arg-set="-simple2"/>
+    <option id="clover"  _label="Clover" arg-set="-clover"/>
+    <option id="stripes"  _label="Stripes" arg-set="-stripes"/>
+    <option id="circle"  _label="Circle" arg-set="-circle"/>
+    <option id="Plasma" _label="Plasma Fractal" arg-set="-plasma"/>
+    <option id="bumpy" _label="Bidirectional Sine Waves" arg-set="-bumpy"/>
+    <option id="bumpysquare" _label="Bidirectional Sine Waves (Square)" arg-set="-bumpysquare"/>
   </select>
  
   <!-- #### -speed [15] -->

@@ -1,7 +1,7 @@
 # WARNING: modified from xscreensaver.spec by shegeek but only partially!
 #          No way will this work!
 %define	name xtrascreenhacks
-%define	version 0.2
+%define	version 0.7
 
 Summary:	Additional modes for XScreenSaver or other daemon
 Name:		%{name}

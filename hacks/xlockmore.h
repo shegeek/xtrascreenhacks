@@ -116,7 +116,7 @@ ERROR!  Sorry, xlockmore.h requires ANSI C (gcc, for example.)
 #define ABS(a)((a)<0 ? -(a) : (a))
 
 /* Maximum possible number of colors (*not* default number of colors.) */
-#define NUMCOLORS 256
+#define NUMCOLORS 2048
 
 
 /* In an Xlib world, we define two global symbols here:
