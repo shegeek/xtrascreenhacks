@@ -4,7 +4,6 @@ xtrascreenhacks-0.5/archive
 Makefile
 configure.scan
 config.h
-config.guess
 config.log
 config.status
 aclocal.m4
