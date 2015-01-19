@@ -81,17 +81,18 @@ UTIL_OBJS	= $(UTILS_SRC)/colors.o $(UTILS_SRC)/hsv.o \
 		   $(UTILS_SRC)/yarandom.o $(UTILS_SRC)/xshm.o $(UTILS_SRC)/erase.o
 
 SRCS		=  xlock-gl-utils.c fps.c xpm-ximage.c xbmread.c flyer.c \ 		  			berlinuhr.c bclockhousing.c bclocklamps.c soma.c \ 					bevelcube.c skylark.c crater4.c ejecta.c craters.c \
-	clovermap.c plasmamap.c psychedelic.c
+	clovermap.c plasmamap.c psychedelic.c hogeweg-hesper.c hhtree.c
 
 
 
 OBJS		= xlock-gl-utils.o fps.o xpm-ximage.o xbmread.o flyer.o \
 		   berlinuhr.o bclockhousing.o bclocklamps.o soma.o \
 		   bevelcube.o skylark.o crater4.o ejecta.o craters.o \
-		  clovermap.o plasmamap.o psychedelic.o
+		  clovermap.o plasmamap.o psychedelic.o hogeweg-hesper.o \
+		  hhtree.o
 
 
-GL_EXES		=  flyer berlinuhr soma skylark craters psychedelic
+GL_EXES		=  flyer berlinuhr soma skylark craters psychedelic hhtree
 #GLE_EXES	= extrusion
 #GL_UTIL_EXES	= xscreensaver-gl-helper
 HACK_EXES	= @GL_EXES@ # @GLE_EXES@
@@ -109,10 +110,10 @@ HACK_OBJS	= $(HACK_BIN)/screenhack.o \
 
 
 HDRS		=  xpm-ximage.h xbmread.h bclockconnector.h bclockhousing.h \ 					bclocklamps.h bclocklightbank.h bevelcube.h flipguide.h \ 					somafigures.h boomerangs.h crater4.h ejecta.h  \
-			 clovermap.h plasmamap.h
+			 clovermap.h plasmamap.h hogeweg-hesper.h
 
 GL_MEN		= flyer.man berlinuhr.man soma.man skylark.man craters.man \
-                                   psychedelic.man
+                                   psychedelic.man hhtree.man
 MEN		= @GL_MEN@
 EXTRAS		= README Makefile.in
 
@@ -354,7 +355,6 @@ CC_HACK		= $(CC) $(LDFLAGS)
 flyer:	flyer.o	 $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o  $(HACK_OBJS)  $(XPM_LIBS)
 
-
 berlinuhr: berlinuhr.o bclockhousing.o bclocklamps.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o bclockhousing.o bclocklamps.o $(HACK_OBJS) $(XPM_LIBS)
 
@@ -370,8 +370,8 @@ craters: craters.o crater4.o ejecta.o $(HACK_OBJS)
 psychedelic: psychedelic.o  clovermap.o  plasmamap.o $(HACK_OBJS)
 	$(CC_HACK) -o $@ $@.o clovermap.o  plasmamap.o $(HACK_OBJS) $(XPM_LIBS)
 
-
-
+hhtree: hhtree.o hogeweg-hesper.o $(HACK_OBJS)
+	$(CC_HACK) -o $@ $@.o hogeweg-hesper.o $(HACK_OBJS) $(XPM_LIBS)
 
 
 ##############################################################################
@@ -498,4 +498,17 @@ xlock-gl-utils.o: $(HACK_SRC)/xlockmoreI.h
 xpm-ximage.o: ../../config.h
 xpm-ximage.o: $(UTILS_SRC)/minixpm.h
 xpm-ximage.o: $(srcdir)/xpm-ximage.h
-
+hogeweg-hesper.o: $(srcdir)/hogeweg-hesper.h
+hhtree.o: $(srcdir)/hogeweg-hesper.h
+hhtree.o: ../../config.h
+hhtree.o: $(HACK_SRC)/screenhackI.h
+hhtree.o: $(UTILS_SRC)/colors.h
+hhtree.o: $(UTILS_SRC)/grabscreen.h
+hhtree.o: $(UTILS_SRC)/hsv.h
+hhtree.o: $(UTILS_SRC)/resources.h
+hhtree.o: $(UTILS_SRC)/usleep.h
+hhtree.o: $(UTILS_SRC)/visual.h
+hhtree.o: $(UTILS_SRC)/xshm.h
+hhtree.o: $(UTILS_SRC)/yarandom.h
+hhtree.o: $(HACK_SRC)/xlockmore.h
+hhtree.o: $(HACK_SRC)/xlockmoreI.h
